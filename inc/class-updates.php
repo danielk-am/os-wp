@@ -8,10 +8,10 @@
  * answers from `manifest.json` on the repo's main branch, which each release
  * updates alongside the tag.
  *
- * Why a manifest instead of the GitHub releases API: the manifest is one
- * cacheable file the site owner controls, it needs no API token or rate-limit
- * handling, and rolling an update back is editing one line rather than
- * deleting a release.
+ * Why a manifest instead of the GitHub releases API: one small file, no API
+ * token, no rate limits. It ships as an asset on every release, so the
+ * `releases/latest/download` URL always serves the manifest that belongs to
+ * the newest release.
  *
  * Loaded outside the module system on purpose: updates must keep working when
  * every module is switched off, and especially when one is tripped, because an
@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class OS_Updates {
 
 	const REPO     = 'https://github.com/danielk-am/os-wp';
-	const MANIFEST = 'https://raw.githubusercontent.com/danielk-am/os-wp/main/manifest.json';
+	const MANIFEST = 'https://github.com/danielk-am/os-wp/releases/latest/download/manifest.json';
 	const CACHE    = 'os_update_manifest';
 
 	public static function register(): void {
@@ -95,12 +95,14 @@ final class OS_Updates {
 			return $cached;
 		}
 
-		// The raw endpoint's CDN caches per edge for a few minutes, and a stale
-		// edge can pin an old version past a release. A five-minute time bucket
-		// on the query string changes the cache key just often enough to bound
-		// the lag without hammering the origin.
-		$url      = add_query_arg( 't', (string) floor( time() / ( 5 * MINUTE_IN_SECONDS ) ), self::MANIFEST );
-		$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
+		// The manifest ships as an asset on every release, and the latest/
+		// download URL always resolves to the newest release's copy. That makes
+		// the manifest fresh the moment a release publishes and atomically tied
+		// to it: no branch push, no CDN lag, and a rollback is republishing.
+		// (The raw.githubusercontent URL looked simpler, but its CDN strips
+		// query strings from the cache key and can serve a stale edge for
+		// several minutes after a push, measured, not assumed.)
+		$response = wp_remote_get( self::MANIFEST, array( 'timeout' => 10 ) );
 		$manifest = array();
 		if ( ! is_wp_error( $response ) && 200 === (int) wp_remote_retrieve_response_code( $response ) ) {
 			$decoded  = json_decode( (string) wp_remote_retrieve_body( $response ), true );
