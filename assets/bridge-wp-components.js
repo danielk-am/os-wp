@@ -29,6 +29,7 @@ export const TextControl = c?.TextControl;
 export const TextareaControl = c?.TextareaControl;
 export const SearchControl = c?.SearchControl;
 export const SelectControl = c?.SelectControl;
+export const ComboboxControl = c?.ComboboxControl;
 export const ToggleControl = c?.ToggleControl;
 export const CheckboxControl = c?.CheckboxControl;
 export const BaseControl = c?.BaseControl;

@@ -615,6 +615,7 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 				'ci/skill-mermaid' => $url( 'ci-skill-mermaid.js' ), 'ci/app-activity' => $url( 'ci-app-activity.js' ),
 				'ci/app-notifications' => $url( 'ci-app-notifications.js' ), 'ci/app-apps' => $url( 'ci-app-apps.js' ),
 				'ci/app-workspace' => $url( 'ci-app-workspace.js' ), 'ci/type' => $url( 'ci-type.js' ),
+				'ci/app-type-menus' => $url( 'ci-app-type-menus.js' ),
 				'ci/blueprints' => $url( 'ci-blueprints.js' ),
 				'ci/app-reminders' => $url( 'ci-app-reminders.js' ),
 				'ci/app-filesystem' => $url( 'ci-app-filesystem.js' ),
@@ -1401,6 +1402,7 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 				'calendar', 'reminders', 'routines' => array( 'ci/app-reminders' ),
 				'filesystem' => array( 'ci/app-filesystem' ),
 				'code' => array( 'ci/app-code' ),
+				'content-types' => array( 'ci/app-type-menus' ),
 				default => array(),
 			};
 			foreach ( (array) ( $this->config['editor_providers'] ?? array() ) as $provider ) {
@@ -1422,6 +1424,9 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 					return '/filesystem';
 				}
 				return '/t/' . $key . '/new';
+			}
+			if ( str_ends_with( $page, '-menus' ) ) {
+				return '/type-menus';
 			}
 			if ( str_ends_with( $page, '-manage' ) ) {
 				if ( 'content-types' === ( $this->config['mode'] ?? '' ) ) {
