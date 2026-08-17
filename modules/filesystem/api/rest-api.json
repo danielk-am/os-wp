@@ -1,0 +1,28 @@
+{
+  "namespace": "filesystem/v1",
+  "routes": [
+    "/fs/roots",
+    "/fs/list",
+    "/fs/search",
+    "/fs/read",
+    "/fs/download",
+    "/fs/write",
+    "/fs/create",
+    "/fs/move",
+    "/fs/copy",
+    "/fs/delete",
+    "/fs/chmod",
+    "/fs/upload",
+    "/fs/archive",
+    "/fs/extract",
+    "/fs/exec",
+    "/fs/exec-config",
+    "/fs/console",
+    "/settings",
+    "/settings/field-groups",
+    "/cpt-schema/{cpt}",
+    "/settings/taxonomies",
+    "/notifications",
+    "/notifications/read"
+  ]
+}

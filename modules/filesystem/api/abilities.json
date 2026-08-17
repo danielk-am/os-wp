@@ -1,0 +1,10 @@
+{
+  "namespace": "filesystem",
+  "abilities": [
+    "filesystem/fs-roots",
+    "filesystem/fs-list",
+    "filesystem/fs-read",
+    "filesystem/fs-search",
+    "filesystem/fs-clean-md-twins"
+  ]
+}

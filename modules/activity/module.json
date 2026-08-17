@@ -1,0 +1,21 @@
+{
+  "module": "activity",
+  "label": "Activity",
+  "legacy_plugin": "os-activity",
+  "ability_namespaces": [
+    "activity"
+  ],
+  "rest_namespaces": [
+    "activity/v1"
+  ],
+  "owned_data": [
+    "wp_activity"
+  ],
+  "data_migrations": [
+    {
+      "from": "wp_activity",
+      "to": "os_activity",
+      "kind": "post_type"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+/* CSV Preview block — frontend + editor styles */
+.ci-csv-block {
+	margin: 1rem 0;
+	font-size: 14px;
+	line-height: 1.4;
+}
+.ci-csv-block .ci-csv-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+	margin-bottom: 8px;
+}
+.ci-csv-block .ci-csv-filter {
+	flex: 1 1 240px;
+	min-width: 200px;
+	padding: 6px 10px;
+	font-size: 13px;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	border-radius: 4px;
+	background: #fff;
+}
+.ci-csv-block .ci-csv-count {
+	font-size: 12px;
+	color: #666;
+	margin-left: auto;
+	white-space: nowrap;
+}
+.ci-csv-block .ci-csv-wrap {
+	border: 1px solid rgba(0, 0, 0, 0.12);
+	border-radius: 4px;
+	overflow: auto;
+	max-height: 60vh;
+}
+.ci-csv-block table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 13px;
+}
+.ci-csv-block thead th {
+	background: #f6f7f7;
+	text-align: left;
+	padding: 8px 12px;
+	font-weight: 600;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	position: sticky;
+	top: 0;
+	z-index: 1;
+}
+.ci-csv-block thead tr.ci-csv-col-filters th {
+	padding: 4px 6px;
+	background: #fafafa;
+	position: sticky;
+	top: 35px; /* sits under the header row */
+	z-index: 1;
+}
+.ci-csv-block .ci-csv-col-filter {
+	width: 100%;
+	padding: 3px 6px;
+	font-size: 11px;
+	border: 1px solid rgba(0, 0, 0, 0.12);
+	border-radius: 3px;
+	background: #fff;
+}
+.ci-csv-block tbody td {
+	padding: 8px 12px;
+	border-top: 1px solid rgba(0, 0, 0, 0.06);
+	vertical-align: top;
+}
+.ci-csv-block tbody tr:hover td {
+	background: rgba(0, 0, 0, 0.025);
+}
+.ci-csv-block tbody tr:last-child td {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.ci-csv-block .ci-csv-chip {
+	display: inline-block;
+	padding: 2px 8px;
+	margin: 0 4px 2px 0;
+	font-size: 11px;
+	line-height: 1.4;
+	border-radius: 999px;
+	background: rgba(0, 0, 0, 0.06);
+	color: inherit;
+	border: 1px solid rgba(0, 0, 0, 0.08);
+}
+.ci-csv-block figcaption {
+	font-size: 12px;
+	color: #666;
+	margin-top: 6px;
+	text-align: center;
+}
+.ci-csv-block .ci-csv-placeholder {
+	font-style: italic;
+	color: #888;
+	padding: 12px;
+	border: 1px dashed rgba(0, 0, 0, 0.15);
+	border-radius: 4px;
+}

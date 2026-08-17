@@ -1,0 +1,165 @@
+{
+  "module": "calendar",
+  "label": "Calendar",
+  "legacy_plugin": "os-calendar",
+  "ability_namespaces": [
+    "calendar",
+    "reminders",
+    "routines"
+  ],
+  "rest_namespaces": [
+    "calendar/v1",
+    "reminders/v1",
+    "routines/v1"
+  ],
+  "owned_data": [
+    "wp_calendar_event",
+    "ci_reminder",
+    "ci_automation",
+    "ci_reminder_note",
+    "ci_auto_trigger",
+    "ci_auto_channel",
+    "ci_auto_method",
+    "ci_auto_target",
+    "ci_auto_agent",
+    "ci_auto_agent_mode",
+    "ci_auto_model",
+    "ci_auto_payload",
+    "ci_auto_body_type",
+    "ci_auto_headers",
+    "ci_auto_priority",
+    "ci_auto_tags",
+    "ci_auto_lead_minutes",
+    "ci_auto_digest_time",
+    "ci_auto_then",
+    "ci_auto_delay",
+    "ci_auto_enabled",
+    "ci_tags"
+  ],
+  "data_migrations": [
+    {
+      "from": "wp_calendar_event",
+      "to": "os_calendar_event",
+      "kind": "post_type"
+    },
+    {
+      "from": "ci_reminder",
+      "to": "os_reminder",
+      "kind": "post_type",
+      "note": "Registered by ci-reminders (legacy) and calendar; both code paths rename together."
+    },
+    {
+      "from": "ci_reminder",
+      "to": "os_reminder",
+      "kind": "rest_base",
+      "note": "Registered by ci-reminders (legacy) and calendar; both code paths rename together."
+    },
+    {
+      "from": "ci_automation",
+      "to": "os_automation",
+      "kind": "post_type",
+      "note": "Registered by ci-reminders and routines (both legacy) and calendar."
+    },
+    {
+      "from": "ci_automation",
+      "to": "os_automation",
+      "kind": "rest_base",
+      "note": "Registered by ci-reminders and routines (both legacy) and calendar."
+    },
+    {
+      "from": "ci_reminder_note",
+      "to": "os_reminder_note",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_trigger",
+      "to": "os_auto_trigger",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_channel",
+      "to": "os_auto_channel",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_method",
+      "to": "os_auto_method",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_target",
+      "to": "os_auto_target",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_agent",
+      "to": "os_auto_agent",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_agent_mode",
+      "to": "os_auto_agent_mode",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_model",
+      "to": "os_auto_model",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_payload",
+      "to": "os_auto_payload",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_body_type",
+      "to": "os_auto_body_type",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_headers",
+      "to": "os_auto_headers",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_priority",
+      "to": "os_auto_priority",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_tags",
+      "to": "os_auto_tags",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_lead_minutes",
+      "to": "os_auto_lead_minutes",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_digest_time",
+      "to": "os_auto_digest_time",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_then",
+      "to": "os_auto_then",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_delay",
+      "to": "os_auto_delay",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_auto_enabled",
+      "to": "os_auto_enabled",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_tags",
+      "to": "os_tags",
+      "kind": "meta"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "core-index/wiki",
+	"title": "Wiki Data",
+	"category": "widgets",
+	"icon": "book-alt",
+	"description": "Embed structured data from a wiki article — a frontmatter field, a section, a named JSON/CSV block, a markdown table, the full article, or a query.",
+	"textdomain": "core-index",
+	"attributes": {
+		"slug":       { "type": "string", "default": "" },
+		"mode":       { "type": "string", "default": "article" },
+		"selector":   { "type": "string", "default": "" },
+		"separator":  { "type": "string", "default": ", " },
+		"queryPath":  { "type": "string", "default": "" },
+		"queryType":  { "type": "string", "default": "" },
+		"queryLimit": { "type": "number", "default": 25 }
+	},
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"]
+	},
+	"editorScript": "file:./edit.js",
+	"style": "file:./style.css"
+}

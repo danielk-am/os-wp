@@ -1,0 +1,24 @@
+{
+  "namespaces": [
+    "calendar",
+    "reminders",
+    "routines"
+  ],
+  "abilities": [
+    "calendar/event-list",
+    "calendar/event-read",
+    "calendar/event-create",
+    "calendar/event-update",
+    "calendar/event-delete",
+    "reminders/reminder-list",
+    "reminders/reminder-read",
+    "reminders/reminder-create",
+    "reminders/reminder-update",
+    "reminders/reminder-delete",
+    "routines/routine-list",
+    "routines/routine-read",
+    "routines/routine-create",
+    "routines/routine-update",
+    "routines/routine-delete"
+  ]
+}

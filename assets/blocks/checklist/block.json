@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "core-index/checklist",
+	"title": "Checklist",
+	"category": "widgets",
+	"icon": "list-view",
+	"description": "A container for clickable task items. Renders as a list of Task blocks with optional title.",
+	"textdomain": "core-index",
+	"attributes": {
+		"title": { "type": "string", "default": "" }
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide" ]
+	},
+	"editorScript": "file:./edit.js",
+	"style":        "file:../task/style.css"
+}

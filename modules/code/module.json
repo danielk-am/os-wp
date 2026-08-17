@@ -1,0 +1,69 @@
+{
+  "module": "code",
+  "label": "Code",
+  "legacy_plugin": "os-code",
+  "ability_namespaces": [
+    "code"
+  ],
+  "rest_namespaces": [
+    "code/v1"
+  ],
+  "owned_data": [
+    "ci_code",
+    "ci_code_index",
+    "ci_code_errors",
+    "ci_code_mcp_activate_php",
+    "ci_code_loading",
+    "ci_code_active",
+    "ci_code_language",
+    "ci_code_priority",
+    "ci_code_scope"
+  ],
+  "data_migrations": [
+    {
+      "from": "ci_code",
+      "to": "os_code",
+      "kind": "post_type"
+    },
+    {
+      "from": "ci_code_index",
+      "to": "os_code_index",
+      "kind": "option"
+    },
+    {
+      "from": "ci_code_errors",
+      "to": "os_code_errors",
+      "kind": "option"
+    },
+    {
+      "from": "ci_code_loading",
+      "to": "os_code_loading",
+      "kind": "option"
+    },
+    {
+      "from": "ci_code_mcp_activate_php",
+      "to": "os_code_mcp_activate_php",
+      "kind": "option"
+    },
+    {
+      "from": "ci_code_active",
+      "to": "os_code_active",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_code_language",
+      "to": "os_code_language",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_code_priority",
+      "to": "os_code_priority",
+      "kind": "meta"
+    },
+    {
+      "from": "ci_code_scope",
+      "to": "os_code_scope",
+      "kind": "meta"
+    }
+  ]
+}

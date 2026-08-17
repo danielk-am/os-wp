@@ -1,0 +1,282 @@
+<!-- GENERATED from llm-editor src/editor/shell.html. Do not edit here.
+     Edit the source and run: node build/sync-wp.mjs -->
+<div class="edit-post-header">
+  <div class="header-toolbar">
+    <button type="button" id="inserter" class="wp-btn" aria-expanded="false"
+            aria-controls="inserter-panel" title="Add node" aria-label="Add node"></button>
+    <button type="button" id="undo" class="wp-btn" title="Undo" aria-label="Undo" disabled></button>
+    <button type="button" id="redo" class="wp-btn" title="Redo" aria-label="Redo" disabled></button>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="header-toolbar" id="block-toolbar" aria-label="Block tools"></div>
+
+  <div class="divider"></div>
+
+  <div class="doc-bar">
+    <strong id="doc-name">untitled</strong>
+    <code id="doc-ext">.llm</code>
+  </div>
+
+  <div class="header-spacer"></div>
+
+  <span class="save-state" id="save-state">Saved</span>
+  <button type="button" id="snap" class="wp-btn" aria-pressed="true"
+          title="Snap drag, resize, and automatic layout to a 20px grid">Snap</button>
+  <button type="button" id="pos" class="wp-btn" aria-pressed="false"
+          title="Write @x,y positions into the source">Positions</button>
+  <!-- Options: the far-right anchor every CI toolbar shares. Dynamic
+       controls (Saved, Positions) sit to its LEFT; secondary actions live
+       in its menu. -->
+  <button type="button" id="more" class="wp-btn" aria-expanded="false"
+          aria-haspopup="true" aria-controls="more-menu" title="Options" aria-label="Options"></button>
+  <div class="more-menu" id="more-menu" hidden>
+    <button type="button" id="history" class="menu-item"><span class="menu-ico"></span><span>Revisions</span></button>
+    <button type="button" id="help" class="menu-item"><span class="menu-ico"></span><span>How it works</span></button>
+    <button type="button" id="repair" class="menu-item"><span class="menu-ico"></span><span>Repair document</span></button>
+    <button type="button" id="compile" class="menu-item"><span class="menu-ico"></span><span>Compile to Markdown</span></button>
+    <button type="button" id="compile-files" class="menu-item" hidden><span class="menu-ico"></span><span>Compile .llm files&hellip;</span></button>
+    <div class="menu-rule"></div>
+    <div class="menu-section" role="group" aria-label="Appearance">
+      <span class="menu-label">Appearance</span>
+      <button type="button" class="menu-item theme-choice" data-theme-choice="system" aria-pressed="true">System</button>
+      <button type="button" class="menu-item theme-choice" data-theme-choice="light" aria-pressed="false">Light</button>
+      <button type="button" class="menu-item theme-choice" data-theme-choice="dark" aria-pressed="false">Dark</button>
+    </div>
+    <div class="menu-rule"></div>
+    <button type="button" id="reset" class="menu-item"><span class="menu-ico"></span><span>Reset</span></button>
+  </div>
+
+  <div class="inserter-panel" id="inserter-panel" hidden>
+    <p class="inserter-label">Nodes</p>
+    <div class="block-grid" id="block-grid"></div>
+
+    <p class="inserter-label section-gap">Embeds</p>
+    <div class="block-grid" id="embed-grid"></div>
+
+    <p class="inserter-label section-gap">Frontmatter &middot; OKF</p>
+    <div class="block-grid" id="fm-grid"></div>
+
+    <p class="inserter-label section-gap">OKF sections</p>
+    <div class="block-grid" id="okf-grid"></div>
+
+    <label class="inserter-label section-gap sdk-toggle">
+      <input type="checkbox" id="sdk-toggle"> Agent SDK commands
+    </label>
+    <div id="sdk-sections" hidden>
+      <p class="inserter-label">Claude SDK</p>
+      <div class="block-grid" id="claude-sdk-grid"></div>
+      <p class="inserter-label section-gap">ChatGPT SDK &middot; Codex</p>
+      <div class="block-grid" id="codex-sdk-grid"></div>
+    </div>
+
+    <p class="inserter-hint">
+      Everything here writes into the <code>.llm</code> source. Nodes and sections land
+      after the selection; frontmatter <strong>merges</strong> into the existing block,
+      because OKF says consumers must preserve unknown keys.
+    </p>
+  </div>
+
+  <div class="color-pop" id="color-pop" hidden>
+    <div class="swatches" id="swatches"></div>
+    <div class="color-row">
+      <input type="text" id="hex" placeholder="#a1b2c3" aria-label="Custom colour hex"
+             spellcheck="false" maxlength="7">
+      <button type="button" class="mini" id="eyedrop" title="Pick a colour from the screen"
+              aria-label="Pick a colour from the screen"></button>
+    </div>
+    <div class="color-foot">
+      <span class="color-hint" id="color-hint">writes <code>color=</code></span>
+      <button type="button" class="mini" id="color-clear">Clear</button>
+    </div>
+  </div>
+</div>
+
+<main id="overview" class="overview" hidden>
+  <section class="overview-hero">
+    <div class="overview-hero-copy" id="overview-hero-copy">
+      <span class="overview-kicker" id="overview-kicker"></span>
+      <h1 id="overview-heading"></h1>
+    </div>
+    <p id="overview-support"></p>
+  </section>
+
+  <section class="journey-grid" id="overview-journeys" aria-label="Start a journey"></section>
+
+  <p class="overview-status" id="overview-status" role="status" aria-live="polite"></p>
+
+  <section class="claude-creator" id="claude-creator" hidden aria-labelledby="claude-creator-title">
+    <header class="claude-creator-head">
+      <div>
+        <span class="overview-label">AI-assisted authoring</span>
+        <h2 id="claude-creator-title">Create a skill with Claude</h2>
+        <p>Claude drafts portable <code>.llm</code>. You review the repaired source before anything is saved.</p>
+      </div>
+      <div class="claude-creator-tools">
+        <label for="claude-domain">Domain Bridge</label>
+        <select id="claude-domain" aria-label="Claude domain Bridge"></select>
+        <button type="button" class="overview-button" id="claude-close">Close</button>
+      </div>
+    </header>
+
+    <div class="claude-messages" id="claude-messages" role="log" aria-live="polite"></div>
+
+    <section class="claude-draft" id="claude-draft" hidden aria-labelledby="claude-draft-title">
+      <div class="claude-draft-head">
+        <div>
+          <span class="overview-label">Reviewable source</span>
+          <h3 id="claude-draft-title">Skill draft</h3>
+        </div>
+        <button type="button" class="overview-button is-primary" id="claude-save-draft">Save skill</button>
+      </div>
+      <pre id="claude-draft-preview" tabindex="0"></pre>
+    </section>
+
+    <form class="claude-composer" id="claude-form">
+      <label for="claude-input">What should this skill teach your AI?</label>
+      <textarea id="claude-input" rows="4"
+        placeholder="For example: Research a product claim, compare primary sources, and return a cited recommendation."></textarea>
+      <div class="claude-composer-actions">
+        <span id="claude-chat-status" role="status" aria-live="polite"></span>
+        <button type="button" class="overview-button" id="claude-stop" hidden>Stop</button>
+        <button type="submit" class="overview-button is-primary" id="claude-send">Send</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="overview-project" id="overview-project" hidden>
+    <div class="overview-project-head">
+      <div>
+        <span class="overview-label">Current project</span>
+        <h2 id="overview-project-name">Project</h2>
+        <code id="overview-project-path"></code>
+      </div>
+      <div class="overview-project-actions">
+        <button type="button" class="overview-button" id="overview-refresh">
+          <span id="overview-refresh-icon"></span>Refresh
+        </button>
+        <button type="button" class="overview-button is-primary" id="overview-new-skill">
+          <span id="overview-new-skill-icon"></span>New skill
+        </button>
+      </div>
+    </div>
+    <p class="overview-empty" id="overview-empty">No skills yet. Create the first one.</p>
+    <ul class="overview-skills" id="overview-skills"></ul>
+  </section>
+</main>
+
+<div class="split-wrap">
+<div class="split">
+  <section class="pane">
+    <div class="pane-head">
+      <span class="pane-title">Canvas</span>
+      <span class="readout"><span class="pulse" id="p-canvas"></span><span id="stat">&nbsp;</span></span>
+    </div>
+    <div id="stage">
+      <div id="world"><svg id="wires"></svg></div>
+      <div id="marquee" hidden></div>
+    </div>
+    <div class="zoom-controls" role="group" aria-label="View">
+        <button type="button" class="zoom-btn" id="z-hand" title="Pan (or hold Space)" aria-label="Pan tool" aria-pressed="false"></button>
+        <button type="button" class="zoom-btn" id="z-in" title="Zoom in" aria-label="Zoom in">+</button>
+        <button type="button" class="zoom-btn" id="z-out" title="Zoom out" aria-label="Zoom out">&minus;</button>
+        <button type="button" class="zoom-btn zoom-auto" id="z-arrange"
+                title="Auto arrange on the grid and fit to view" aria-label="Auto arrange">Auto</button>
+        <button type="button" class="zoom-btn" id="z-fit" title="Fit to view" aria-label="Fit to view">[ ]</button>
+        <button type="button" class="zoom-btn" id="z-reset" title="Reset to 100%" aria-label="Reset zoom">1:1</button>
+        <span class="zoom-pct" id="z-pct">100%</span>
+      </div>
+
+  </section>
+
+  <div class="split-handle" id="split-handle" role="separator" aria-orientation="vertical"
+       aria-label="Resize panels" aria-valuemin="20" aria-valuemax="80" tabindex="0"></div>
+
+  <section class="pane">
+    <div class="pane-head">
+      <div class="view-switch" role="group" aria-label="Source view">
+        <button type="button" class="seg-btn" id="v-src" aria-pressed="true">Source &middot; <span id="tab-ext">.llm</span></button>
+      </div>
+      <span class="readout"><span class="pulse" id="p-src"></span><span id="side-note">authored</span></span>
+    </div>
+    <div class="editor-wrap">
+      <pre id="hl" aria-hidden="true"></pre>
+      <textarea id="src" spellcheck="false" aria-label=".llm source"></textarea>
+    </div>
+    <div class="err" id="err"></div>
+  </section>
+</div>
+</div>
+
+<div id="snack" hidden role="status" aria-live="polite"></div>
+
+<div class="side-panel" id="help-panel" hidden aria-label="How it works">
+  <div class="side-head">
+    <span class="pane-title">How it works</span>
+    <button type="button" class="mini" id="help-close" aria-label="Close"></button>
+  </div>
+  <div class="side-body teach">
+    <div class="lesson">
+      <span class="lesson-key">insert</span>
+      <p><strong>Both ways, really.</strong> Inserting from the toolbar splices a block into the
+        source. Renaming, editing, indenting, connecting and deleting do too. The text stays the
+        object, so your formatting survives.</p>
+    </div>
+    <div class="lesson">
+      <span class="lesson-key">## &rarr; ###</span>
+      <p><strong>Heading depth is containment.</strong> Indent moves <code>##</code> to
+        <code>###</code> and the node slides inside the group above it. JSON Canvas cannot say
+        this, which is why its Mermaid emitter flattens groups to plain boxes.</p>
+    </div>
+    <div class="lesson">
+      <span class="lesson-key">drag</span>
+      <p><strong>Layout is presentation.</strong> Drag and the source stays put. Switch on
+        <em>Positions</em> and <code>@x,y</code> appears, because now a human placed it
+        deliberately. Which side port you grab never reaches the file either.</p>
+    </div>
+    <div class="lesson">
+      <span class="lesson-key">tag=</span>
+      <p><strong>One structure, three renderings.</strong> A heading in the file, a group on the
+        canvas, and nested <code>&lt;tags&gt;</code> for the agent. Tagging is inherited, so a
+        tagged section wraps its children too.</p>
+    </div>
+    <div class="lesson">
+      <span class="lesson-key">okf</span>
+      <p><strong>Frontmatter is OKF.</strong> Google's Open Knowledge Format. <code>type</code> is
+        the only required field; extension keys are explicitly allowed, so inserting a schema
+        merges rather than clobbers.</p>
+    </div>
+    <div class="lesson">
+      <span class="lesson-key">keys</span>
+      <p><strong>Shortcuts.</strong> The pencil jumps to and selects the authored heading in the
+        source pane; double-click edits a node directly on the canvas. Cmd+A, Delete,
+        Cmd+Z / Cmd+Shift+Z, Cmd+C / X / V on the canvas. Drag on empty space to marquee-select.
+        In the source pane the native ones apply.</p>
+    </div>
+    <div class="lesson">
+      <span class="lesson-key">snap</span>
+      <p><strong>Clean by default.</strong> Dragging, resizing, and automatic layout use the
+        20px grid and keep a two-cell gutter around the workflow. <em>Auto</em> removes pinned
+        positions and fits the whole workflow. Collapse and expand discard stale manual sizing,
+        measure the content again, and separate siblings that would otherwise overlap.</p>
+    </div>
+  </div>
+</div>
+
+<div class="side-panel" id="rev-panel" hidden aria-label="Revisions">
+  <div class="side-head">
+    <span class="pane-title">Revisions</span>
+    <button type="button" class="mini" id="rev-close" aria-label="Close"></button>
+  </div>
+  <div class="side-body">
+    <ul class="rev-list" id="rev-list"></ul>
+    <div class="rev-diff" id="rev-diff" hidden>
+      <div class="rev-diff-head">
+        <span id="rev-diff-label"></span>
+        <button type="button" class="mini" id="rev-restore">Restore</button>
+      </div>
+      <pre class="diff" id="diff-out"></pre>
+    </div>
+  </div>
+</div>

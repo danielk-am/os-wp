@@ -1,0 +1,10 @@
+{
+    "namespace": "wizard-builder",
+    "abilities": [
+        "wizard-builder/wizard-list",
+        "wizard-builder/wizard-read",
+        "wizard-builder/wizard-create",
+        "wizard-builder/wizard-update",
+        "wizard-builder/wizard-delete"
+    ]
+}

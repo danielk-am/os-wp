@@ -1,0 +1,15 @@
+{
+    "namespace": "content-types",
+    "abilities": [
+        "content-types/content-type-list",
+        "content-types/content-type-read",
+        "content-types/content-type-create",
+        "content-types/content-type-update",
+        "content-types/content-type-delete",
+        "content-types/csv-list",
+        "content-types/csv-read",
+        "content-types/csv-create",
+        "content-types/csv-update",
+        "content-types/csv-delete"
+    ]
+}

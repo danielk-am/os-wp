@@ -1,0 +1,33 @@
+{
+  "module": "filesystem",
+  "label": "Filesystem",
+  "legacy_plugin": "os-filesystem",
+  "ability_namespaces": [
+    "filesystem"
+  ],
+  "rest_namespaces": [
+    "filesystem/v1"
+  ],
+  "owned_data": [
+    "ci_fs_roots",
+    "ci_fs_exec",
+    "ci_fs_console"
+  ],
+  "data_migrations": [
+    {
+      "from": "ci_fs_roots",
+      "to": "os_fs_roots",
+      "kind": "option"
+    },
+    {
+      "from": "ci_fs_exec",
+      "to": "os_fs_exec",
+      "kind": "option"
+    },
+    {
+      "from": "ci_fs_console",
+      "to": "os_fs_console",
+      "kind": "option"
+    }
+  ]
+}

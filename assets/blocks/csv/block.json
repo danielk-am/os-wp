@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "core-index/csv",
+	"title": "CSV Preview",
+	"category": "widgets",
+	"icon": "editor-table",
+	"description": "Embed a filterable preview of a Core Index CSV file. Supports global + per-column filters with multi-term AND, and auto-detects chip columns.",
+	"textdomain": "core-index",
+	"attributes": {
+		"slug":             { "type": "string",  "default": "" },
+		"showFilters":      { "type": "boolean", "default": true },
+		"showColumnFilters":{ "type": "boolean", "default": true },
+		"caption":          { "type": "string",  "default": "" }
+	},
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"]
+	},
+	"editorScript": "file:./edit.js",
+	"viewScript":   "file:./view.js",
+	"style":        "file:./style.css"
+}

@@ -1,0 +1,31 @@
+/* Site Editor Embed — shared editor + front-end styles. */
+
+.ci-site-editor-embed {
+	margin: 0 0 1.25rem 0;
+}
+
+.ci-site-editor-embed.is-wide {
+	max-width: none;
+}
+
+.ci-se-embed-caption {
+	font-size: 0.8125rem;
+	color: #6b7280;
+	margin: 0 0 0.5rem 0;
+	font-weight: 500;
+}
+
+.ci-se-embed-frame {
+	border: 1px solid rgba( 0, 0, 0, 0.08 );
+	border-radius: 6px;
+	overflow: hidden;
+	background: #fff;
+}
+
+.ci-se-embed-loading {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 12px;
+	color: #6b7280;
+}

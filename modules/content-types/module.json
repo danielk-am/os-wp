@@ -1,0 +1,41 @@
+{
+  "module": "content-types",
+  "label": "Content Types",
+  "legacy_plugin": "os-content-types",
+  "ability_namespaces": [
+    "content-types"
+  ],
+  "rest_namespaces": [
+    "content-types/v1"
+  ],
+  "owned_data": [
+    "wp_content_type",
+    "ci_csv",
+    "ci_language"
+  ],
+  "data_migrations": [
+    {
+      "from": "wp_content_type",
+      "to": "os_content_type",
+      "kind": "post_type",
+      "note": "Referenced by every family plugin, so this rename lands last."
+    },
+    {
+      "from": "ci_csv",
+      "to": "os_csv",
+      "kind": "post_type",
+      "note": "Registered by ci-csv (legacy) and content-types; both code paths rename together."
+    },
+    {
+      "from": "ci_csv",
+      "to": "os_csv",
+      "kind": "rest_base",
+      "note": "Registered by ci-csv (legacy) and content-types; both code paths rename together."
+    },
+    {
+      "from": "ci_language",
+      "to": "os_language",
+      "kind": "meta"
+    }
+  ]
+}

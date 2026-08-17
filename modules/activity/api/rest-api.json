@@ -1,0 +1,15 @@
+{
+    "namespace": "activity/v1",
+    "routes": [
+        "/items?type={type}",
+        "/items/{id}?type={type}",
+        "/settings",
+        "/settings/field-groups",
+        "/cpt-schema/{cpt}",
+        "/settings/taxonomies",
+        "/activity",
+        "/activity/log",
+        "/notifications",
+        "/notifications/read"
+    ]
+}

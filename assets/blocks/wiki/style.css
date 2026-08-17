@@ -1,0 +1,41 @@
+.ci-wiki-article,
+.ci-wiki-section,
+.ci-wiki-json,
+.ci-wiki-query {
+	font-size: 1rem;
+}
+
+.ci-wiki-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1em 0;
+}
+.ci-wiki-table th,
+.ci-wiki-table td {
+	border: 1px solid #ddd;
+	padding: 6px 10px;
+	text-align: left;
+	vertical-align: top;
+}
+.ci-wiki-table thead {
+	background: #f5f5f5;
+}
+
+.ci-wiki-json dl {
+	display: grid;
+	grid-template-columns: max-content 1fr;
+	gap: 4px 12px;
+	margin: 0;
+}
+.ci-wiki-json dt {
+	font-weight: 600;
+}
+.ci-wiki-json dd {
+	margin: 0;
+}
+
+.ci-wiki-placeholder {
+	background: #fffbea;
+	border-left: 3px solid #f0c000;
+	padding: 6px 10px;
+}

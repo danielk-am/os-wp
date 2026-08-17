@@ -1,0 +1,204 @@
+/* Quick Add Reminder overlay — scoped to ci-qa-* */
+
+/* The popup mounts on document.body, outside #ci-root, so it can't inherit
+ * the app's shadcn tokens. Mirror them here (same oklch values as
+ * assets/tailwind.css) on the shared root so the overlay matches the
+ * in-app design language. */
+.ci-qa-root {
+	--ci-qa-primary: oklch( 0.5306 0.2210 268.0484 );
+	--ci-qa-primary-hover: oklch( 0.4359 0.2210 268.0103 );
+	--ci-qa-primary-foreground: oklch( 0.9549 0.0029 264.5418 );
+	--ci-qa-foreground: oklch( 0.2350 0 0 );
+	--ci-qa-muted-foreground: oklch( 0.5452 0 0 );
+	--ci-qa-muted: oklch( 0.9672 0 0 );
+	--ci-qa-card: oklch( 1 0 0 );
+	--ci-qa-border: oklch( 0.8914 0 0 );
+	--ci-qa-ring: oklch( 0.5306 0.2210 268.0484 / 0.30 );
+	--ci-qa-radius: 0.5rem;
+	--ci-qa-destructive: oklch( 0.5390 0.2095 28.0950 );
+}
+
+.ci-qa-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba( 17, 24, 39, 0.45 );
+	z-index: 100000;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	padding-top: 14vh;
+	animation: ci-qa-fade 0.12s ease-out;
+}
+
+@keyframes ci-qa-fade {
+	from { opacity: 0; }
+	to   { opacity: 1; }
+}
+
+.ci-qa-panel {
+	width: 560px;
+	max-width: 92vw;
+	background: var( --ci-qa-card );
+	border: 1px solid var( --ci-qa-border );
+	border-radius: calc( var( --ci-qa-radius ) + 2px );
+	box-shadow: 0 16px 48px rgba( 16, 24, 40, 0.18 );
+	overflow: hidden;
+	font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.ci-qa-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 16px;
+	border-bottom: 1px solid var( --ci-qa-border );
+}
+
+.ci-qa-title {
+	font-weight: 600;
+	font-size: 13px;
+	color: var( --ci-qa-foreground );
+}
+
+.ci-qa-hint {
+	font-size: 11px;
+	color: var( --ci-qa-muted-foreground );
+}
+
+/* A proper bordered, rounded input — not the search-bar underline. */
+.ci-qa-input {
+	display: block;
+	width: calc( 100% - 32px );
+	margin: 16px;
+	border: 1px solid var( --ci-qa-border );
+	border-radius: var( --ci-qa-radius );
+	padding: 11px 12px;
+	font-size: 15px;
+	line-height: 1.4;
+	font-family: inherit;
+	color: var( --ci-qa-foreground );
+	background: var( --ci-qa-card );
+	outline: none;
+	box-sizing: border-box;
+	transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.ci-qa-input::placeholder {
+	color: var( --ci-qa-muted-foreground );
+}
+
+.ci-qa-input:focus {
+	border-color: var( --ci-qa-primary );
+	box-shadow: 0 0 0 3px var( --ci-qa-ring );
+}
+
+.ci-qa-preview {
+	padding: 12px 16px;
+	margin: 0 16px 12px;
+	display: grid;
+	grid-template-columns: 80px 1fr;
+	row-gap: 4px;
+	column-gap: 12px;
+	font-size: 13px;
+	background: var( --ci-qa-muted );
+	border: 1px solid var( --ci-qa-border );
+	border-radius: var( --ci-qa-radius );
+}
+
+.ci-qa-row {
+	display: contents;
+}
+
+.ci-qa-k {
+	color: var( --ci-qa-muted-foreground );
+	font-weight: 500;
+	text-transform: uppercase;
+	font-size: 10px;
+	letter-spacing: 0.04em;
+	padding-top: 3px;
+}
+
+.ci-qa-v {
+	color: var( --ci-qa-foreground );
+	font-variant-numeric: tabular-nums;
+}
+
+.ci-qa-pri-high   { color: #991b1b; font-weight: 600; }
+.ci-qa-pri-medium { color: #92400e; font-weight: 600; }
+.ci-qa-pri-low    { color: #1e40af; font-weight: 600; }
+.ci-qa-pri-none   { color: var( --ci-qa-muted-foreground ); }
+
+.ci-qa-footer {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	padding: 0 16px 16px;
+}
+
+.ci-qa-btn-primary,
+.ci-qa-btn-secondary {
+	font-size: 13px;
+	padding: 8px 14px;
+	border-radius: var( --ci-qa-radius );
+	font-weight: 500;
+	cursor: pointer;
+	font-family: inherit;
+	border: 1px solid transparent;
+	transition: background-color 0.12s ease, border-color 0.12s ease, opacity 0.12s ease;
+}
+
+.ci-qa-btn-secondary {
+	background: var( --ci-qa-card );
+	color: var( --ci-qa-foreground );
+	border-color: var( --ci-qa-border );
+}
+
+.ci-qa-btn-secondary:hover {
+	background: var( --ci-qa-muted );
+}
+
+.ci-qa-btn-primary {
+	background: var( --ci-qa-primary );
+	color: var( --ci-qa-primary-foreground );
+}
+
+.ci-qa-btn-primary:hover {
+	background: var( --ci-qa-primary-hover );
+}
+
+.ci-qa-btn-primary[disabled] {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.ci-qa-btn-primary[disabled]:hover {
+	background: var( --ci-qa-primary );
+}
+
+.ci-qa-toast {
+	position: fixed;
+	bottom: 24px;
+	right: 24px;
+	background: var( --ci-qa-foreground );
+	color: var( --ci-qa-card );
+	padding: 10px 16px;
+	border-radius: var( --ci-qa-radius );
+	box-shadow: 0 6px 16px rgba( 16, 24, 40, 0.22 );
+	font-size: 13px;
+	z-index: 100001;
+	animation: ci-qa-slide 0.18s ease-out;
+}
+
+.ci-qa-toast.is-error {
+	background: var( --ci-qa-destructive );
+}
+
+.ci-qa-toast a {
+	color: var( --ci-qa-primary-foreground );
+	text-decoration: underline;
+}
+
+@keyframes ci-qa-slide {
+	from { opacity: 0; transform: translateY( 6px ); }
+	to   { opacity: 1; transform: translateY( 0 ); }
+}

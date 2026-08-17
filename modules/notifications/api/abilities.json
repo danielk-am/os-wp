@@ -1,0 +1,10 @@
+{
+    "namespace": "notifications",
+    "abilities": [
+        "notifications/notification-list",
+        "notifications/notification-read",
+        "notifications/notification-create",
+        "notifications/notification-update",
+        "notifications/notification-delete"
+    ]
+}

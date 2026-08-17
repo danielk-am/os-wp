@@ -1,0 +1,28 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "core-index/task",
+	"title": "Task",
+	"category": "widgets",
+	"icon": "yes",
+	"description": "A clickable todo item with optional due date. Click the checkbox on the front-end to toggle done; the state persists back to the post content.",
+	"textdomain": "core-index",
+	"parent": null,
+	"attributes": {
+		"taskId":  { "type": "string", "default": "" },
+		"text":    { "type": "string", "default": "" },
+		"checked": { "type": "boolean", "default": false },
+		"dueDate": { "type": "string", "default": "" },
+		"priority":{ "type": "string", "default": "" }
+	},
+	"supports": {
+		"html": false,
+		"reusable": false,
+		"className": false,
+		"inserter": true,
+		"anchor": false
+	},
+	"editorScript": "file:./edit.js",
+	"viewScript":   "file:./view.js",
+	"style":        "file:./style.css"
+}

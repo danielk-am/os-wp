@@ -1,0 +1,55 @@
+/* global wp */
+( function ( wp ) {
+	const { registerBlockType } = wp.blocks;
+	const { createElement: h } = wp.element;
+	const { InnerBlocks, RichText, useBlockProps } = wp.blockEditor;
+
+	const ALLOWED   = [ 'core-index/task' ];
+	const TEMPLATE  = [
+		[ 'core-index/task', { text: '' } ],
+		[ 'core-index/task', { text: '' } ],
+	];
+
+	registerBlockType( 'core-index/checklist', {
+		edit: function Edit( { attributes, setAttributes } ) {
+			const { title } = attributes;
+			const blockProps = useBlockProps( { className: 'ci-checklist' } );
+			return h(
+				'div',
+				blockProps,
+				h( RichText, {
+					tagName: 'h4',
+					className: 'ci-checklist__title',
+					value: title || '',
+					onChange: ( v ) => setAttributes( { title: v } ),
+					placeholder: 'Checklist title (optional)…',
+					allowedFormats: [ 'core/bold', 'core/italic' ],
+				} ),
+				h( InnerBlocks, {
+					allowedBlocks:        ALLOWED,
+					template:             TEMPLATE,
+					templateInsertUpdatesSelection: false,
+					renderAppender:       InnerBlocks.ButtonBlockAppender,
+				} )
+			);
+		},
+		save: function Save( { attributes } ) {
+			const { title } = attributes;
+			const blockProps = ( wp.blockEditor.useBlockProps && wp.blockEditor.useBlockProps.save )
+				? wp.blockEditor.useBlockProps.save( { className: 'ci-checklist' } )
+				: { className: 'ci-checklist' };
+			return h(
+				'div',
+				blockProps,
+				title
+					? h( RichText.Content, {
+						tagName: 'h4',
+						className: 'ci-checklist__title',
+						value: title,
+					} )
+					: null,
+				h( InnerBlocks.Content, null )
+			);
+		},
+	} );
+} )( window.wp );

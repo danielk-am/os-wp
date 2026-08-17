@@ -1,0 +1,14 @@
+{
+  "namespace": "code/v1",
+  "routes": [
+    "/code/status",
+    "/code/(?P<id>\\d+)/activate",
+    "/code/(?P<id>\\d+)/clear-error",
+    "/settings",
+    "/settings/field-groups",
+    "/cpt-schema/{cpt}",
+    "/settings/taxonomies",
+    "/notifications",
+    "/notifications/read"
+  ]
+}

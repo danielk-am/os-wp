@@ -1,0 +1,11 @@
+{
+  "namespace": "code",
+  "abilities": [
+    "code/code-list",
+    "code/code-read",
+    "code/code-create",
+    "code/code-update",
+    "code/code-activate",
+    "code/code-delete"
+  ]
+}

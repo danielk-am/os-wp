@@ -1,0 +1,21 @@
+{
+  "module": "graph",
+  "label": "Graph",
+  "legacy_plugin": "os-graph",
+  "ability_namespaces": [
+    "knowledge-graph"
+  ],
+  "rest_namespaces": [
+    "knowledge-graph/v1"
+  ],
+  "owned_data": [
+    "wp_knowledge_node"
+  ],
+  "data_migrations": [
+    {
+      "from": "wp_knowledge_node",
+      "to": "os_knowledge_node",
+      "kind": "post_type"
+    }
+  ]
+}

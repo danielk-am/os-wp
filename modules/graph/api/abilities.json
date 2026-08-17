@@ -1,0 +1,10 @@
+{
+    "namespace": "knowledge-graph",
+    "abilities": [
+        "knowledge-graph/node-list",
+        "knowledge-graph/node-read",
+        "knowledge-graph/node-create",
+        "knowledge-graph/node-update",
+        "knowledge-graph/node-delete"
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "namespace": "activity",
+    "abilities": [
+        "activity/activity-list",
+        "activity/activity-read",
+        "activity/activity-create",
+        "activity/activity-update",
+        "activity/activity-delete"
+    ]
+}

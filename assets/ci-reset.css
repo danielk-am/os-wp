@@ -1,0 +1,195 @@
+/* Manual scoped preflight, lifted out of tailwind.css into a real CSS
+   cascade layer. Unlayered author CSS (WordPress wp-components /
+   wp-block-editor) always beats a layer regardless of specificity, so the
+   inline Gutenberg editor now styles itself natively — no per-element
+   patches, no shadow DOM. App utilities (unlayered, in tailwind.css) also
+   beat this layer, which is the correct reset<utility order. */
+@layer ci-reset {
+  /* Scoped Tailwind preflight — copies the upstream preflight rules but
+     gates every selector to inside #ci-root. WP admin elements outside
+     this root keep their original styles. */
+
+  #ci-root, #ci-root *, #ci-root *::before, #ci-root *::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: #e5e7eb;
+  }
+
+  #ci-root {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    tab-size: 4;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+  }
+
+  #ci-root hr {
+    height: 0;
+    color: inherit;
+    border-top-width: 1px;
+  }
+
+  #ci-root abbr:where([title]) { text-decoration: underline dotted; }
+
+  #ci-root h1, #ci-root h2, #ci-root h3,
+  #ci-root h4, #ci-root h5, #ci-root h6 {
+    font-size: inherit;
+    font-weight: inherit;
+    margin: 0;
+  }
+
+  #ci-root a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  #ci-root b, #ci-root strong { font-weight: bolder; }
+
+  #ci-root code, #ci-root kbd, #ci-root samp, #ci-root pre {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 1em;
+  }
+
+  #ci-root small { font-size: 80%; }
+  #ci-root sub, #ci-root sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+  #ci-root sub { bottom: -0.25em; }
+  #ci-root sup { top: -0.5em; }
+
+  #ci-root table {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: collapse;
+  }
+
+  #ci-root button,
+  #ci-root input,
+  #ci-root optgroup,
+  #ci-root select,
+  #ci-root textarea {
+    font-family: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+  }
+
+  #ci-root button, #ci-root select { text-transform: none; }
+
+  #ci-root button,
+  #ci-root [type='button'],
+  #ci-root [type='reset'],
+  #ci-root [type='submit'] {
+    -webkit-appearance: button;
+    background-color: transparent;
+    background-image: none;
+    cursor: pointer;
+  }
+
+  #ci-root :-moz-focusring { outline: auto; }
+  #ci-root :-moz-ui-invalid { box-shadow: none; }
+  #ci-root progress { vertical-align: baseline; }
+  #ci-root ::-webkit-inner-spin-button,
+  #ci-root ::-webkit-outer-spin-button { height: auto; }
+  #ci-root [type='search'] { -webkit-appearance: textfield; outline-offset: -2px; }
+  #ci-root ::-webkit-search-decoration { -webkit-appearance: none; }
+  #ci-root ::-webkit-file-upload-button { -webkit-appearance: button; font: inherit; }
+  #ci-root summary { display: list-item; }
+
+  /* The Tailwind preflight above strips borders from every element
+   * (`#ci-root * { border: 0 solid ... }`), which makes native
+   * checkboxes / radios invisible. Restore their default chrome so
+   * users can see what they're toggling. Single source of truth —
+   * components don't need to special-case checkbox styling. */
+  #ci-root input[type='checkbox'],
+  #ci-root input[type='radio'] {
+    -webkit-appearance: auto;
+    appearance: auto;
+    accent-color: var(--ci-primary, oklch(0.5306 0.2210 268.0484));
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  #ci-root input[type='file'] {
+    -webkit-appearance: auto;
+    appearance: auto;
+    font-size: 0.875rem;
+    color: var(--foreground);
+  }
+  /* Style the native "Choose file" button inside file inputs so it
+   * doesn't look like an unstyled system widget against our card
+   * surfaces. WebKit and the cross-browser ::file-selector-button
+   * pseudo can't share a rule (PostCSS drops the combined selector
+   * because one half is unknown to whichever browser is parsing it),
+   * so we duplicate. */
+  #ci-root input[type='file']::-webkit-file-upload-button {
+    height: 2.25rem;
+    padding: 0 0.875rem;
+    margin-right: 0.75rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--input);
+    background-color: var(--card);
+    color: var(--foreground);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 120ms ease;
+  }
+  #ci-root input[type='file']::-webkit-file-upload-button:hover {
+    background-color: var(--muted);
+  }
+  #ci-root input[type='file']::file-selector-button {
+    height: 2.25rem;
+    padding: 0 0.875rem;
+    margin-right: 0.75rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--input);
+    background-color: var(--card);
+    color: var(--foreground);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 120ms ease;
+  }
+  #ci-root input[type='file']::file-selector-button:hover {
+    background-color: var(--muted);
+  }
+
+  #ci-root blockquote,
+  #ci-root dl, #ci-root dd,
+  #ci-root h1, #ci-root h2, #ci-root h3, #ci-root h4, #ci-root h5, #ci-root h6,
+  #ci-root hr,
+  #ci-root figure,
+  #ci-root p,
+  #ci-root pre { margin: 0; }
+
+  #ci-root fieldset { margin: 0; padding: 0; }
+  #ci-root legend { padding: 0; }
+  #ci-root ol, #ci-root ul, #ci-root menu { list-style: none; margin: 0; padding: 0; }
+  #ci-root dialog { padding: 0; }
+  #ci-root textarea { resize: vertical; }
+
+  #ci-root input::placeholder,
+  #ci-root textarea::placeholder { opacity: 1; color: #9ca3af; }
+
+  #ci-root button, #ci-root [role="button"] { cursor: pointer; }
+  #ci-root :disabled { cursor: default; }
+
+  #ci-root img,
+  #ci-root svg,
+  #ci-root video,
+  #ci-root canvas,
+  #ci-root audio,
+  #ci-root iframe,
+  #ci-root embed,
+  #ci-root object { display: block; vertical-align: middle; }
+
+  #ci-root img, #ci-root video { max-width: 100%; height: auto; }
+
+  #ci-root [hidden] { display: none; }
+}

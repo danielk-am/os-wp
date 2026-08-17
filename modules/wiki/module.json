@@ -1,0 +1,59 @@
+{
+  "module": "wiki",
+  "label": "Wiki",
+  "legacy_plugin": "os-wiki",
+  "ability_namespaces": [
+    "llm-wiki"
+  ],
+  "rest_namespaces": [
+    "llm-wiki/v1"
+  ],
+  "owned_data": [
+    "ci_skill",
+    "ci_wiki",
+    "ci_memory",
+    "ci_snippet"
+  ],
+  "data_migrations": [
+    {
+      "from": "ci_skill",
+      "to": "os_skill",
+      "kind": "post_type"
+    },
+    {
+      "from": "ci_skill",
+      "to": "os_skill",
+      "kind": "rest_base"
+    },
+    {
+      "from": "ci_wiki",
+      "to": "os_wiki",
+      "kind": "post_type"
+    },
+    {
+      "from": "ci_wiki",
+      "to": "os_wiki",
+      "kind": "rest_base"
+    },
+    {
+      "from": "ci_memory",
+      "to": "os_memory",
+      "kind": "post_type"
+    },
+    {
+      "from": "ci_memory",
+      "to": "os_memory",
+      "kind": "rest_base"
+    },
+    {
+      "from": "ci_snippet",
+      "to": "os_snippet",
+      "kind": "post_type"
+    },
+    {
+      "from": "ci_snippet",
+      "to": "os_snippet",
+      "kind": "rest_base"
+    }
+  ]
+}

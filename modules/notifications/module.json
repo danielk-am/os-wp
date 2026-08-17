@@ -1,0 +1,21 @@
+{
+  "module": "notifications",
+  "label": "Notifications",
+  "legacy_plugin": "os-notifications",
+  "ability_namespaces": [
+    "notifications"
+  ],
+  "rest_namespaces": [
+    "notifications/v1"
+  ],
+  "owned_data": [
+    "wp_notification"
+  ],
+  "data_migrations": [
+    {
+      "from": "wp_notification",
+      "to": "os_notification",
+      "kind": "post_type"
+    }
+  ]
+}

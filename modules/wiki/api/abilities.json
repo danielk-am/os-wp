@@ -1,0 +1,25 @@
+{
+    "namespace": "llm-wiki",
+    "abilities": [
+        "llm-wiki/skill-list",
+        "llm-wiki/skill-read",
+        "llm-wiki/skill-create",
+        "llm-wiki/skill-update",
+        "llm-wiki/skill-delete",
+        "llm-wiki/wiki-list",
+        "llm-wiki/wiki-read",
+        "llm-wiki/wiki-create",
+        "llm-wiki/wiki-update",
+        "llm-wiki/wiki-delete",
+        "llm-wiki/memory-list",
+        "llm-wiki/memory-read",
+        "llm-wiki/memory-create",
+        "llm-wiki/memory-update",
+        "llm-wiki/memory-delete",
+        "llm-wiki/snippet-list",
+        "llm-wiki/snippet-read",
+        "llm-wiki/snippet-create",
+        "llm-wiki/snippet-update",
+        "llm-wiki/snippet-delete"
+    ]
+}

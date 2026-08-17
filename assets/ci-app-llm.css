@@ -1,0 +1,25 @@
+/**
+ * The .llm editor INSIDE the Context app.
+ *
+ * Separate from admin.css on purpose. That file dresses the wp-admin fallback
+ * screen and does wp-admin things to wp-admin furniture (`#wpcontent
+ * { padding-left: 0 }`, `.edit-post-header { display: none }`). Loading it here
+ * would strip the padding off CI's own app shell and hide the canvas toolbar
+ * this host actually wants. Same plugin, two hosts, two stylesheets.
+ */
+
+/* The canvas keeps its own toolbar here (inserter, undo/redo, positions,
+   source/agent): canvas tools with no CI equivalent. ci-canvas splits it the
+   same way, which is why it passes canInsert=false to EditorHeader.
+
+   The SAVE INDICATOR goes, because CI's EditorHeader draws a SaveStatus and two
+   indicators reading two sources is how they end up disagreeing. The canvas is
+   still the one that knows; it forwards its state through the host's
+   onSaveState hook and CI renders it. One source, one indicator. */
+.ci-llm-mount #save-state { display: none; }
+
+/* The mount IS the box: CI gives us a flex child, the canvas fills it. The
+   canvas's own `.split` is sized for a full viewport elsewhere, which would
+   overflow CI's editor area by the height of its header. */
+.ci-llm-mount { display: flex; flex-direction: column; }
+.ci-llm-mount .split { flex: 1; min-height: 0; height: auto; }

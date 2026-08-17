@@ -1,0 +1,26 @@
+{
+  "module": "wizard",
+  "label": "Wizard",
+  "legacy_plugin": "os-wizard",
+  "ability_namespaces": [
+    "wizard-builder"
+  ],
+  "rest_namespaces": [
+    "wizard-builder/v1"
+  ],
+  "owned_data": [
+    "ci_wizard"
+  ],
+  "data_migrations": [
+    {
+      "from": "ci_wizard",
+      "to": "os_wizard",
+      "kind": "post_type"
+    },
+    {
+      "from": "ci_wizard",
+      "to": "os_wizard",
+      "kind": "rest_base"
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+/*
+ * ci-dataviews-skin.css — compact + WP-native polish over the vendored
+ * @wordpress/dataviews. Loaded AFTER vendor/wp-dataviews.css (handle dep
+ * `ci-dataviews`) so these win on source order. Scoped to #ci-root.
+ *
+ * Fixes two nits: (1) the table rows are too "fat" — default cells are
+ * `12px 12px 12px 48px` → ~56px rows with a wasted 48px left indent; (2) the
+ * filter value popover reads as plain text (no clear selectable affordance).
+ */
+
+/* --- Compact table rows ------------------------------------------------ */
+#ci-root .dataviews-view-table td,
+#ci-root .dataviews-view-table th {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+/* Centre cell content vertically so single-line values (and the CSV editor's
+   inline cell input) sit in the middle of the row rather than at the top. */
+#ci-root .dataviews-view-table td { vertical-align: middle; }
+/* Drop the 48px leading indent → tidy 16px gutter (no media/selection col). */
+#ci-root .dataviews-view-table td:first-child,
+#ci-root .dataviews-view-table th:first-child { padding-left: 16px; }
+#ci-root .dataviews-view-table td:last-child,
+#ci-root .dataviews-view-table th:last-child { padding-right: 16px; }
+/* The cell content wrapper reserves a tall min-height by default. */
+#ci-root .dataviews-view-table__cell-content-wrapper { min-height: 0; }
+/* Single-line ellipsis for text cells so long values (tips, descriptions,
+   content previews) don't blow a column out. One shared rule across read- and
+   edit-mode cells (.ci-cell-text); chip/pill rows opt out and keep wrapping.
+   The 32rem cap bounds the column under @wordpress/dataviews' auto table
+   layout; overflow + ellipsis clip the remainder. */
+#ci-root .dataviews-view-table td .ci-cell-text {
+  display: block;
+  max-width: 32rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Slightly quieter, denser header row. */
+#ci-root .dataviews-view-table thead th { padding-top: 6px; padding-bottom: 6px; }
+
+/* --- Flush + consistent 16px gutter ----------------------------------- */
+/* The toolbar (search + filters) defaults to a 48px horizontal inset, so the
+   search bar sits indented from the table content. Align it to the 16px
+   content gutter so it reads flush-left. */
+#ci-root .dataviews__view-actions { padding-left: 16px; padding-right: 16px; }
+
+/* List layout: rows default to `16px 24px` (tall + over-indented vs the table).
+   Match the compact 16px gutter + 8px rows so list/table feel identical. */
+#ci-root .dataviews-view-list__item-wrapper {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* --- Stable sort-arrow slot (no layout shift on sort) ----------------- */
+/* The header button keeps a span for the sort arrow but hides it while empty
+   (`span:empty { display: none }` in the vendor CSS). So the first time a
+   column is sorted the arrow appears, the button grows, the column widens, and
+   the whole row reflows. Reserve the slot in EVERY header instead: an unsorted
+   header holds an empty 20px box, a sorted one fills it with the up/down arrow.
+   Same width either way, so nothing shifts and the arrow reads clearly. */
+#ci-root .dataviews-view-table-header-button span:empty {
+  display: inline-block;
+  width: 20px;
+}
+#ci-root .dataviews-view-table-header-button svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* --- Filter value popover --------------------------------------------- */
+#ci-root .dataviews-filters__summary-popover .components-popover__content,
+#ci-root .dataviews-filters__summary-popover { min-width: 14rem; }
+
+/* --- Tree layout (display.layout = 'tree') ----------------------------- */
+/* Same palette as .dataviews-view-table, whose rows separate with a literal
+   #f0f0f0 and whose text runs gray-900 / gray-700: the app's own border and
+   muted tokens are visibly darker, and View <-> Edit flashed two palettes.
+   Last row drops its rule, like a table body does. */
+#ci-root .ci-tree { color: var(--wp-components-color-gray-900, #1e1e1e); }
+#ci-root .ci-tree .ci-tree-row {
+	border-bottom: 1px solid var(--wp-components-color-gray-100, #f0f0f0);
+}
+#ci-root .ci-tree .ci-tree-row:last-child { border-bottom: 0; }
+#ci-root .ci-tree .ci-tree-head {
+	border-bottom: 1px solid var(--wp-components-color-gray-100, #f0f0f0);
+}
+#ci-root .ci-tree .ci-tree-muted { color: var(--wp-components-color-gray-700, #757575); }
+
+/* The tree's search, hand-rolled to the vendored table search's MEASURED
+   spec (the bridge SearchControl is a different component generation and
+   could not be CSS'd into pixel parity: white fill, LEFT-prefixed and
+   mirrored glyph, other paddings). Numbers from the live vendored control:
+   32px box filled gray-100, radius 2, 13px input padded 0 4px 0 8px, 28px
+   icon slot, placeholder at 62% ink. */
+#ci-root .ci-tree-search {
+	display: flex;
+	align-items: center;
+	width: fit-content;
+	height: 32px;
+	background: var(--wp-components-color-gray-100, #f0f0f0);
+	border-radius: 2px;
+	color: var(--wp-components-color-gray-900, #1e1e1e);
+	/* The vendored control's emotion styles set the wp-components font stack;
+	   without this the placeholder renders in the app's Tailwind stack and the
+	   two controls read subtly different. */
+	font-family: -apple-system, "system-ui", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+#ci-root .ci-tree-search:focus-within {
+	box-shadow: inset 0 0 0 1px var(--wp-admin-theme-color, #3858e9);
+}
+#ci-root .ci-tree-search__input {
+	border: 0;
+	background: transparent;
+	outline: none;
+	box-shadow: none;
+	height: 32px;
+	/* wp-admin forms.css (WP 7) floors every input at min-height 40px, and
+	   min-height beats height — the box measured 150x40 against the table's
+	   32 until this pinned it. */
+	min-height: 32px;
+	max-height: 32px;
+	width: 158px;   /* the vendored input's measured width; box = 158 + 28 icon */
+	font-size: 13px;
+	line-height: 13px;   /* measured off the vendored input */
+	font-family: inherit;
+	margin: 0;           /* the UA gives search inputs 1px inline margins */
+	padding: 0 4px 0 8px;
+	color: inherit;
+}
+#ci-root .ci-tree-search__input::placeholder { color: rgba(30, 30, 30, 0.62); }
+#ci-root .ci-tree-search__input::-webkit-search-cancel-button { -webkit-appearance: none; }
+#ci-root .ci-tree-search__btn {
+	display: flex;
+	align-items: center;
+	/* flush-left like the vendored suffix: glyph 0px from the input, 4px
+	   from the box edge (centring gave 2px/2px). */
+	justify-content: flex-start;
+	width: 28px;
+	height: 32px;
+	min-height: 32px;
+	min-width: 28px;
+	border: 0;
+	background: transparent;
+	padding: 0;
+	color: inherit;
+	cursor: pointer;
+}
+#ci-root .ci-tree-search__btn svg { fill: currentColor; }
+
+/* Pagination: "PAGE [1] OF 5" — the page select must sit on the same
+   baseline, at the same size, as the 11px caps text around it. The global
+   iOS no-zoom rule (#ci-root select { font-size: 16px !important },
+   ci-wpds-theme.css) outguns the vendored skin's class-only 11px rule on ID
+   specificity, inflating the select and dropping it below the row. */
+#ci-root .dataviews-pagination__page-select select.components-select-control__input {
+	font-size: 11px !important;
+	font-weight: 500;
+	height: 24px !important;
+	min-height: 24px !important;
+}
+
+/* Operator row ("Is any" select) — give it breathing room + a divider. */
+#ci-root .dataviews-filters__summary-operators-container {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--wp-components-color-gray-200, #e0e0e0);
+}
+
+/* Option rows: a real selectable list — reserve the check gutter so items
+   line up whether ticked or not, add hover, and keep them compact. */
+#ci-root .dataviews-filters__search-widget-listitem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+#ci-root .dataviews-filters__search-widget-listitem:hover {
+  background: var(--wp-components-color-gray-100, #f0f0f0);
+}
+#ci-root .dataviews-filters__search-widget-listitem-check {
+  width: 20px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--wp-admin-theme-color, #3858e9);
+}
+#ci-root .dataviews-filters__search-widget-listitem-value { flex: 1; min-width: 0; }

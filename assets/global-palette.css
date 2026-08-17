@@ -1,0 +1,206 @@
+/**
+ * Context — global command palette styles.
+ *
+ * Scoped under `.ci-gp-root` so we don't leak into the host page's own
+ * styles (most wp-admin pages are highly opinionated about layout).
+ *
+ * The look matches the React-app palette: card on dark backdrop, top-
+ * mounted, ~10vh from top, max-width 720px, themed in WP admin tones
+ * with no Tailwind dependency (this file is loaded on every admin
+ * screen, including ones that don't load our Tailwind bundle).
+ */
+
+#ci-global-palette-host {
+	position: relative;
+	z-index: 100000;
+}
+
+.ci-gp-root {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	padding: 10vh 16px 32px;
+}
+
+.ci-gp-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.4);
+	backdrop-filter: blur(4px);
+	-webkit-backdrop-filter: blur(4px);
+}
+
+.ci-gp-wrap {
+	position: relative;
+	width: 100%;
+	max-width: 760px;
+}
+
+.ci-gp-card {
+	background: #fff;
+	color: #1d2327;
+	border: 1px solid #dcdcde;
+	border-radius: 12px;
+	box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.25);
+	overflow: hidden;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	font-size: 14px;
+}
+
+.ci-gp-input-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 12px 16px;
+	border-bottom: 1px solid #dcdcde;
+}
+
+.ci-gp-kbd {
+	font-family: "SF Mono", Menlo, Consolas, monospace;
+	font-size: 11px;
+	color: #646970;
+	background: #f0f0f1;
+	border-radius: 4px;
+	padding: 2px 6px;
+}
+
+.ci-gp-input {
+	flex: 1;
+	border: 0;
+	outline: none;
+	background: transparent;
+	font-size: 15px;
+	color: inherit;
+	box-shadow: none !important;
+	padding: 0;
+}
+
+.ci-gp-spinner {
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	border: 2px solid #c3c4c7;
+	border-top-color: #2271b1;
+	animation: ci-gp-spin 0.8s linear infinite;
+}
+
+@keyframes ci-gp-spin {
+	to { transform: rotate(360deg); }
+}
+
+.ci-gp-results {
+	max-height: 60vh;
+	overflow-y: auto;
+}
+
+.ci-gp-empty {
+	padding: 24px;
+	text-align: center;
+	color: #646970;
+	font-size: 13px;
+}
+
+.ci-gp-result {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 16px;
+	cursor: pointer;
+	border-bottom: 1px solid #f6f7f7;
+}
+
+.ci-gp-result:last-child {
+	border-bottom: 0;
+}
+
+.ci-gp-result.is-active,
+.ci-gp-result:hover {
+	background: #f0f0f1;
+}
+
+.ci-gp-icon {
+	width: 20px;
+	text-align: center;
+	font-size: 15px;
+	color: #646970;
+	flex-shrink: 0;
+}
+
+.ci-gp-text {
+	flex: 1;
+	min-width: 0;
+}
+
+.ci-gp-title {
+	font-size: 13.5px;
+	font-weight: 500;
+	color: #1d2327;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.ci-gp-sub {
+	font-size: 11.5px;
+	color: #646970;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	margin-top: 2px;
+}
+
+.ci-gp-kind {
+	font-size: 10px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: #8c8f94;
+	flex-shrink: 0;
+}
+
+.ci-gp-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 8px 16px;
+	border-top: 1px solid #dcdcde;
+	background: #f6f7f7;
+	font-size: 11px;
+	color: #646970;
+}
+
+/* Dark mode follows WP's user preference if set. */
+@media (prefers-color-scheme: dark) {
+	body.admin-color-modern .ci-gp-card,
+	body.admin-color-midnight .ci-gp-card {
+		background: #1d2327;
+		color: #f0f0f1;
+		border-color: #3c434a;
+	}
+	body.admin-color-modern .ci-gp-kbd,
+	body.admin-color-midnight .ci-gp-kbd {
+		background: #2c3338;
+		color: #c3c4c7;
+	}
+	body.admin-color-modern .ci-gp-result.is-active,
+	body.admin-color-midnight .ci-gp-result.is-active,
+	body.admin-color-modern .ci-gp-result:hover,
+	body.admin-color-midnight .ci-gp-result:hover {
+		background: #2c3338;
+	}
+	body.admin-color-modern .ci-gp-footer,
+	body.admin-color-midnight .ci-gp-footer {
+		background: #2c3338;
+		border-color: #3c434a;
+	}
+	body.admin-color-modern .ci-gp-title,
+	body.admin-color-midnight .ci-gp-title { color: #f0f0f1; }
+	body.admin-color-modern .ci-gp-sub,
+	body.admin-color-midnight .ci-gp-sub,
+	body.admin-color-modern .ci-gp-footer,
+	body.admin-color-midnight .ci-gp-footer { color: #c3c4c7; }
+}
