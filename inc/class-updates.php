@@ -32,6 +32,16 @@ final class OS_Updates {
 
 	public static function register(): void {
 		add_filter( 'update_plugins_github.com', array( __CLASS__, 'check' ), 10, 3 );
+		// A forced check (the Updates screen's "Check again", or WP-CLI) deletes
+		// the update_plugins transient; our manifest cache goes with it, so a
+		// forced check really is fresh rather than answering from six-hour-old
+		// data with a straight face.
+		add_action(
+			'delete_site_transient_update_plugins',
+			static function (): void {
+				delete_site_transient( self::CACHE );
+			}
+		);
 	}
 
 	/**
@@ -85,7 +95,12 @@ final class OS_Updates {
 			return $cached;
 		}
 
-		$response = wp_remote_get( self::MANIFEST, array( 'timeout' => 10 ) );
+		// The raw endpoint's CDN caches per edge for a few minutes, and a stale
+		// edge can pin an old version past a release. A five-minute time bucket
+		// on the query string changes the cache key just often enough to bound
+		// the lag without hammering the origin.
+		$url      = add_query_arg( 't', (string) floor( time() / ( 5 * MINUTE_IN_SECONDS ) ), self::MANIFEST );
+		$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
 		$manifest = array();
 		if ( ! is_wp_error( $response ) && 200 === (int) wp_remote_retrieve_response_code( $response ) ) {
 			$decoded  = json_decode( (string) wp_remote_retrieve_body( $response ), true );
