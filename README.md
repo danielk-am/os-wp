@@ -1,70 +1,68 @@
 # OS
 
-A personal operating system that lives in WordPress. Skills, wiki pages, memory, reminders, code snippets, and a knowledge graph, stored as content that both you and your agents can read and write.
+**Give your agents somewhere to live.** OS turns a WordPress site you own into the system of record for your skills, notes, memory, reminders, and code. Anything you store, an agent can read and write over one MCP connection.
 
-One plugin, nine modules, one MCP endpoint. Turn off what you don't need.
+One plugin. Nine modules. Your data, on your server.
 
-![The OS Modules screen: nine modules with checkboxes, their status, and the data each one owns.](docs/screenshots/modules.png)
+![The OS Modules screen: nine modules, each with a switch, a status, and the data it owns.](docs/screenshots/modules.png)
 
-## What's inside
+## What you get
 
-| Module | What it does |
+| Module | What it does for you |
 |---|---|
-| Wiki | Skills, wiki pages, memory, and snippets. The knowledge store. |
-| Calendar | Events, reminders, and scheduled automations. |
-| Content Types | Define your own post types with schemas and field groups. |
-| Code | PHP, JS, and CSS snippets with a fatal-error circuit breaker. |
-| Filesystem | A jailed disk browser. |
-| Graph | Entities and relationships across your content. |
-| Activity | Everything that happened on the site, as a stream. |
-| Notifications | One tray for alerts from every module. |
-| Wizard | Multi-step guided flows. |
+| Wiki | A knowledge base for how you work: skills, wiki pages, memory, snippets. |
+| Calendar | Reminders, events, and automations that run on your schedule. |
+| Content Types | Invent your own record types, no code required. |
+| Code | Small PHP, JS, and CSS changes, with a circuit breaker that catches fatals. |
+| Filesystem | A jailed window onto server files. |
+| Graph | The connections between everything you keep. |
+| Activity | A stream of everything that happened, and who did it. |
+| Notifications | One tray for every alert. |
+| Wizard | Checklists that walk you through, step by step. |
 
-Each module ships its own admin app, built on WordPress components.
+Everything works together from the first activation. Reminders surface in Notifications, changes land in Activity, and nothing needs configuring to talk to anything else.
+
+![Reminders grouped by due date inside the Calendar module.](docs/screenshots/calendar.png)
+
+## A memory your agent keeps
+
+Skills record how you do things, memory holds what stays true, and wiki pages carry the reference notes. Your agent reads them before acting and writes back what it learns, so every session starts warmer than the last.
 
 ![The Skills list inside the Wiki module.](docs/screenshots/wiki.png)
 
-![Reminders inside the Calendar module, grouped by due date.](docs/screenshots/calendar.png)
+## One connection for every tool
 
-## Everything works together from the first activation
+Install the [MCP Adapter](https://github.com/WordPress/mcp-adapter) and every module's tools appear on a single endpoint, registered through the [WordPress Abilities API](https://developer.wordpress.org/apis/abilities-api/). Point your agent at one URL and it sees the whole system.
 
-Reminders surface in Notifications, every change lands in Activity, and your agent reaches skills, calendar, and code through one connection. No setup order, no glue plugins.
+Underneath, it's all WordPress content: posts, revisions, users, and permissions you already understand. Back it up, export it, move it. Nothing is locked in.
 
-Take only what you need. Each module stands on its own, so switching one off never breaks another.
+## Take only what you need
 
-## Turning modules off
+Every module is a switch under Settings → OS Modules. A module that's off doesn't boot, and nothing is deleted either way. On multisite the switches are per site, so each site on a network runs its own mix.
 
-Every module is a switch under Settings → OS Modules. A module that's off doesn't boot: its content types, routes, and abilities don't exist until you turn it back on. Nothing is deleted either way.
+## Breaks safely
 
-On multisite the switches are per site, so two sites on one network can run different module sets from a single network activation.
+A module that fails to load is switched off on its own, and the rest of the site carries on. The modules screen shows what tripped and why. Tick it and save once it's fixed. Recovery never needs SSH.
 
-## When a module breaks
-
-A module that fails to load is switched off automatically, and the rest of the site carries on. The modules screen shows which one tripped and why. Tick it and save to boot it again once it's fixed.
-
-Recovery never needs SSH. That's the point.
-
-## For agents
-
-Every module registers its tools through the [WordPress Abilities API](https://developer.wordpress.org/apis/abilities-api/), under its own namespace: `llm-wiki/*`, `calendar/*`, `code/*`, and so on. Install the [MCP Adapter](https://github.com/WordPress/mcp-adapter) and an agent sees the whole system on one endpoint.
-
-REST routes mirror the same namespaces. Data identifiers live in one frozen namespace, `os_`, declared per module in `modules/*/module.json` and documented in [docs/contracts/DATA-INVENTORY.md](docs/contracts/DATA-INVENTORY.md).
-
-## Install
+## Get started
 
 1. Download `os.zip` from the [latest release](https://github.com/danielk-am/os-wp/releases/latest).
 2. Go to Plugins → Add New Plugin → Upload Plugin.
 3. Choose `os.zip` and click Install Now.
 4. Click Activate.
 
-Updates arrive like any other plugin: WordPress checks this repo's releases and offers new versions on the Plugins screen.
+Updates arrive on the Plugins screen like any other plugin. You install once.
 
-Requirements:
+You'll need:
 
 - WordPress 6.9 or newer
 - PHP 8.1 or newer
 - [MCP Adapter](https://github.com/WordPress/mcp-adapter), optional, for agent access
 
+Ready when you are:
+
+**[Download the latest release](https://github.com/danielk-am/os-wp/releases/latest)**
+
 ## License
 
-GPL-2.0-or-later. See [license.txt](license.txt).
+GPL-2.0-or-later. See [license.txt](license.txt). Module internals are documented in [docs/contracts/MODULES.md](docs/contracts/MODULES.md).
