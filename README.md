@@ -40,6 +40,12 @@ Underneath, it's all WordPress content: posts, revisions, users, and permissions
 
 Every module is a switch under Settings → OS Modules. A module that's off doesn't boot, and nothing is deleted either way. On multisite the switches are per site, so each site on a network runs its own mix.
 
+## Arrange it your way
+
+Every type has its own menu item and icon. Change the label, the icon, or where it sits from Content type → Menus & icons; the Manage screen on each type handles its fields.
+
+![Menus and icons: every type's label, icon, and sidebar position on one screen.](docs/screenshots/type-menus.png)
+
 ## Breaks safely
 
 A module that fails to load is switched off on its own, and the rest of the site carries on. The modules screen shows what tripped and why. Tick it and save once it's fixed. Recovery never needs SSH.

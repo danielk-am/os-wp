@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once __DIR__ . '/inc/class-icon-svg-sanitizer.php';
+require_once __DIR__ . '/inc/class-type-menus-screen.php';
+OS_Type_Menus_Screen::register();
 require_once __DIR__ . '/inc/class-dynamic-types.php';
 
 final class Core_Index_Content_Types {

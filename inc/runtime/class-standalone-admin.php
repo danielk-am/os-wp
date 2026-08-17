@@ -52,28 +52,54 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 			if ( $this->register_optional_grouped_parent_menus( $capability ) ) {
 				return;
 			}
-			if ( 'calendar' === ( $this->config['mode'] ?? '' ) || ! empty( $this->config['grouped_menu_types'] ) ) {
-				$this->register_grouped_menus( $capability );
-				return;
-			}
 			if ( $this->register_calendar_child_menus( $capability ) ) {
 				return;
 			}
-			$menu_types = $this->config['menu_types'] ?? array_keys( $this->config['types'] );
-			foreach ( $menu_types as $key ) {
+
+			// Every type gets its own top-level menu with its own icon. The old
+			// grouped menus (Calendar holding reminders and automations, the AI
+			// library holding skills, wiki, and memory) buried two thirds of the
+			// system behind one label. `grouped_menu_types` now only narrows
+			// WHICH types get menus; hidden types keep hidden pages below.
+			$menu_types = $this->config['grouped_menu_types']
+				?? $this->config['menu_types']
+				?? array_keys( $this->config['types'] );
+			$overrides  = (array) get_option( 'os_type_menus', array() );
+			$multi      = count( $menu_types ) > 1;
+			$base       = (float) ( $this->config['position'] ?? 40 );
+
+			foreach ( array_values( $menu_types ) as $index => $key ) {
 				$type = $this->config['types'][ $key ];
 				$slug     = $this->page_slug( $key );
 				$plural   = $type['plural'];
 				$callback = array( $this, 'render' );
-				$menu_title = $this->config['menu_title'] ?? $plural;
-				add_menu_page( $menu_title, $menu_title, $capability, $slug, $callback, $type['icon'] ?? 'dashicons-index-card', $type['position'] ?? $this->config['position'] ?? null );
-				$is_calendar = 'calendar' === ( $this->config['mode'] ?? '' );
-				$all_label   = $is_calendar ? 'All events' : 'All ' . $plural;
-				$add_label   = 'Add new ' . strtolower( $type['singular'] );
-				$manage_label = $is_calendar ? 'Manage events type' : 'Manage ' . $plural;
+				$ov       = (array) ( $overrides[ (string) ( $type['post_type'] ?? '' ) ] ?? array() );
+
+				// Label: a per-type override wins; a module with one visible type
+				// keeps its configured menu title; siblings use their own name.
+				$menu_title = (string) ( $ov['label'] ?? ( $multi ? $plural : ( $this->config['menu_title'] ?? $plural ) ) );
+				$icon       = (string) ( $ov['icon'] ?? $type['icon'] ?? 'dashicons-index-card' );
+				$position   = '' !== (string) ( $ov['position'] ?? '' )
+					? (string) $ov['position']
+					: (string) ( $type['position'] ?? ( $multi ? $base + $index * 0.1 : $base ) );
+
+				add_menu_page( $menu_title, $menu_title, $capability, $slug, $callback, $icon, $position );
+				$all_label    = 'All ' . strtolower( $plural );
+				$add_label    = 'Add new ' . strtolower( $type['singular'] );
+				$manage_label = 'Manage ' . strtolower( $plural ) . ' type';
 				add_submenu_page( $slug, $all_label, $all_label, $capability, $slug, $callback );
 				add_submenu_page( $slug, $add_label, $add_label, $capability, $slug . '-new', $callback );
 				add_submenu_page( $slug, $manage_label, $manage_label, $capability, $slug . '-manage', $callback );
+			}
+
+			// Types outside the menu list still need their pages registered, or
+			// deep links into them would 403. Registered, then hidden.
+			foreach ( array_diff( array_keys( $this->config['types'] ), $menu_types ) as $key ) {
+				$type = $this->config['types'][ $key ];
+				$slug = $this->page_slug( $key );
+				foreach ( array( $slug, $slug . '-new', $slug . '-manage' ) as $page_slug ) {
+					add_submenu_page( 'options.php', $type['plural'], $type['plural'], $capability, $page_slug, array( $this, 'render' ) );
+				}
 			}
 		}
 
