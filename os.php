@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       OS
  * Description:       Skills, wiki, memory, work items, calendar, code, and the rest of the OS, as WordPress modules an agent can read and write.
- * Version:           3.0.0
+ * Version:           3.0.1
  * Requires at least: 6.9
  * Requires PHP:      8.1
  * Author:            Daniel Kam
@@ -36,12 +36,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'OS_PLUGIN_FILE', __FILE__ );
 define( 'OS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'OS_URL', plugin_dir_url( __FILE__ ) );
-define( 'OS_VERSION', '3.0.0' );
+define( 'OS_VERSION', '3.0.1' );
 
 // Option access and the namespace migrations load before anything else and
 // outside the module system: they are how a site that ran the pre-rename code
 // gets its data onto `os_`, and a module being switched off must not take its
 // migration path with it.
+require_once OS_DIR . 'inc/class-updates.php';
+OS_Updates::register();
+
 require_once OS_DIR . 'inc/class-options.php';
 require_once OS_DIR . 'inc/class-option-migration.php';
 Core_Index_Option_Migration::register();

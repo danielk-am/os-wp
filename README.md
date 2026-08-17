@@ -26,11 +26,11 @@ Each module ships its own admin app, built on WordPress components.
 
 ![Reminders inside the Calendar module, grouped by due date.](docs/screenshots/calendar.png)
 
-## Why one plugin instead of nine
+## Everything works together from the first activation
 
-The people who want this want the whole thing. One install beats nine installs in the right order, and one screen of switches beats guessing which four plugins to skip.
+Reminders surface in Notifications, every change lands in Activity, and your agent reaches skills, calendar, and code through one connection. No setup order, no glue plugins.
 
-Modules stay independent inside the plugin. Each owns its data, its REST namespace, and its abilities, and reaches the others only through WordPress hooks. The boundaries are real; the plugin borders were overhead.
+Take only what you need. Each module stands on its own, so switching one off never breaks another.
 
 ## Turning modules off
 
@@ -57,17 +57,13 @@ REST routes mirror the same namespaces. Data identifiers live in one frozen name
 3. Choose `os.zip` and click Install Now.
 4. Click Activate.
 
+Updates arrive like any other plugin: WordPress checks this repo's releases and offers new versions on the Plugins screen.
+
 Requirements:
 
 - WordPress 6.9 or newer
 - PHP 8.1 or newer
 - [MCP Adapter](https://github.com/WordPress/mcp-adapter), optional, for agent access
-
-Coming from the earlier Core Index or `os-*` plugin family? Run `wp ci migrate-options --execute` and then `wp ci migrate-types --execute --merge` to move your data onto the `os_` namespace. Compatibility shims keep old option names, queries, and REST routes answering either side of the move.
-
-## Where this came from
-
-OS started as a monolith, was split into nine standalone plugins in July 2026, and was merged back in August 2026 once it was clear the split was enforcing independence nobody used. The module boundaries the split proved are the ones this plugin keeps, as directories with manifests instead of separate plugins. The reasoning lives in [docs/contracts/MODULES.md](docs/contracts/MODULES.md).
 
 ## License
 
