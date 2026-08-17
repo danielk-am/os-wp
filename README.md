@@ -42,7 +42,7 @@ Every module is a switch under Settings → OS Modules. A module that's off does
 
 ## Arrange it your way
 
-Every type has its own menu item and icon. Change the label, the icon, or where it sits from Content type → Menus & icons; the Manage screen on each type handles its fields.
+Every type has its own menu item and icon. Pick from the bundled Font Awesome set or any dashicon, set the label and position, all from Content type → Menus & icons; the Manage screen on each type handles its fields.
 
 ![Menus and icons: every type's label, icon, and sidebar position on one screen.](docs/screenshots/type-menus.png)
 

@@ -42,6 +42,54 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 			add_filter( 'script_loader_tag', array( $app, 'module_tag' ), 10, 3 );
 		}
 
+		/**
+		 * Resolve a stored icon value to what add_menu_page() accepts.
+		 *
+		 * `dashicons-*` and full data URIs pass through; `fa-<name>` becomes a
+		 * base64 SVG data URI built from the generated path table, normalised to
+		 * a square viewBox so every glyph sits at the same size in the sidebar.
+		 * Unknown values fall back to the given default.
+		 */
+		public static function menu_icon( string $icon, string $default_icon = 'dashicons-index-card' ): string {
+			$icon = trim( $icon );
+			if ( str_starts_with( $icon, 'dashicons-' ) || str_starts_with( $icon, 'data:image/' ) ) {
+				return $icon;
+			}
+			if ( str_starts_with( $icon, 'fa-' ) ) {
+				$uri = self::fa_icon_data_uri( substr( $icon, 3 ) );
+				if ( '' !== $uri ) {
+					return $uri;
+				}
+			}
+			return $default_icon;
+		}
+
+		/** Base64 SVG data URI for a bundled FontAwesome glyph, '' when unknown. */
+		public static function fa_icon_data_uri( string $name ): string {
+			static $paths = null;
+			if ( null === $paths ) {
+				$file  = __DIR__ . '/fa-icon-paths.php';
+				$paths = is_readable( $file ) ? (array) require $file : array();
+			}
+			if ( empty( $paths[ $name ] ) ) {
+				return '';
+			}
+			list( $w, $h, $d ) = $paths[ $name ];
+			// Glyphs share a 512 height but vary in width; the menu scales by
+			// width, so raw viewBoxes render unevenly. Centre in a square.
+			$side = max( (int) $w, (int) $h );
+			$dx   = ( $side - (int) $w ) / 2;
+			$dy   = ( $side - (int) $h ) / 2;
+			$svg  = sprintf(
+				'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %1$d %1$d"><path fill="#a7aaad" transform="translate(%2$s %3$s)" d="%4$s"/></svg>',
+				$side,
+				rtrim( rtrim( sprintf( '%.2f', $dx ), '0' ), '.' ),
+				rtrim( rtrim( sprintf( '%.2f', $dy ), '0' ), '.' ),
+				esc_attr( (string) $d )
+			);
+			return 'data:image/svg+xml;base64,' . base64_encode( $svg );
+		}
+
 		public function menus(): void {
 			$capability = $this->config['capability'] ?? 'edit_posts';
 			$this->register_top_level_separator();
@@ -78,7 +126,7 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 				// Label: a per-type override wins; a module with one visible type
 				// keeps its configured menu title; siblings use their own name.
 				$menu_title = (string) ( $ov['label'] ?? ( $multi ? $plural : ( $this->config['menu_title'] ?? $plural ) ) );
-				$icon       = (string) ( $ov['icon'] ?? $type['icon'] ?? 'dashicons-index-card' );
+				$icon       = self::menu_icon( (string) ( $ov['icon'] ?? '' ), (string) ( $type['icon'] ?? 'dashicons-index-card' ) );
 				$position   = '' !== (string) ( $ov['position'] ?? '' )
 					? (string) $ov['position']
 					: (string) ( $type['position'] ?? ( $multi ? $base + $index * 0.1 : $base ) );

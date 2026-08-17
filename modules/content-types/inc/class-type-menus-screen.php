@@ -105,10 +105,54 @@ final class OS_Type_Menus_Screen {
 		exit;
 	}
 
+	/**
+	 * The Font Awesome names the plugin ships, from the generated path table.
+	 *
+	 * @return string[]
+	 */
+	private static function fa_icons(): array {
+		$file  = OS_DIR . 'inc/runtime/fa-icon-paths.php';
+		$paths = is_readable( $file ) ? (array) require $file : array();
+		$names = array_keys( $paths );
+		sort( $names );
+		return $names;
+	}
+
+	/**
+	 * Every dashicon this WordPress ships, parsed from core's own stylesheet
+	 * so the list always matches the running version. Cached per request.
+	 *
+	 * @return string[]
+	 */
+	private static function dashicons(): array {
+		static $names = null;
+		if ( null !== $names ) {
+			return $names;
+		}
+		$css   = '';
+		foreach ( array( 'dashicons.min.css', 'dashicons.css' ) as $file ) {
+			$path = ABSPATH . WPINC . '/css/' . $file;
+			if ( is_readable( $path ) ) {
+				$css = (string) file_get_contents( $path );
+				break;
+			}
+		}
+		preg_match_all( '/\.dashicons-([a-z0-9-]+):before/', $css, $matches );
+		$names = array_values( array_unique( $matches[1] ?? array() ) );
+		sort( $names );
+		return $names;
+	}
+
 	/** Icons are dashicon names only; anything else falls back to the default. */
 	private static function sanitize_icon( string $icon ): string {
 		$icon = trim( $icon );
-		return preg_match( '/^dashicons-[a-z0-9-]+$/', $icon ) ? $icon : '';
+		if ( preg_match( '/^dashicons-[a-z0-9-]+$/', $icon ) ) {
+			return $icon;
+		}
+		if ( str_starts_with( $icon, 'fa-' ) && in_array( substr( $icon, 3 ), self::fa_icons(), true ) ) {
+			return $icon;
+		}
+		return '';
 	}
 
 	/** Positions are numeric, dotted decimals included, e.g. `3.1`. */
@@ -155,13 +199,27 @@ final class OS_Type_Menus_Screen {
 										placeholder="<?php echo esc_attr( $row['plural'] ); ?>" />
 								</td>
 								<td>
-									<?php if ( '' !== $row['icon'] ) : ?>
-										<span class="dashicons <?php echo esc_attr( $row['icon'] ); ?>" style="vertical-align: middle;"></span>
-									<?php endif; ?>
-									<input type="text" style="max-width: 190px;"
-										name="os_menu_icon[<?php echo esc_attr( $type ); ?>]"
-										value="<?php echo esc_attr( $row['icon'] ); ?>"
-										placeholder="dashicons-…" />
+									<span class="os-icon-preview" data-for="<?php echo esc_attr( $type ); ?>" style="display: inline-block; width: 20px; height: 20px; vertical-align: middle; margin-right: 6px;">
+										<?php if ( str_starts_with( $row['icon'], 'fa-' ) ) : ?>
+											<?php // esc_attr, not esc_url: esc_url strips data: URIs, and this one is plugin-generated base64 SVG. ?>
+											<img src="<?php echo esc_attr( OS_Standalone_Admin::fa_icon_data_uri( substr( $row['icon'], 3 ) ) ); ?>" alt="" style="width: 20px; height: 20px;" />
+										<?php elseif ( '' !== $row['icon'] ) : ?>
+											<span class="dashicons <?php echo esc_attr( $row['icon'] ); ?>"></span>
+										<?php endif; ?>
+									</span>
+									<select name="os_menu_icon[<?php echo esc_attr( $type ); ?>]" class="os-icon-select" data-for="<?php echo esc_attr( $type ); ?>" style="max-width: 190px;">
+										<option value=""><?php esc_html_e( 'Module default', 'os' ); ?></option>
+										<optgroup label="<?php esc_attr_e( 'Font Awesome', 'os' ); ?>">
+											<?php foreach ( self::fa_icons() as $name ) : ?>
+												<option value="<?php echo esc_attr( 'fa-' . $name ); ?>" <?php selected( $row['icon'], 'fa-' . $name ); ?>><?php echo esc_html( $name ); ?></option>
+											<?php endforeach; ?>
+										</optgroup>
+										<optgroup label="<?php esc_attr_e( 'Dashicons', 'os' ); ?>">
+											<?php foreach ( self::dashicons() as $name ) : ?>
+												<option value="<?php echo esc_attr( 'dashicons-' . $name ); ?>" <?php selected( $row['icon'], 'dashicons-' . $name ); ?>><?php echo esc_html( $name ); ?></option>
+											<?php endforeach; ?>
+										</optgroup>
+									</select>
 								</td>
 								<td>
 									<input type="text" style="max-width: 80px;"
@@ -178,14 +236,30 @@ final class OS_Type_Menus_Screen {
 			</form>
 
 			<p class="description" style="max-width: 900px;">
-				<?php
-				printf(
-					/* translators: %s: link to the dashicons reference. */
-					esc_html__( 'Icons take any name from the %s. Fields for each type live under its own Manage screen.', 'os' ),
-					'<a href="https://developer.wordpress.org/resource/dashicons/" target="_blank" rel="noreferrer">' . esc_html__( 'dashicons reference', 'os' ) . '</a>'
-				);
-				?>
+				<?php esc_html_e( 'Font Awesome icons are the set bundled with the plugin; Dashicons are everything this WordPress ships. Fields for each type live under its own Manage screen.', 'os' ); ?>
 			</p>
+
+			<script>
+			( function () {
+				var faIcons = <?php echo wp_json_encode( array_combine( self::fa_icons(), array_map( array( 'OS_Standalone_Admin', 'fa_icon_data_uri' ), self::fa_icons() ) ) ); ?>;
+				document.querySelectorAll( '.os-icon-select' ).forEach( function ( select ) {
+					select.addEventListener( 'change', function () {
+						var preview = document.querySelector( '.os-icon-preview[data-for="' + select.dataset.for + '"]' );
+						if ( ! preview ) {
+							return;
+						}
+						var value = select.value;
+						if ( value.indexOf( 'fa-' ) === 0 && faIcons[ value.slice( 3 ) ] ) {
+							preview.innerHTML = '<img src="' + faIcons[ value.slice( 3 ) ] + '" alt="" style="width:20px;height:20px;" />';
+						} else if ( value.indexOf( 'dashicons-' ) === 0 ) {
+							preview.innerHTML = '<span class="dashicons ' + value + '"></span>';
+						} else {
+							preview.innerHTML = '';
+						}
+					} );
+				} );
+			} () );
+			</script>
 		</div>
 		<?php
 	}
