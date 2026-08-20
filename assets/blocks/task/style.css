@@ -1,6 +1,6 @@
 /* ci/task block — modelled after p2/task. Shared by editor + front-end. */
 
-.wp-block-ci-task {
+.wp-block-os-task {
 	display: flex;
 	align-items: flex-start;
 	gap: 0.625rem;
@@ -9,12 +9,12 @@
 	transition: background-color 0.12s ease, opacity 0.15s ease;
 }
 
-.wp-block-ci-task:hover {
+.wp-block-os-task:hover {
 	background: rgba( 0, 0, 0, 0.02 );
 }
 
 /* Status column: emoji indicator + clickable checkbox. */
-.wp-block-ci-task__status {
+.wp-block-os-task__status {
 	display: flex;
 	align-items: center;
 	gap: 0.25rem;
@@ -22,19 +22,19 @@
 	padding-top: 0.125rem;
 }
 
-.wp-block-ci-task__emoji-status {
+.wp-block-os-task__emoji-status {
 	font-size: 0.875rem;
 	line-height: 1;
 	-webkit-user-select: none;
 	user-select: none;
 }
 
-.wp-block-ci-task__checkbox-wrapper {
+.wp-block-os-task__checkbox-wrapper {
 	display: inline-flex;
 	align-items: center;
 }
 
-.wp-block-ci-task__checkbox {
+.wp-block-os-task__checkbox {
 	display: inline-block;
 	width: 1.125rem;
 	height: 1.125rem;
@@ -47,17 +47,17 @@
 	flex: 0 0 auto;
 }
 
-.wp-block-ci-task__checkbox:hover {
+.wp-block-os-task__checkbox:hover {
 	background: rgba( 99, 102, 241, 0.08 );
 }
 
-.wp-block-ci-task__checkbox.is-aria-checked-true {
+.wp-block-os-task__checkbox.is-aria-checked-true {
 	background: #6366f1;
 	border-color: #6366f1;
 	position: relative;
 }
 
-.wp-block-ci-task__checkbox.is-aria-checked-true::after {
+.wp-block-os-task__checkbox.is-aria-checked-true::after {
 	content: "";
 	position: absolute;
 	top: 50%;
@@ -69,13 +69,13 @@
 	transform: translate(-55%, -65%) rotate(45deg);
 }
 
-.wp-block-ci-task__checkbox.is-disabled {
+.wp-block-os-task__checkbox.is-disabled {
 	cursor: default;
 	opacity: 0.85;
 }
 
 /* Main column: content + dates on the left, assignees on the right. */
-.wp-block-ci-task__main {
+.wp-block-os-task__main {
 	display: flex;
 	align-items: flex-start;
 	justify-content: space-between;
@@ -84,7 +84,7 @@
 	min-width: 0;
 }
 
-.wp-block-ci-task__left {
+.wp-block-os-task__left {
 	flex: 1 1 auto;
 	min-width: 0;
 	display: flex;
@@ -92,11 +92,11 @@
 	gap: 0.25rem;
 }
 
-.wp-block-ci-task__content-wrapper {
+.wp-block-os-task__content-wrapper {
 	display: block;
 }
 
-.wp-block-ci-task__content {
+.wp-block-os-task__content {
 	display: inline;
 	font-size: 1rem;
 	line-height: 1.5;
@@ -104,12 +104,12 @@
 	word-break: break-word;
 }
 
-.wp-block-ci-task.is-checked .wp-block-ci-task__content {
+.wp-block-os-task.is-checked .wp-block-os-task__content {
 	text-decoration: line-through;
 	color: #6b7280;
 }
 
-.wp-block-ci-task__dates {
+.wp-block-os-task__dates {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.375rem;
@@ -117,12 +117,12 @@
 	min-height: 0;
 }
 
-.wp-block-ci-task__dates:empty {
+.wp-block-os-task__dates:empty {
 	display: none;
 }
 
-.wp-block-ci-task__date,
-.wp-block-ci-task__priority {
+.wp-block-os-task__date,
+.wp-block-os-task__priority {
 	display: inline-flex;
 	align-items: center;
 	font-size: 0.75rem;
@@ -131,50 +131,50 @@
 	font-variant-numeric: tabular-nums;
 }
 
-.wp-block-ci-task__date--due {
+.wp-block-os-task__date--due {
 	background: rgba( 0, 0, 0, 0.04 );
 	color: #4b5563;
 }
 
-.wp-block-ci-task__date--time {
+.wp-block-os-task__date--time {
 	background: rgba( 0, 0, 0, 0.04 );
 	color: #4b5563;
 }
 
-.wp-block-ci-task__date--time::before {
+.wp-block-os-task__date--time::before {
 	content: "🕒";
 	margin-right: 0.25rem;
 	font-size: 0.6875rem;
 	line-height: 1;
 }
 
-.wp-block-ci-task__priority {
+.wp-block-os-task__priority {
 	font-weight: 600;
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
 	font-size: 0.6875rem;
 }
 
-.wp-block-ci-task__priority--low    { background: #e6f3ff; color: #1e40af; }
-.wp-block-ci-task__priority--medium { background: #fef3c7; color: #92400e; }
-.wp-block-ci-task__priority--high   { background: #fee2e2; color: #991b1b; }
+.wp-block-os-task__priority--low    { background: #e6f3ff; color: #1e40af; }
+.wp-block-os-task__priority--medium { background: #fef3c7; color: #92400e; }
+.wp-block-os-task__priority--high   { background: #fee2e2; color: #991b1b; }
 
-.wp-block-ci-task__right {
+.wp-block-os-task__right {
 	flex: 0 0 auto;
 }
 
-.wp-block-ci-task__assignees-avatars {
+.wp-block-os-task__assignees-avatars {
 	display: flex;
 	gap: 0.25rem;
 	align-items: center;
 }
 
-.wp-block-ci-task__assignees-avatars:empty {
+.wp-block-os-task__assignees-avatars:empty {
 	display: none;
 }
 
 /* Checklist container — unchanged. */
-.ci-checklist {
+.os-checklist {
 	display: flex;
 	flex-direction: column;
 	gap: 0.125rem;
@@ -184,7 +184,7 @@
 	background: rgba( 0, 0, 0, 0.015 );
 }
 
-.ci-checklist__title {
+.os-checklist__title {
 	font-size: 0.8125rem;
 	font-weight: 600;
 	color: #6b7280;
@@ -194,9 +194,9 @@
 	margin: 0;
 }
 
-/* Legacy `.ci-task` classes still used by view.js front-end clicks —
+/* Legacy `.os-task` classes still used by view.js front-end clicks —
  * keep these as aliases so older content keeps working until migrated. */
-.ci-task { display: flex; align-items: center; gap: 0.5rem; }
-.ci-task__checkbox { width: 1rem; height: 1rem; cursor: pointer; }
-.ci-task__text { flex: 1 1 auto; }
-.ci-task.is-checked .ci-task__text { text-decoration: line-through; opacity: 0.55; }
+.os-task { display: flex; align-items: center; gap: 0.5rem; }
+.os-task__checkbox { width: 1rem; height: 1rem; cursor: pointer; }
+.os-task__text { flex: 1 1 auto; }
+.os-task.is-checked .os-task__text { text-decoration: line-through; opacity: 0.55; }

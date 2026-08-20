@@ -1,21 +1,21 @@
 /*
- * ci-wpds-theme.css — WPDS palette harmonization.
+ * os-wpds-theme.css — WPDS palette harmonization.
  *
  * The React app's utilities (bg-card / text-muted-foreground / border-border /
  * bg-primary / ring-ring …) all resolve to a set of shadcn design tokens that
- * tailwind.css defines on #ci-root (an oklch neutral palette + indigo primary).
+ * tailwind.css defines on #os-app-root (an oklch neutral palette + indigo primary).
  * Rather than rewrite ~1,800 utility usages, we re-point those tokens at the
  * native @wordpress/components colour vars so the WHOLE app inherits the WP
  * admin palette and stops looking shadcn — one place, zero consumer churn.
  *
- * Loaded AFTER tailwind.css with the same #ci-root selector, so these win on
+ * Loaded AFTER tailwind.css with the same #os-app-root selector, so these win on
  * source order (equal specificity). Non-destructive: tailwind.css is untouched
  * and can be rebuilt freely; this layer just re-tints it.
  *
  * @package Core_Index
  */
 
-#ci-root {
+#os-app-root {
   /* Surfaces */
   --background: var(--wp-components-color-background, #fff);
   --card: var(--wp-components-color-background, #fff);
@@ -63,39 +63,39 @@
  * bypass the token system above. Re-map the exact classes in use to
  * WordPress's own semantic palette (alert red #cc1818, success #00a32a,
  * warning #dba617, info = admin theme colour) so notices/badges/dots match
- * core. Same #ci-root specificity, loaded after tailwind.css → wins on order.
+ * core. Same #os-app-root specificity, loaded after tailwind.css → wins on order.
  */
-#ci-root .text-red-600 { color: #cc1818; }
-#ci-root .text-red-700 { color: #a30000; }
-#ci-root .text-rose-900 { color: #8a1f1f; }
-#ci-root .text-amber-700 { color: #614200; }
-#ci-root .text-amber-800 { color: #4f3600; }
-#ci-root .text-amber-900 { color: #3d2900; }
-#ci-root .text-emerald-600 { color: #008a20; }
-#ci-root .text-emerald-700 { color: #007017; }
-#ci-root .text-emerald-800 { color: #005c13; }
-#ci-root .text-blue-500,
-#ci-root .text-blue-700,
-#ci-root .text-violet-700 { color: var(--wp-admin-theme-color, #3858e9); }
+#os-app-root .text-red-600 { color: #cc1818; }
+#os-app-root .text-red-700 { color: #a30000; }
+#os-app-root .text-rose-900 { color: #8a1f1f; }
+#os-app-root .text-amber-700 { color: #614200; }
+#os-app-root .text-amber-800 { color: #4f3600; }
+#os-app-root .text-amber-900 { color: #3d2900; }
+#os-app-root .text-emerald-600 { color: #008a20; }
+#os-app-root .text-emerald-700 { color: #007017; }
+#os-app-root .text-emerald-800 { color: #005c13; }
+#os-app-root .text-blue-500,
+#os-app-root .text-blue-700,
+#os-app-root .text-violet-700 { color: var(--wp-admin-theme-color, #3858e9); }
 
-#ci-root .bg-red-500 { background-color: #d63638; }
-#ci-root .bg-red-50 { background-color: #fcf0f1; }
-#ci-root .bg-rose-900 { background-color: #8a1f1f; }
-#ci-root .bg-rose-50 { background-color: #fcecec; }
-#ci-root .bg-amber-500 { background-color: #dba617; }
-#ci-root .bg-amber-900 { background-color: #614200; }
-#ci-root .bg-amber-100 { background-color: #fcf9e8; }
-#ci-root .bg-amber-50 { background-color: #fdfbf0; }
-#ci-root .bg-emerald-500 { background-color: #00a32a; }
-#ci-root .bg-emerald-100 { background-color: #edfaef; }
-#ci-root .bg-emerald-50 { background-color: #f3faf4; }
-#ci-root .bg-blue-500 { background-color: var(--wp-admin-theme-color, #3858e9); }
-#ci-root .bg-blue-100 { background-color: #e6edfb; }
-#ci-root .bg-violet-100 { background-color: #e6e6fb; }
-#ci-root .bg-violet-50 { background-color: #f0f0fb; }
-#ci-root .bg-sky-50 { background-color: #eef6fc; }
+#os-app-root .bg-red-500 { background-color: #d63638; }
+#os-app-root .bg-red-50 { background-color: #fcf0f1; }
+#os-app-root .bg-rose-900 { background-color: #8a1f1f; }
+#os-app-root .bg-rose-50 { background-color: #fcecec; }
+#os-app-root .bg-amber-500 { background-color: #dba617; }
+#os-app-root .bg-amber-900 { background-color: #614200; }
+#os-app-root .bg-amber-100 { background-color: #fcf9e8; }
+#os-app-root .bg-amber-50 { background-color: #fdfbf0; }
+#os-app-root .bg-emerald-500 { background-color: #00a32a; }
+#os-app-root .bg-emerald-100 { background-color: #edfaef; }
+#os-app-root .bg-emerald-50 { background-color: #f3faf4; }
+#os-app-root .bg-blue-500 { background-color: var(--wp-admin-theme-color, #3858e9); }
+#os-app-root .bg-blue-100 { background-color: #e6edfb; }
+#os-app-root .bg-violet-100 { background-color: #e6e6fb; }
+#os-app-root .bg-violet-50 { background-color: #f0f0fb; }
+#os-app-root .bg-sky-50 { background-color: #eef6fc; }
 
-#ci-root .border-amber-200 { border-color: #f5e6ab; }
-#ci-root .border-rose-200 { border-color: #f1c0c0; }
-#ci-root .border-red-300 { border-color: #f1adad; }
-#ci-root .border-emerald-500 { border-color: #00a32a; }
+#os-app-root .border-amber-200 { border-color: #f5e6ab; }
+#os-app-root .border-rose-200 { border-color: #f1c0c0; }
+#os-app-root .border-red-300 { border-color: #f1adad; }
+#os-app-root .border-emerald-500 { border-color: #00a32a; }

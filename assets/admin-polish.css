@@ -5,21 +5,21 @@
  * publish box, dark primary buttons. Scoped to those post types so we
  * don't bleed into the rest of wp-admin.
  *
- * Enqueued by `Core_Index_Admin_Polish::enqueue()`.
+ * Enqueued by `OS_Admin_Polish::enqueue()`.
  */
 
 :root {
-  --ci-bg: #f8f9fa;
-  --ci-card: #ffffff;
-  --ci-border: #e4e4e7;
-  --ci-text: #18181b;
-  --ci-muted: #71717a;
-  --ci-accent: #18181b;
-  --ci-accent-hover: #27272a;
-  --ci-shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
-  --ci-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
-  --ci-radius: 8px;
-  --ci-radius-sm: 6px;
+  --os-bg: #f8f9fa;
+  --os-card: #ffffff;
+  --os-border: #e4e4e7;
+  --os-text: #18181b;
+  --os-muted: #71717a;
+  --os-accent: #18181b;
+  --os-accent-hover: #27272a;
+  --os-shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
+  --os-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --os-radius: 8px;
+  --os-radius-sm: 6px;
 }
 
 /* Page background */
@@ -31,7 +31,7 @@
 .post-type-os_wiki #wpbody-content,
 .post-type-wp_guideline #wpbody-content,
 .post-type-wiki #wpbody-content {
-  background: var(--ci-bg);
+  background: var(--os-bg);
 }
 
 .post-type-os_skill .wrap > h1,
@@ -40,7 +40,7 @@
 .post-type-wiki .wrap > h1 {
   font-size: 24px;
   font-weight: 600;
-  color: var(--ci-text);
+  color: var(--os-text);
   margin: 24px 0 16px;
   letter-spacing: -0.01em;
 }
@@ -48,11 +48,11 @@
 .post-type-os_wiki .wrap > h1 .page-title-action,
 .post-type-wp_guideline .wrap > h1 .page-title-action,
 .post-type-wiki .wrap > h1 .page-title-action {
-  background: var(--ci-card);
-  border: 1px solid var(--ci-border);
-  color: var(--ci-text);
-  border-radius: var(--ci-radius-sm);
-  box-shadow: var(--ci-shadow-sm);
+  background: var(--os-card);
+  border: 1px solid var(--os-border);
+  color: var(--os-text);
+  border-radius: var(--os-radius-sm);
+  box-shadow: var(--os-shadow-sm);
   padding: 6px 12px;
   margin-left: 12px;
   font-weight: 500;
@@ -70,11 +70,11 @@
   font-size: 18px;
   font-weight: 500;
   padding: 12px 16px;
-  border: 1px solid var(--ci-border);
-  border-radius: var(--ci-radius);
-  box-shadow: var(--ci-shadow-sm);
-  background: var(--ci-card);
-  color: var(--ci-text);
+  border: 1px solid var(--os-border);
+  border-radius: var(--os-radius);
+  box-shadow: var(--os-shadow-sm);
+  background: var(--os-card);
+  color: var(--os-text);
   height: auto;
   line-height: 1.4;
 }
@@ -82,7 +82,7 @@
 .post-type-os_wiki #titlediv #title:focus,
 .post-type-wp_guideline #titlediv #title:focus,
 .post-type-wiki #titlediv #title:focus {
-  border-color: var(--ci-accent);
+  border-color: var(--os-accent);
   box-shadow: 0 0 0 3px rgba(24,24,27,0.1);
   outline: none;
 }
@@ -92,10 +92,10 @@
 .post-type-os_wiki #poststuff .postbox,
 .post-type-wp_guideline #poststuff .postbox,
 .post-type-wiki #poststuff .postbox {
-  border: 1px solid var(--ci-border);
-  border-radius: var(--ci-radius);
-  box-shadow: var(--ci-shadow);
-  background: var(--ci-card);
+  border: 1px solid var(--os-border);
+  border-radius: var(--os-radius);
+  box-shadow: var(--os-shadow);
+  background: var(--os-card);
   margin-bottom: 16px;
   overflow: hidden;
 }
@@ -103,8 +103,8 @@
 .post-type-os_wiki #poststuff .postbox-header,
 .post-type-wp_guideline #poststuff .postbox-header,
 .post-type-wiki #poststuff .postbox-header {
-  border-bottom: 1px solid var(--ci-border);
-  background: var(--ci-card);
+  border-bottom: 1px solid var(--os-border);
+  background: var(--os-card);
 }
 .post-type-os_skill #poststuff .postbox-header h2,
 .post-type-os_wiki #poststuff .postbox-header h2,
@@ -113,7 +113,7 @@
   padding: 12px 16px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--ci-text);
+  color: var(--os-text);
   letter-spacing: 0.01em;
 }
 .post-type-os_skill #poststuff .postbox .inside,
@@ -126,7 +126,7 @@
 .post-type-os_skill #poststuff .handle-actions,
 .post-type-os_wiki #poststuff .handle-actions,
 .post-type-wp_guideline #poststuff .handle-actions,
-.post-type-wiki #poststuff .handle-actions { color: var(--ci-muted); }
+.post-type-wiki #poststuff .handle-actions { color: var(--os-muted); }
 
 /* Publish box — sticky, accent button */
 .post-type-os_skill #submitdiv,
@@ -145,23 +145,23 @@
 .post-type-os_wiki #save-post,
 .post-type-wp_guideline #save-post,
 .post-type-wiki #save-post {
-  background: var(--ci-accent) !important;
-  border-color: var(--ci-accent) !important;
+  background: var(--os-accent) !important;
+  border-color: var(--os-accent) !important;
   color: #fff !important;
-  border-radius: var(--ci-radius-sm) !important;
+  border-radius: var(--os-radius-sm) !important;
   padding: 0 16px !important;
   height: 36px !important;
   line-height: 34px !important;
   font-weight: 500 !important;
-  box-shadow: var(--ci-shadow-sm) !important;
+  box-shadow: var(--os-shadow-sm) !important;
   text-shadow: none !important;
 }
 .post-type-os_skill #publish:hover,
 .post-type-os_wiki #publish:hover,
 .post-type-wp_guideline #publish:hover,
 .post-type-wiki #publish:hover {
-  background: var(--ci-accent-hover) !important;
-  border-color: var(--ci-accent-hover) !important;
+  background: var(--os-accent-hover) !important;
+  border-color: var(--os-accent-hover) !important;
 }
 
 /* Two-column rebalance: a bit more room for the editor */
@@ -176,9 +176,9 @@
 
 /* Code editor container blends with cards */
 #core-index-md-editor {
-  border-radius: var(--ci-radius) !important;
-  box-shadow: var(--ci-shadow) !important;
-  border-color: var(--ci-border) !important;
+  border-radius: var(--os-radius) !important;
+  box-shadow: var(--os-shadow) !important;
+  border-color: var(--os-border) !important;
   overflow: hidden;
 }
 
@@ -187,7 +187,7 @@
 .post-type-os_wiki #misc-publishing-actions .misc-pub-section,
 .post-type-wp_guideline #misc-publishing-actions .misc-pub-section,
 .post-type-wiki #misc-publishing-actions .misc-pub-section {
-  border-bottom: 1px solid var(--ci-border);
+  border-bottom: 1px solid var(--os-border);
   padding: 10px 16px;
 }
 .post-type-os_skill #minor-publishing-actions,
@@ -203,7 +203,7 @@
 .post-type-wp_guideline #major-publishing-actions,
 .post-type-wiki #major-publishing-actions {
   background: transparent;
-  border-top: 1px solid var(--ci-border);
+  border-top: 1px solid var(--os-border);
   padding: 12px 16px;
 }
 .post-type-os_skill #delete-action a,
@@ -219,52 +219,52 @@
 .post-type-os_wiki .categorydiv div.tabs-panel,
 .post-type-wp_guideline .categorydiv div.tabs-panel,
 .post-type-wiki .categorydiv div.tabs-panel {
-  border: 1px solid var(--ci-border);
-  border-radius: var(--ci-radius-sm);
-  background: var(--ci-bg);
+  border: 1px solid var(--os-border);
+  border-radius: var(--os-radius-sm);
+  background: var(--os-bg);
   padding: 8px 10px;
 }
 .post-type-os_skill .category-tabs a,
 .post-type-os_wiki .category-tabs a,
 .post-type-wp_guideline .category-tabs a,
-.post-type-wiki .category-tabs a { color: var(--ci-muted); }
+.post-type-wiki .category-tabs a { color: var(--os-muted); }
 .post-type-os_skill .category-tabs .tabs a,
 .post-type-os_wiki .category-tabs .tabs a,
 .post-type-wp_guideline .category-tabs .tabs a,
-.post-type-wiki .category-tabs .tabs a { color: var(--ci-text); font-weight: 500; }
+.post-type-wiki .category-tabs .tabs a { color: var(--os-text); font-weight: 500; }
 
 /* Tag box input + cloud */
 .post-type-os_skill .tagsdiv .ajaxtag input.newtag,
 .post-type-os_wiki .tagsdiv .ajaxtag input.newtag,
 .post-type-wp_guideline .tagsdiv .ajaxtag input.newtag,
 .post-type-wiki .tagsdiv .ajaxtag input.newtag {
-  border: 1px solid var(--ci-border);
-  border-radius: var(--ci-radius-sm);
+  border: 1px solid var(--os-border);
+  border-radius: var(--os-radius-sm);
   padding: 6px 10px;
-  box-shadow: var(--ci-shadow-sm);
+  box-shadow: var(--os-shadow-sm);
 }
 .post-type-os_skill .tagchecklist .ntdelbutton,
 .post-type-os_wiki .tagchecklist .ntdelbutton,
 .post-type-wp_guideline .tagchecklist .ntdelbutton,
-.post-type-wiki .tagchecklist .ntdelbutton { color: var(--ci-muted); }
+.post-type-wiki .tagchecklist .ntdelbutton { color: var(--os-muted); }
 
 /* List screens — quieter row dividers */
 .post-type-os_skill.edit-php .wp-list-table,
 .post-type-os_wiki.edit-php .wp-list-table,
 .post-type-wp_guideline.edit-php .wp-list-table,
 .post-type-wiki.edit-php .wp-list-table {
-  border: 1px solid var(--ci-border);
-  border-radius: var(--ci-radius);
-  box-shadow: var(--ci-shadow);
+  border: 1px solid var(--os-border);
+  border-radius: var(--os-radius);
+  box-shadow: var(--os-shadow);
   overflow: hidden;
-  background: var(--ci-card);
+  background: var(--os-card);
 }
 .post-type-os_skill.edit-php .wp-list-table thead th,
 .post-type-os_wiki.edit-php .wp-list-table thead th,
 .post-type-wp_guideline.edit-php .wp-list-table thead th,
 .post-type-wiki.edit-php .wp-list-table thead th {
-  background: var(--ci-bg);
-  border-bottom: 1px solid var(--ci-border);
+  background: var(--os-bg);
+  border-bottom: 1px solid var(--os-border);
   font-weight: 600;
 }
 
@@ -285,9 +285,9 @@
 .post-type-os_wiki .notice,
 .post-type-wp_guideline .notice,
 .post-type-wiki .notice {
-  border: 1px solid var(--ci-border);
+  border: 1px solid var(--os-border);
   border-left-width: 4px;
-  border-radius: var(--ci-radius-sm);
-  box-shadow: var(--ci-shadow-sm);
-  background: var(--ci-card);
+  border-radius: var(--os-radius-sm);
+  box-shadow: var(--os-shadow-sm);
+  background: var(--os-card);
 }

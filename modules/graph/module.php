@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/inc/class-graph-links.php';
 
-final class Core_Index_Graph {
+final class OS_Graph {
 
 	const VERSION   = '1.0.2';
 	const NAMESPACE = 'knowledge-graph';
@@ -407,22 +407,22 @@ final class Core_Index_Graph {
 
 ( static function (): void {
 	if ( ! class_exists( 'Knowledge_Graph_For_WordPress' ) ) {
-		class_alias( Core_Index_Graph::class, 'Knowledge_Graph_For_WordPress' );
+		class_alias( OS_Graph::class, 'Knowledge_Graph_For_WordPress' );
 	}
 	if ( ! class_exists( 'Knowledge_Graph_For_WordPress_Links' ) ) {
-		class_alias( Core_Index_Graph_Links::class, 'Knowledge_Graph_For_WordPress_Links' );
+		class_alias( OS_Graph_Links::class, 'Knowledge_Graph_For_WordPress_Links' );
 	}
 } )();
 
-Core_Index_Graph::register();
-Core_Index_Graph_Links::register();
+OS_Graph::register();
+OS_Graph_Links::register();
 OS_Standalone_Admin::boot(
 	array(
 		'slug' => 'os-graph', 'name' => 'OS Graph',
-		'mode' => 'graph', 'rest_ns' => Core_Index_Graph::REST_NS,
+		'mode' => 'graph', 'rest_ns' => OS_Graph::REST_NS,
 		'compat_field_options' => array( 'ci_field_groups_knowledge_graph_for_wordpress' ),
 		'menu_title' => 'Graph', 'position' => '3.2', 'menu_priority' => 40,
-		'types' => Core_Index_Graph::TYPES,
+		'types' => OS_Graph::TYPES,
 		'description' => 'Map the entities and relationships in your WordPress knowledge.',
 		'ai_chat_instructions' => 'Help administrators explore this knowledge graph. Ground answers in visible nodes and edges, distinguish recorded relationships from inferred ones, and preserve object-level permissions.',
 	),

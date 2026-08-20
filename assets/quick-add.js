@@ -109,26 +109,26 @@
 
 		return h(
 			'div',
-			{ className: 'ci-qa-root' },
+			{ className: 'os-qa-root' },
 			open
 				? h(
 						'div',
 						{
-							className: 'ci-qa-backdrop',
+							className: 'os-qa-backdrop',
 							onClick: ( e ) => {
 								if ( e.target === e.currentTarget ) setOpen( false );
 							},
 						},
 						h(
 							'div',
-							{ className: 'ci-qa-panel', role: 'dialog', 'aria-label': 'Quick add reminder' },
-							h( 'div', { className: 'ci-qa-header' },
-								h( 'span', { className: 'ci-qa-title' }, 'Quick add' ),
-								h( 'span', { className: 'ci-qa-hint' }, 'Cmd+. to toggle · Esc to close · Enter to save' )
+							{ className: 'os-qa-panel', role: 'dialog', 'aria-label': 'Quick add reminder' },
+							h( 'div', { className: 'os-qa-header' },
+								h( 'span', { className: 'os-qa-title' }, 'Quick add' ),
+								h( 'span', { className: 'os-qa-hint' }, 'Cmd+. to toggle · Esc to close · Enter to save' )
 							),
 							h( 'input', {
 								ref: inputRef,
-								className: 'ci-qa-input',
+								className: 'os-qa-input',
 								type: 'text',
 								value: value,
 								onChange: ( e ) => setValue( e.target.value ),
@@ -138,35 +138,35 @@
 							} ),
 							parsed && h(
 								'div',
-								{ className: 'ci-qa-preview' },
-								h( 'div', { className: 'ci-qa-row' },
-									h( 'span', { className: 'ci-qa-k' }, 'Title' ),
-									h( 'span', { className: 'ci-qa-v' }, parsed.title || '—' )
+								{ className: 'os-qa-preview' },
+								h( 'div', { className: 'os-qa-row' },
+									h( 'span', { className: 'os-qa-k' }, 'Title' ),
+									h( 'span', { className: 'os-qa-v' }, parsed.title || '—' )
 								),
-								h( 'div', { className: 'ci-qa-row' },
-									h( 'span', { className: 'ci-qa-k' }, 'Due' ),
-									h( 'span', { className: 'ci-qa-v' },
+								h( 'div', { className: 'os-qa-row' },
+									h( 'span', { className: 'os-qa-k' }, 'Due' ),
+									h( 'span', { className: 'os-qa-v' },
 										parsed.due_date
 											? parsed.due_date + ( parsed.due_time ? ' · ' + parsed.due_time : '' )
 											: '—'
 									)
 								),
-								h( 'div', { className: 'ci-qa-row' },
-									h( 'span', { className: 'ci-qa-k' }, 'Priority' ),
-									h( 'span', { className: 'ci-qa-v ci-qa-pri-' + ( parsed.priority || 'none' ) },
+								h( 'div', { className: 'os-qa-row' },
+									h( 'span', { className: 'os-qa-k' }, 'Priority' ),
+									h( 'span', { className: 'os-qa-v os-qa-pri-' + ( parsed.priority || 'none' ) },
 										parsed.priority || '—'
 									)
 								)
 							),
-							h( 'div', { className: 'ci-qa-footer' },
+							h( 'div', { className: 'os-qa-footer' },
 								h( 'button', {
 									type: 'button',
-									className: 'ci-qa-btn-secondary',
+									className: 'os-qa-btn-secondary',
 									onClick: () => setOpen( false ),
 								}, 'Cancel' ),
 								h( 'button', {
 									type: 'button',
-									className: 'ci-qa-btn-primary',
+									className: 'os-qa-btn-primary',
 									disabled: busy || ! value.trim(),
 									onClick: submit,
 								}, busy ? 'Saving…' : 'Add reminder' )
@@ -177,7 +177,7 @@
 			toast
 				? h(
 						'div',
-						{ className: 'ci-qa-toast' + ( toast.error ? ' is-error' : '' ) },
+						{ className: 'os-qa-toast' + ( toast.error ? ' is-error' : '' ) },
 						toast.error
 							? toast.msg
 							: h(
@@ -192,9 +192,9 @@
 	}
 
 	function mount() {
-		if ( document.getElementById( 'ci-quick-add-host' ) ) return;
+		if ( document.getElementById( 'os-quick-add-host' ) ) return;
 		const host = document.createElement( 'div' );
-		host.id = 'ci-quick-add-host';
+		host.id = 'os-quick-add-host';
 		document.body.appendChild( host );
 		// React 18 createRoot when available (WP 6.2+); fall back to the
 		// legacy render() on older cores. Avoids the "ReactDOM.render is no

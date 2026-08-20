@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/inc/class-memory-capture.php';
 require_once __DIR__ . '/inc/class-llm-provider.php';
 
-final class Core_Index_AI_Library {
+final class OS_AI_Library {
 
 	const VERSION   = '1.2.2';
 	const NAMESPACE = 'llm-wiki';
@@ -485,27 +485,27 @@ final class Core_Index_AI_Library {
 
 ( static function (): void {
 	if ( ! class_exists( 'LLM_Wiki_For_WordPress' ) ) {
-		class_alias( Core_Index_AI_Library::class, 'LLM_Wiki_For_WordPress' );
+		class_alias( OS_AI_Library::class, 'LLM_Wiki_For_WordPress' );
 	}
 	if ( ! class_exists( 'LLM_Wiki_For_WordPress_Memory_Capture' ) ) {
-		class_alias( Core_Index_AI_Library_Memory_Capture::class, 'LLM_Wiki_For_WordPress_Memory_Capture' );
+		class_alias( OS_AI_Library_Memory_Capture::class, 'LLM_Wiki_For_WordPress_Memory_Capture' );
 	}
 } )();
 
-Core_Index_AI_Library::register();
-Core_Index_AI_Library_Memory_Capture::register();
-Core_Index_AI_Library_LLM_Provider::register();
+OS_AI_Library::register();
+OS_AI_Library_Memory_Capture::register();
+OS_AI_Library_LLM_Provider::register();
 OS_Standalone_Admin::boot(
 	array(
 		'slug' => 'os-wiki', 'name' => 'OS Wiki',
-		'mode' => 'wiki', 'rest_ns' => Core_Index_AI_Library::REST_NS,
+		'mode' => 'wiki', 'rest_ns' => OS_AI_Library::REST_NS,
 		'compat_field_options' => array( 'ci_field_groups_llm_wiki_for_wordpress' ),
-		'menu_title' => 'AI library', 'menu_icon' => Core_Index_AI_Library::menu_icon(),
+		'menu_title' => 'AI library', 'menu_icon' => OS_AI_Library::menu_icon(),
 		'position' => '40.0',
 		'menu_priority' => 41,
-		'separator_before' => array( 'position' => '39.0', 'slug' => 'separator-ci-content-library' ),
+		'separator_before' => array( 'position' => '39.0', 'slug' => 'separator-os-content-library' ),
 		'grouped_menu_types' => array( 'skill', 'wiki', 'memory' ),
-		'types' => Core_Index_AI_Library::TYPES,
+		'types' => OS_AI_Library::TYPES,
 		'description' => 'Author durable skills, wiki pages, memory, and snippets for people and agents.',
 		'ai_chat_instructions' => 'Help administrators curate this AI library. Ground answers in visible skills, wiki pages, and memory, distinguish durable source material from suggestions, and keep private content within WordPress permissions.',
 	),

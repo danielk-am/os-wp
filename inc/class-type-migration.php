@@ -45,7 +45,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class Core_Index_Type_Migration {
+class OS_Type_Migration {
 
 	/**
 	 * Post types, and the taxonomies and meta keys that belong to each. The
@@ -243,7 +243,7 @@ class Core_Index_Type_Migration {
 	 * agent configurations, MCP clients, and anything else holding the old URL
 	 * would 404, so the old path is rewritten onto the new one before the server
 	 * matches a route. Same mechanism as the namespace rewrite in
-	 * `Core_Index_Legacy_Compat`, and it retires the same way: delete this once
+	 * `OS_Legacy_Compat`, and it retires the same way: delete this once
 	 * every client has moved.
 	 *
 	 * @param mixed            $result  Short-circuit result, returned untouched.
@@ -381,7 +381,7 @@ class Core_Index_Type_Migration {
 		$touched = 0;
 
 		foreach ( self::KEYED_BY_TYPE as $option ) {
-			$value = Core_Index_Options::get( $option, null );
+			$value = OS_Options::get( $option, null );
 			if ( ! is_array( $value ) ) {
 				continue;
 			}
@@ -403,13 +403,13 @@ class Core_Index_Type_Migration {
 				$rebuilt[ $new_key ] = $entry;
 			}
 			if ( $changed ) {
-				Core_Index_Options::update( $option, $rebuilt );
+				OS_Options::update( $option, $rebuilt );
 				++$touched;
 			}
 		}
 
 		foreach ( self::LISTS_OF_TYPES as $option ) {
-			$value = Core_Index_Options::get( $option, null );
+			$value = OS_Options::get( $option, null );
 			if ( ! is_array( $value ) ) {
 				continue;
 			}
@@ -418,7 +418,7 @@ class Core_Index_Type_Migration {
 				$value
 			);
 			if ( $rebuilt !== $value ) {
-				Core_Index_Options::update( $option, $rebuilt );
+				OS_Options::update( $option, $rebuilt );
 				++$touched;
 			}
 		}
@@ -516,7 +516,7 @@ class Core_Index_Type_Migration {
 	private static function groups(): array {
 		$groups = self::GROUPS;
 
-		foreach ( (array) Core_Index_Options::get( 'os_custom_cpts', array() ) as $key => $definition ) {
+		foreach ( (array) OS_Options::get( 'os_custom_cpts', array() ) as $key => $definition ) {
 			$slug = '';
 			if ( is_array( $definition ) ) {
 				$slug = (string) ( $definition['slug'] ?? $definition['post_type'] ?? '' );

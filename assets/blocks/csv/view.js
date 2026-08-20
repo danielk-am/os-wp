@@ -25,9 +25,9 @@
 		try { rows = JSON.parse( root.getAttribute( 'data-rows' ) || '[]' ); }
 		catch ( e ) { rows = []; }
 		var trEls = root.querySelectorAll( 'tbody > tr' );
-		var globalInput = root.querySelector( '.ci-csv-filter' );
-		var colInputs = root.querySelectorAll( '.ci-csv-col-filter' );
-		var countEl = root.querySelector( '.ci-csv-count' );
+		var globalInput = root.querySelector( '.os-csv-filter' );
+		var colInputs = root.querySelectorAll( '.os-csv-col-filter' );
+		var countEl = root.querySelector( '.os-csv-count' );
 		var totalRows = rows.length;
 
 		function applyFilters() {
@@ -79,7 +79,7 @@
 	}
 
 	function boot() {
-		document.querySelectorAll( '.ci-csv-block[data-rows]' ).forEach( hydrate );
+		document.querySelectorAll( '.os-csv-block[data-rows]' ).forEach( hydrate );
 	}
 
 	if ( document.readyState === 'loading' ) {

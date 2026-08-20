@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-final class Core_Index_Calendar_Automations {
+final class OS_Calendar_Automations {
 
 	const LEGACY_RUN_HOOK       = 'routines_for_wordpress_run';
 	const LEGACY_STEP_HOOK      = 'routines_for_wordpress_step';
@@ -94,6 +94,6 @@ final class Core_Index_Calendar_Automations {
 		! in_array( 'routines-for-wordpress/routines-for-wordpress.php', $active_plugins, true )
 		&& ! class_exists( 'Routines_For_WordPress_Runner' )
 	) {
-		class_alias( Core_Index_Calendar_Automations::class, 'Routines_For_WordPress_Runner' );
+		class_alias( OS_Calendar_Automations::class, 'Routines_For_WordPress_Runner' );
 	}
 } )();

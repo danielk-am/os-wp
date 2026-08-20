@@ -24,7 +24,7 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 		private function __construct( array $config, string $file ) {
 			$this->config = $config;
 			$this->file   = $file;
-			$this->handle = sanitize_key( $config['slug'] ) . '-ci-app';
+			$this->handle = sanitize_key( $config['slug'] ) . '-os-app';
 		}
 
 		public static function boot( array $config, string $file ): void {
@@ -165,9 +165,9 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 			$callback   = array( $this, 'render' );
 			$menu_types = (array) $this->config['grouped_menu_types'];
 			$submenu[ $parent ][] = array(
-				'<span class="ci-grouped-submenu-divider" aria-hidden="true"></span>',
+				'<span class="os-grouped-submenu-divider" aria-hidden="true"></span>',
 				$capability,
-				'ci-grouped-divider-' . sanitize_key( $this->config['slug'] ),
+				'os-grouped-divider-' . sanitize_key( $this->config['slug'] ),
 			);
 			foreach ( $menu_types as $index => $key ) {
 				if ( ! isset( $this->config['types'][ $key ] ) ) {
@@ -176,9 +176,9 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 				$type = $this->config['types'][ $key ];
 				if ( $index > 0 ) {
 					$submenu[ $parent ][] = array(
-						'<span class="ci-grouped-submenu-divider" aria-hidden="true"></span>',
+						'<span class="os-grouped-submenu-divider" aria-hidden="true"></span>',
 						$capability,
-						'ci-grouped-divider-' . sanitize_key( $type['plural'] ),
+						'os-grouped-divider-' . sanitize_key( $type['plural'] ),
 					);
 				}
 				$slug     = $this->page_slug( $key );
@@ -231,9 +231,9 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 				$add_label    = 'Add new ' . $singular;
 				$manage_label = 'Manage ' . $plural . ' type';
 				$submenu[ $parent ][] = array(
-					'<span class="ci-tools-submenu-divider" aria-hidden="true"></span>',
+					'<span class="os-tools-submenu-divider" aria-hidden="true"></span>',
 					$capability,
-					'ci-tools-divider-' . sanitize_key( $slug ),
+					'os-tools-divider-' . sanitize_key( $slug ),
 				);
 				add_submenu_page( $parent, $tool_label, $tool_label, $capability, $slug, $callback );
 				add_submenu_page( $parent, $add_label, $add_label, $capability, $slug . '-new', $callback );
@@ -266,9 +266,9 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 				$type = $this->config['types'][ $key ];
 				if ( $first_key !== $key ) {
 					$submenu[ $parent ][] = array(
-						'<span class="ci-grouped-submenu-divider" aria-hidden="true"></span>',
+						'<span class="os-grouped-submenu-divider" aria-hidden="true"></span>',
 						$capability,
-						'ci-grouped-divider-' . sanitize_key( $type['plural'] ),
+						'os-grouped-divider-' . sanitize_key( $type['plural'] ),
 					);
 				}
 				$slug     = $this->page_slug( $key );
@@ -317,9 +317,9 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 				: array( 'plural' => 'automations', 'singular' => 'automation' );
 
 			$submenu[ $parent ][] = array(
-				'<span class="ci-grouped-submenu-divider" aria-hidden="true"></span>',
+				'<span class="os-grouped-submenu-divider" aria-hidden="true"></span>',
 				$capability,
-				'ci-grouped-divider-' . $labels['plural'],
+				'os-grouped-divider-' . $labels['plural'],
 			);
 			add_submenu_page( $parent, 'All ' . $labels['plural'], 'All ' . $labels['plural'], $capability, $slug, $callback );
 			add_submenu_page( $parent, 'Add new ' . $labels['singular'], 'Add new ' . $labels['singular'], $capability, $slug . '-new', $callback );
@@ -331,15 +331,15 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 
 		public function grouped_submenu_styles(): void {
 			echo '<style>
-				#adminmenu li.ci-grouped-submenu-divider-item {
+				#adminmenu li.os-grouped-submenu-divider-item {
 					border:0; display:block; height:21px !important; margin:0 12px !important;
 					min-height:21px !important; padding:0 !important; position:relative;
 				}
-				#adminmenu li.ci-grouped-submenu-divider-item::before {
+				#adminmenu li.os-grouped-submenu-divider-item::before {
 					border-top:1px solid rgba(255,255,255,.16); content:"";
 					left:0; position:absolute; right:0; top:10px;
 				}
-				#adminmenu .ci-grouped-submenu-divider-item > a { display:none !important; }
+				#adminmenu .os-grouped-submenu-divider-item > a { display:none !important; }
 				#adminmenu .wp-submenu a[href$="-manage"] {
 					font-size:12px; white-space:nowrap;
 				}
@@ -349,10 +349,10 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 		public function grouped_submenu_accessibility(): void {
 			echo '<script>
 				(() => {
-					document.querySelectorAll("#adminmenu .ci-grouped-submenu-divider").forEach((divider) => {
+					document.querySelectorAll("#adminmenu .os-grouped-submenu-divider").forEach((divider) => {
 						const item = divider.closest("li");
 						if (!item) return;
-						item.classList.add("ci-grouped-submenu-divider-item");
+						item.classList.add("os-grouped-submenu-divider-item");
 						item.setAttribute("role", "separator");
 						item.setAttribute("aria-hidden", "true");
 					});
@@ -362,37 +362,37 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 
 		public function tools_submenu_styles(): void {
 			echo '<style>
-				#adminmenu li.ci-tools-submenu-divider-item {
+				#adminmenu li.os-tools-submenu-divider-item {
 					border:0; display:block; height:21px !important; margin:0 12px !important;
 					min-height:21px !important; padding:0 !important; position:relative;
 				}
-				#adminmenu li.ci-tools-submenu-divider-item::before {
+				#adminmenu li.os-tools-submenu-divider-item::before {
 					border-top:1px solid rgba(255,255,255,.16); content:"";
 					left:0; position:absolute; right:0; top:10px;
 				}
-				#adminmenu .ci-tools-submenu-divider-item > a { display:none !important; }
-				#menu-tools .wp-submenu > li.ci-tools-branch-parent { position:relative; }
-				#menu-tools .wp-submenu > li.ci-tools-branch-parent > a {
+				#adminmenu .os-tools-submenu-divider-item > a { display:none !important; }
+				#menu-tools .wp-submenu > li.os-tools-branch-parent { position:relative; }
+				#menu-tools .wp-submenu > li.os-tools-branch-parent > a {
 					padding-right:28px; position:relative;
 				}
-				#menu-tools .wp-submenu > li.ci-tools-branch-parent > a::after {
+				#menu-tools .wp-submenu > li.os-tools-branch-parent > a::after {
 					content:"›"; font-size:20px; line-height:1; position:absolute;
 					right:10px; top:50%; transform:translateY(-52%);
 				}
-				body.wp-admin > .ci-tools-branch {
+				body.wp-admin > .os-tools-branch {
 					background:#1d2327; box-shadow:0 3px 10px rgba(0,0,0,.32);
 					display:none; margin:0; min-width:190px; padding:7px 0;
 					position:fixed; z-index:100000;
 				}
-				body.wp-admin > .ci-tools-branch.ci-tools-branch-open { display:block; }
-				body.wp-admin > .ci-tools-branch li { margin:0; padding:0; }
-				body.wp-admin > .ci-tools-branch a {
+				body.wp-admin > .os-tools-branch.os-tools-branch-open { display:block; }
+				body.wp-admin > .os-tools-branch li { margin:0; padding:0; }
+				body.wp-admin > .os-tools-branch a {
 					color:#c3c4c7; display:block; line-height:1.4; padding:6px 14px;
 					text-decoration:none; white-space:nowrap;
 				}
-				body.wp-admin > .ci-tools-branch a:hover,
-				body.wp-admin > .ci-tools-branch a:focus { color:#72aee6; }
-				body.wp-admin > .ci-tools-branch li.current > a {
+				body.wp-admin > .os-tools-branch a:hover,
+				body.wp-admin > .os-tools-branch a:focus { color:#72aee6; }
+				body.wp-admin > .os-tools-branch li.current > a {
 					border-left:4px solid #72aee6; color:#fff; padding-left:10px;
 				}
 			</style>';
@@ -415,10 +415,10 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 			}
 			echo '<script>
 				(() => {
-					document.querySelectorAll("#adminmenu .ci-tools-submenu-divider").forEach((divider) => {
+					document.querySelectorAll("#adminmenu .os-tools-submenu-divider").forEach((divider) => {
 						const item = divider.closest("li");
 						if (!item) return;
-						item.classList.add("ci-tools-submenu-divider-item");
+						item.classList.add("os-tools-submenu-divider-item");
 						item.setAttribute("role", "separator");
 						item.setAttribute("aria-hidden", "true");
 					});
@@ -436,12 +436,12 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 						if (!trigger) return;
 						const parent = trigger.closest("li");
 						if (!parent || trigger.hasAttribute("aria-controls")) return;
-						parent.classList.add("ci-tools-branch-parent");
+						parent.classList.add("os-tools-branch-parent");
 						trigger.setAttribute("aria-haspopup", "true");
 						trigger.setAttribute("aria-expanded", "false");
 						const branch = document.createElement("ul");
-						branch.id = "ci-tools-branch-" + group.slug;
-						branch.className = "ci-tools-branch";
+						branch.id = "os-tools-branch-" + group.slug;
+						branch.className = "os-tools-branch";
 						branch.setAttribute("role", "menu");
 						branch.setAttribute("aria-label", trigger.textContent.trim());
 						trigger.setAttribute("aria-controls", branch.id);
@@ -469,8 +469,8 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 							branch.style.top = top + "px";
 						};
 						const setOpen = (open) => {
-							parent.classList.toggle("ci-tools-branch-open", open);
-							branch.classList.toggle("ci-tools-branch-open", open);
+							parent.classList.toggle("os-tools-branch-open", open);
+							branch.classList.toggle("os-tools-branch-open", open);
 							trigger.setAttribute("aria-expanded", open ? "true" : "false");
 							if (open) positionBranch();
 						};
@@ -511,7 +511,7 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 							trigger.focus();
 						});
 						window.addEventListener("resize", () => {
-							if (branch.classList.contains("ci-tools-branch-open")) positionBranch();
+							if (branch.classList.contains("os-tools-branch-open")) positionBranch();
 						});
 					});
 				})();
@@ -519,7 +519,7 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 		}
 
 		public function render(): void {
-			echo '<div class="wrap" style="margin:0;padding:0;max-width:none"><div id="ci-root"></div></div>';
+			echo '<div class="wrap" style="margin:0;padding:0;max-width:none"><div id="os-app-root"></div></div>';
 		}
 
 		public function enqueue(): void {
@@ -541,13 +541,13 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 			wp_enqueue_style( 'wp-components' );
 			wp_enqueue_style( $this->handle . '-identity', $base . 'wpds-identity.css', array(), $ver( 'wpds-identity.css' ) );
 			wp_enqueue_script( $this->handle . '-identity-runtime', $base . 'wpds-identity.js', array(), $ver( 'wpds-identity.js' ), false );
-			wp_enqueue_script( $this->handle . '-identity', $base . 'ci-identity.js', array( $this->handle . '-identity-runtime' ), $ver( 'ci-identity.js' ), true );
+			wp_enqueue_script( $this->handle . '-identity', $base . 'os-identity.js', array( $this->handle . '-identity-runtime' ), $ver( 'os-identity.js' ), true );
 			wp_enqueue_style( $this->handle . '-shell', $base . 'context-app-shell.css', array(), $ver( 'context-app-shell.css' ) );
-			wp_enqueue_style( $this->handle . '-reset', $base . 'ci-reset.css', array(), $ver( 'ci-reset.css' ) );
-			wp_enqueue_style( $this->handle . '-utils', $base . 'ci-utils.css', array( $this->handle . '-reset' ), $ver( 'ci-utils.css' ) );
-			wp_enqueue_style( $this->handle . '-theme', $base . 'ci-wpds-theme.css', array( $this->handle . '-utils' ), $ver( 'ci-wpds-theme.css' ) );
+			wp_enqueue_style( $this->handle . '-reset', $base . 'os-reset.css', array(), $ver( 'os-reset.css' ) );
+			wp_enqueue_style( $this->handle . '-utils', $base . 'os-utils.css', array( $this->handle . '-reset' ), $ver( 'os-utils.css' ) );
+			wp_enqueue_style( $this->handle . '-theme', $base . 'os-wpds-theme.css', array( $this->handle . '-utils' ), $ver( 'os-wpds-theme.css' ) );
 			wp_enqueue_style( $this->handle . '-dataviews', $base . 'vendor/wp-dataviews.css', array( $this->handle . '-theme' ), $ver( 'vendor/wp-dataviews.css' ) );
-			wp_enqueue_style( $this->handle . '-dataviews-skin', $base . 'ci-dataviews-skin.css', array( $this->handle . '-dataviews' ), $ver( 'ci-dataviews-skin.css' ) );
+			wp_enqueue_style( $this->handle . '-dataviews-skin', $base . 'os-dataviews-skin.css', array( $this->handle . '-dataviews' ), $ver( 'os-dataviews-skin.css' ) );
 			wp_enqueue_script( $this->handle . '-shell', $base . 'context-app-shell.js', array(), $ver( 'context-app-shell.js' ), false );
 			wp_enqueue_script(
 				$this->handle,
@@ -573,15 +573,15 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 			if ( current_user_can( 'manage_options' ) ) {
 				wp_enqueue_style(
 					$this->handle . '-ai-chat',
-					$base . 'ci-ai-chat.css',
+					$base . 'os-ai-chat.css',
 					array( 'wp-components' ),
-					$ver( 'ci-ai-chat.css' )
+					$ver( 'os-ai-chat.css' )
 				);
 				wp_enqueue_script(
 					$this->handle . '-ai-chat',
-					$base . 'ci-ai-chat.js',
+					$base . 'os-ai-chat.js',
 					array( $this->handle ),
-					$ver( 'ci-ai-chat.js' ),
+					$ver( 'os-ai-chat.js' ),
 					true
 				);
 			}
@@ -608,18 +608,18 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 				return $base . $path . '?v=' . ( file_exists( $dir . $path ) ? filemtime( $dir . $path ) : 1 );
 			};
 			$imports = array(
-				'ci/core' => $url( 'ci-core.js' ), 'ci/ui' => $url( 'ci-ui.js' ),
-				'ci/engine' => $url( 'ci-engine.js' ), 'ci/shell' => $url( 'ci-shell.js' ),
-				'ci/editors' => $url( 'ci-editors.js' ), 'ci/app-media' => $url( 'ci-app-media.js' ),
-				'ci/app-wizards' => $url( 'ci-app-wizards.js' ), 'ci/editor-chrome' => $url( 'ci-editor-chrome.js' ),
-				'ci/skill-mermaid' => $url( 'ci-skill-mermaid.js' ), 'ci/app-activity' => $url( 'ci-app-activity.js' ),
-				'ci/app-notifications' => $url( 'ci-app-notifications.js' ), 'ci/app-apps' => $url( 'ci-app-apps.js' ),
-				'ci/app-workspace' => $url( 'ci-app-workspace.js' ), 'ci/type' => $url( 'ci-type.js' ),
-				'ci/app-type-menus' => $url( 'ci-app-type-menus.js' ),
-				'ci/blueprints' => $url( 'ci-blueprints.js' ),
-				'ci/app-reminders' => $url( 'ci-app-reminders.js' ),
-				'ci/app-filesystem' => $url( 'ci-app-filesystem.js' ),
-				'ci/app-code' => $url( 'ci-app-code.js' ),
+				'os/core' => $url( 'os-core.js' ), 'os/ui' => $url( 'os-ui.js' ),
+				'os/engine' => $url( 'os-engine.js' ), 'os/shell' => $url( 'os-shell.js' ),
+				'os/editors' => $url( 'os-editors.js' ), 'os/app-media' => $url( 'os-app-media.js' ),
+				'os/app-wizards' => $url( 'os-app-wizards.js' ), 'os/editor-chrome' => $url( 'os-editor-chrome.js' ),
+				'os/skill-mermaid' => $url( 'os-skill-mermaid.js' ), 'os/app-activity' => $url( 'os-app-activity.js' ),
+				'os/app-notifications' => $url( 'os-app-notifications.js' ), 'os/app-apps' => $url( 'os-app-apps.js' ),
+				'os/app-workspace' => $url( 'os-app-workspace.js' ), 'os/type' => $url( 'os-type.js' ),
+				'os/app-type-menus' => $url( 'os-app-type-menus.js' ),
+				'os/blueprints' => $url( 'os-blueprints.js' ),
+				'os/app-reminders' => $url( 'os-app-reminders.js' ),
+				'os/app-filesystem' => $url( 'os-app-filesystem.js' ),
+				'os/app-code' => $url( 'os-app-code.js' ),
 				'react' => $url( 'bridge-react.js' ), 'react-dom' => $url( 'bridge-react-dom-client.js' ),
 				'react-dom/client' => $url( 'bridge-react-dom-client.js' ), 'react/jsx-runtime' => $url( 'bridge-react-jsx-runtime.js' ),
 				'@wordpress/components' => $url( 'bridge-wp-components.js' ),
@@ -637,7 +637,7 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 			);
 			$providers = (array) ( $this->config['editor_providers'] ?? array() );
 			if ( in_array( 'llm', $providers, true ) ) {
-				$imports['ci/app-llm'] = $url( 'ci-app-llm.js' );
+				$imports['os/app-llm'] = $url( 'os-app-llm.js' );
 				$canvas_dir = $dir . 'llm-editor/';
 				if ( is_dir( $canvas_dir ) ) {
 					$iterator = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $canvas_dir, FilesystemIterator::SKIP_DOTS ) );
@@ -651,10 +651,10 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 				}
 			}
 			if ( in_array( 'csv', $providers, true ) ) {
-				$imports['ci/app-csv'] = $url( 'ci-app-csv.js' );
+				$imports['os/app-csv'] = $url( 'os-app-csv.js' );
 			}
 			if ( in_array( 'source', $providers, true ) ) {
-				$imports['ci/app-source'] = $url( 'ci-app-source.js' );
+				$imports['os/app-source'] = $url( 'os-app-source.js' );
 			}
 			wp_print_inline_script_tag( (string) wp_json_encode( array( 'imports' => $imports ) ), array( 'type' => 'importmap' ) );
 		}
@@ -747,7 +747,7 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 				) );
 			}
 			$compat_namespaces = (array) ( $this->config['compat_rest_namespaces'] ?? array() );
-			if ( 'content-types' === ( $this->config['mode'] ?? '' ) && ! class_exists( 'Core_Index_Settings' ) ) {
+			if ( 'content-types' === ( $this->config['mode'] ?? '' ) && ! class_exists( 'OS_Settings' ) ) {
 				// The extracted CI type editor still speaks the original shared
 				// namespace. Content Types owns those kernel routes after split,
 				// but must not shadow a partially migrated monolith.
@@ -1003,10 +1003,10 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 			}
 
 			if ( post_type_exists( $cpt ) ) {
-				$owned_dynamic_type = class_exists( 'Core_Index_Content_Types_Dynamic_Types' )
-					&& is_callable( array( 'Core_Index_Content_Types_Dynamic_Types', 'owns' ) )
-					&& Core_Index_Content_Types_Dynamic_Types::owns( $cpt );
-				if ( ! $definitions || ( class_exists( 'Core_Index_Content_Types_Dynamic_Types' ) && ! $owned_dynamic_type ) ) {
+				$owned_dynamic_type = class_exists( 'OS_Content_Types_Dynamic_Types' )
+					&& is_callable( array( 'OS_Content_Types_Dynamic_Types', 'owns' ) )
+					&& OS_Content_Types_Dynamic_Types::owns( $cpt );
+				if ( ! $definitions || ( class_exists( 'OS_Content_Types_Dynamic_Types' ) && ! $owned_dynamic_type ) ) {
 					return new WP_Error(
 						'post_type_conflict',
 						'A registered post type already uses that key.',
@@ -1091,7 +1091,7 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 				'path_template' => static fn( $value ) => sanitize_text_field( (string) $value ),
 				'hierarchical' => static fn( $value ) => (bool) $value,
 				'icon'         => static fn( $value ) => sanitize_key( (string) $value ),
-				'icon_svg'     => static fn( $value ) => Core_Index_Icon_SVG_Sanitizer::sanitize( (string) $value ),
+				'icon_svg'     => static fn( $value ) => OS_Icon_SVG_Sanitizer::sanitize( (string) $value ),
 			);
 			foreach ( $conditional_values as $key => $sanitize ) {
 				$value = $request->get_param( $key );
@@ -1102,7 +1102,7 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 			if ( $created && ! array_key_exists( 'hierarchical', $config ) ) {
 				$config['hierarchical'] = false;
 			}
-			$config['icon_svg'] = Core_Index_Icon_SVG_Sanitizer::sanitize( (string) ( $config['icon_svg'] ?? '' ) );
+			$config['icon_svg'] = OS_Icon_SVG_Sanitizer::sanitize( (string) ( $config['icon_svg'] ?? '' ) );
 
 			update_post_meta( $post_id, 'content_types_type_key', $cpt );
 			update_post_meta( $post_id, 'content_types_singular', $label );
@@ -1399,15 +1399,15 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 		private function app_modules(): array {
 			$mode = $this->config['mode'] ?? '';
 			$modules = match ( $mode ) {
-				'calendar', 'reminders', 'routines' => array( 'ci/app-reminders' ),
-				'filesystem' => array( 'ci/app-filesystem' ),
-				'code' => array( 'ci/app-code' ),
-				'content-types' => array( 'ci/app-type-menus' ),
+				'calendar', 'reminders', 'routines' => array( 'os/app-reminders' ),
+				'filesystem' => array( 'os/app-filesystem' ),
+				'code' => array( 'os/app-code' ),
+				'content-types' => array( 'os/app-type-menus' ),
 				default => array(),
 			};
 			foreach ( (array) ( $this->config['editor_providers'] ?? array() ) as $provider ) {
 				if ( in_array( $provider, array( 'llm', 'csv', 'source' ), true ) ) {
-					$modules[] = 'ci/app-' . $provider;
+					$modules[] = 'os/app-' . $provider;
 				}
 			}
 			return array_values( array_unique( $modules ) );
@@ -1462,7 +1462,7 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 				'custom_cpts' => $is_content ? $this->custom_content_types() : array(), 'adopted_cpts' => array(), 'cpt_candidates' => array(),
 				'cpt_orphans' => array(), 'field_groups' => $this->field_groups(),
 				'taxonomies' => $is_content ? $this->content_taxonomies() : array(), 'read_token' => '', 'anthropic_key_set' => false,
-				'llm_provider' => class_exists( 'Core_Index_AI_Library_LLM_Provider' ) ? Core_Index_AI_Library_LLM_Provider::public_settings() : array(),
+				'llm_provider' => class_exists( 'OS_AI_Library_LLM_Provider' ) ? OS_AI_Library_LLM_Provider::public_settings() : array(),
 				'instance_id' => '', 'instance_id_locked' => false, 'mcp_disabled_tools' => array(),
 				'mcp_all_tools' => array(), 'mcp_connector_url' => '',
 				'diagnostics' => array(), 'schemas' => $schemas, 'schema_overrides' => $schema_overrides,
@@ -1486,9 +1486,9 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 			foreach ( $posts as $post ) {
 				$cpt = (string) get_post_meta( $post->ID, 'content_types_type_key', true );
 				$slug = preg_replace( '/^(ci|os)_/', '', sanitize_key( $cpt ) );
-				$owned_dynamic_type = class_exists( 'Core_Index_Content_Types_Dynamic_Types' )
-					&& is_callable( array( 'Core_Index_Content_Types_Dynamic_Types', 'owns' ) )
-					&& Core_Index_Content_Types_Dynamic_Types::owns( $cpt );
+				$owned_dynamic_type = class_exists( 'OS_Content_Types_Dynamic_Types' )
+					&& is_callable( array( 'OS_Content_Types_Dynamic_Types', 'owns' ) )
+					&& OS_Content_Types_Dynamic_Types::owns( $cpt );
 				if (
 					'' === $slug
 					|| strlen( $cpt ) > 20
@@ -1508,7 +1508,7 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 					'slug' => $slug,
 					'label' => (string) ( get_post_meta( $post->ID, 'content_types_singular', true ) ?: $post->post_title ),
 					'plural' => (string) ( get_post_meta( $post->ID, 'content_types_plural', true ) ?: $post->post_title ),
-					'icon' => (string) ( $config['icon'] ?? 'folder' ), 'icon_svg' => Core_Index_Icon_SVG_Sanitizer::sanitize( (string) ( $config['icon_svg'] ?? '' ) ),
+					'icon' => (string) ( $config['icon'] ?? 'folder' ), 'icon_svg' => OS_Icon_SVG_Sanitizer::sanitize( (string) ( $config['icon_svg'] ?? '' ) ),
 					'editor' => (string) ( $config['editor'] ?? 'cpt' ), 'editors' => (array) ( $config['editors'] ?? array( 'cpt' ) ),
 					'hierarchical' => (bool) ( $config['hierarchical'] ?? false ),
 					'editor_mode' => (string) ( $config['editor_mode'] ?? '' ),

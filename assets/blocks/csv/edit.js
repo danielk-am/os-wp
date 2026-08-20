@@ -98,7 +98,7 @@
 				slug
 					? h(
 							'div',
-							{ className: 'ci-csv-block-preview' },
+							{ className: 'os-csv-block-preview' },
 							h( ServerSideRender, {
 								block: 'core-index/csv',
 								attributes,

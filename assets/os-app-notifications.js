@@ -11,9 +11,9 @@
  */
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { h, rest, registerRoute, registerNavRow, setNavBadge, CIRegistry } from 'ci/core';
-import { Icon, Card, Button, Badge, Spinner, PageHeading, LogTable } from 'ci/ui';
-import { useToast } from 'ci/shell';
+import { h, rest, registerRoute, registerNavRow, setNavBadge, CIRegistry } from 'os/core';
+import { Icon, Card, Button, Badge, Spinner, PageHeading, LogTable } from 'os/ui';
+import { useToast } from 'os/shell';
 
 const FEED = '/activity/v1/notifications';
 
@@ -52,10 +52,10 @@ function NotificationsTable({ items, readAt, now }) {
             <span className=${`mt-1.5 inline-block w-2 h-2 rounded-full shrink-0 ${sev.dot}`} aria-hidden="true" />
             <span className="min-w-0">
               <span className="flex items-center gap-2">
-                <span className=${`ci-cell-text ${item.unread ? 'font-semibold' : ''}`} style=${item.unread ? undefined : { fontWeight: 400 }}>${item.title}</span>
+                <span className=${`os-cell-text ${item.unread ? 'font-semibold' : ''}`} style=${item.unread ? undefined : { fontWeight: 400 }}>${item.title}</span>
                 ${item.unread ? h`<span className="shrink-0 text-[10px] uppercase tracking-wider text-blue-500 font-semibold">new</span>` : null}
               </span>
-              ${item.detail ? h`<span className="ci-cell-text text-xs text-muted-foreground" style=${{ fontWeight: 400 }}>${item.detail}</span>` : null}
+              ${item.detail ? h`<span className="os-cell-text text-xs text-muted-foreground" style=${{ fontWeight: 400 }}>${item.detail}</span>` : null}
             </span>
           </span>`;
         },

@@ -5,12 +5,12 @@
  *
  * Each snippet is a `os_code` post (the source of truth + free version history
  * via revisions). Saving materialises it to a real file under
- * wp-content/ci-snippets/<lang>/<slug>.<ext> — so it's browsable, diffable, and
+ * wp-content/os-snippets/<lang>/<slug>.<ext> — so it's browsable, diffable, and
  * restorable in the Filesystem app, and a corrupt PHP snippet is recoverable by
  * the loader rather than fatal-and-stuck.
  *
  * Execution model by language:
- *   - php  → run by the mu-plugin loader (inc/loader/ci-code-loader.php),
+ *   - php  → run by the mu-plugin loader (inc/loader/os-code-loader.php),
  *            wrapped in a shutdown tripwire that flags + auto-skips any snippet
  *            that fatals (the circuit breaker). Activation is the only risky
  *            operation, so MCP activation of PHP is gated behind a setting.
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CI_Code {
+class OS_Code {
 
 	const NS           = 'code/v1';
 	const CPT          = 'os_code';
@@ -93,7 +93,7 @@ class CI_Code {
 		CI_Code_Options::update( self::INDEX_OPTION, array(), false );
 		CI_Code_Options::delete( self::LOADING_OPTION );
 
-		$source = CI_CODE_DIR . 'inc/loader/ci-code-loader.php';
+		$source = CI_CODE_DIR . 'inc/loader/os-code-loader.php';
 		$loader = self::loader_path();
 		if ( ! is_file( $source ) || ! is_file( $loader ) ) {
 			return;
@@ -455,9 +455,9 @@ class CI_Code {
 			$url = self::url() . '/' . $s['language'] . '/' . $s['slug'] . '.' . ( self::EXT[ $s['language'] ] ?? $s['language'] );
 			$ver = (string) ( file_exists( self::dir() . '/' . $s['language'] . '/' . $s['slug'] . '.' . self::EXT[ $s['language'] ] ) ? filemtime( self::dir() . '/' . $s['language'] . '/' . $s['slug'] . '.' . self::EXT[ $s['language'] ] ) : self::LOADER_VERSION );
 			if ( 'css' === $s['language'] ) {
-				wp_enqueue_style( 'ci-code-' . $s['id'], $url, array(), $ver );
+				wp_enqueue_style( 'os-code-' . $s['id'], $url, array(), $ver );
 			} elseif ( 'js' === $s['language'] ) {
-				wp_enqueue_script( 'ci-code-' . $s['id'], $url, array(), $ver, true );
+				wp_enqueue_script( 'os-code-' . $s['id'], $url, array(), $ver, true );
 			}
 		}
 	}
@@ -499,7 +499,7 @@ class CI_Code {
 			'callback'            => static function () {
 				return rest_ensure_response( array(
 					'errors'           => self::get_errors(),
-					'loader_installed' => is_file( WPMU_PLUGIN_DIR . '/ci-code-loader.php' ),
+					'loader_installed' => is_file( WPMU_PLUGIN_DIR . '/os-code-loader.php' ),
 					'mcp_activate_php' => self::mcp_php_activation_allowed(),
 				) );
 			},
@@ -530,7 +530,7 @@ class CI_Code {
 		if ( ! defined( 'WPMU_PLUGIN_DIR' ) ) {
 			return;
 		}
-		$src  = CI_CODE_DIR . 'inc/loader/ci-code-loader.php';
+		$src  = CI_CODE_DIR . 'inc/loader/os-code-loader.php';
 		$dest = self::loader_path();
 		if ( ! is_file( $src ) ) {
 			return;
@@ -564,16 +564,16 @@ class CI_Code {
 	}
 
 	private static function loader_path(): string {
-		return WPMU_PLUGIN_DIR . '/ci-code-loader.php';
+		return WPMU_PLUGIN_DIR . '/os-code-loader.php';
 	}
 
 	// === Helpers ==========================================================
 
 	public static function dir(): string {
-		return ( defined( 'WP_CONTENT_DIR' ) ? WP_CONTENT_DIR : ABSPATH . 'wp-content' ) . '/ci-snippets';
+		return ( defined( 'WP_CONTENT_DIR' ) ? WP_CONTENT_DIR : ABSPATH . 'wp-content' ) . '/os-snippets';
 	}
 	public static function url(): string {
-		return content_url( 'ci-snippets' );
+		return content_url( 'os-snippets' );
 	}
 	private static function lang_of( int $post_id ): string {
 		$l = (string) get_post_meta( $post_id, self::META_LANG, true );

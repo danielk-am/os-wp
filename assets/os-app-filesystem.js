@@ -13,7 +13,7 @@
  *   - Main: listing of the current directory (dirs + files) + a collapsible
  *     command console; per-row kebab + right-click context menu for ops.
  *   - Right: preview pane — editable code (CodeMirror) for text, image preview,
- *     or a download for binaries. .llm opens on the ci-llm graph canvas instead,
+ *     or a download for binaries. .llm opens on the os-llm graph canvas instead,
  *     when that companion is active (CIRegistry.LlmBodyEditor).
  *
  * File ops + the command console call the manage_options-gated /fs/* REST
@@ -29,10 +29,10 @@ import {
   Dropdown as WPDropdown, MenuGroup as WPMenuGroup, MenuItem as WPMenuItem,
   Toolbar as WPToolbar, ToolbarGroup as WPToolbarGroup, ToolbarButton as WPToolbarButton,
 } from '@wordpress/components';
-import { h, BOOT, rest, REST_BASE, registerRoute, CIRegistry, rankSearch } from 'ci/core';
-import { Icon, Spinner, PageHeading, ViewToggle, useViewMode, ResizablePane } from 'ci/ui';
-import { useToast, useDialog } from 'ci/shell';
-import { CodeEditor, useEditorFullWidth } from 'ci/editors';
+import { h, BOOT, rest, REST_BASE, registerRoute, CIRegistry, rankSearch } from 'os/core';
+import { Icon, Spinner, PageHeading, ViewToggle, useViewMode, ResizablePane } from 'os/ui';
+import { useToast, useDialog } from 'os/shell';
+import { CodeEditor, useEditorFullWidth } from 'os/editors';
 
 const NS = '/filesystem/v1';
 
@@ -73,7 +73,7 @@ function entryIcon(entry, open) {
 }
 
 // `.llm` has no glyph in the icon font, but it is a first-class authored format
-// here (opens on the ci-llm graph canvas). Render a `.llm` chip that mirrors the
+// here (opens on the os-llm graph canvas). Render a `.llm` chip that mirrors the
 // `file-markdown` document badge — a rounded outline with the extension inside —
 // so it reads as a labelled file type, theme-aware via currentColor.
 function LlmGlyph({ className }) {
@@ -106,9 +106,9 @@ const CM_LANG = {
 function cmLangFor(ext) { return CM_LANG[ext] || 'plaintext'; }
 
 // Extensions that prefer the .llm graph canvas over the code editor, when the
-// ci-llm companion is active. Only .llm, its native format: .md stays on the
+// os-llm companion is active. Only .llm, its native format: .md stays on the
 // code editor for markdown syntax highlighting (and to avoid the canvas
-// reserializing plain markdown on save). ci-llm publishes the embeddable editor
+// reserializing plain markdown on save). os-llm publishes the embeddable editor
 // as CIRegistry.LlmBodyEditor — a { value, onChange } component, the same shape
 // as CodeEditor — so this is a drop-in swap. Absent the companion the key is
 // undefined and we fall back to the code editor, the usual registry contract.
@@ -196,10 +196,10 @@ function RootsManager({ roots, onClose, onSaved }) {
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         <p className="text-xs text-muted-foreground">Each root is an absolute path the Files browser is jailed to. Access never escapes a root (symlinks included).</p>
         ${rows.map((r, i) => h`<div key=${i} className="flex items-end gap-2">
-          <div className="w-32 shrink-0 ci-wpds-fields">
+          <div className="w-32 shrink-0 os-wpds-fields">
             <${WPTextControl} __nextHasNoMarginBottom __next40pxDefaultSize label="Label" value=${r.label} onChange=${(v) => update(i, 'label', v)} placeholder="wp-content" />
           </div>
-          <div className="flex-1 ci-wpds-fields">
+          <div className="flex-1 os-wpds-fields">
             <${WPTextControl} __nextHasNoMarginBottom __next40pxDefaultSize label="Absolute path" value=${r.path} onChange=${(v) => update(i, 'path', v)} placeholder="/var/www/html/wp-content" />
           </div>
           <${WPButton} size="small" isDestructive=${true} onClick=${() => remove(i)} label="Remove" showTooltip=${true} icon=${h`<${Icon} name="trash" />`} />
@@ -241,7 +241,7 @@ function PreviewPane({ root, file, onClose, onSaved }) {
   const ext = (name.split('.').pop() || '').toLowerCase();
   const isImage = data && data.mime && data.mime.startsWith('image/');
   const isText = data && !data.error && !data.binary && !data.too_large && !isImage;
-  // .llm / .md open on the ci-llm canvas when that companion is loaded; every
+  // .llm / .md open on the os-llm canvas when that companion is loaded; every
   // other text file, and any of these when it isn't, use the code editor.
   const LlmEditor = isText ? llmCanvasFor(ext) : null;
   // Drag cap: let the handle pull the pane most of the way across the viewport
@@ -599,7 +599,7 @@ function DirListing({ root, cwd, view, query, content, onOpenDir, onOpenFile, se
       ${folders.map((e) => {
         const full = entryFull(cwd, e);
         return h`<div key=${e.path || e.name} onClick=${() => openEntry(e, full)} onContextMenu=${onCtx(e)}
-          className="group relative flex items-center gap-2 px-3 py-2 rounded-md border border-border bg-card cursor-pointer ci-card-hover">
+          className="group relative flex items-center gap-2 px-3 py-2 rounded-md border border-border bg-card cursor-pointer os-card-hover">
           <${Icon} name="folder" className="w-4 h-4 text-blue-500 shrink-0" />
           <div className="flex-1 min-w-0">
             <div className="text-sm font-medium truncate" title=${e.name}>${e.name}${e.is_link ? ' ↗' : ''}</div>
@@ -614,7 +614,7 @@ function DirListing({ root, cwd, view, query, content, onOpenDir, onOpenFile, se
         const full = entryFull(cwd, e);
         const isSel = selectedFile === full;
         return h`<div key=${e.path || e.name} onClick=${() => openEntry(e, full)} onContextMenu=${onCtx(e)}
-          className=${`group relative rounded-md border bg-card cursor-pointer overflow-hidden transition-shadow ${isSel ? 'border-foreground ring-2 ring-ring' : 'border-border ci-card-hover'}`}>
+          className=${`group relative rounded-md border bg-card cursor-pointer overflow-hidden transition-shadow ${isSel ? 'border-foreground ring-2 ring-ring' : 'border-border os-card-hover'}`}>
           <div className="aspect-square bg-muted flex items-center justify-center">
             <${EntryIcon} entry=${e} open=${false} className="w-10 h-10 text-muted-foreground" />
           </div>
@@ -909,8 +909,8 @@ function FilesystemPage() {
   // groups are split by the toolbar's own separators (view · create · session),
   // set a comfortable gap from the primary Upload button so the cluster reads as
   // spaced controls, not a cramped icon strip.
-  const fsActions = h`<div className="ci-fs-actions flex items-center gap-3 shrink-0">
-    <${WPToolbar} label="File actions" className="ci-editor-toolbar ci-fs-toolbar">
+  const fsActions = h`<div className="os-fs-actions flex items-center gap-3 shrink-0">
+    <${WPToolbar} label="File actions" className="os-editor-toolbar os-fs-toolbar">
       <${ViewToggle} view=${view} onChange=${setView} />
       <${WPToolbarGroup}>
         <${WPToolbarButton} icon=${h`<${Icon} name="folder-plus" />`} label="New folder" showTooltip=${true} onClick=${opNewFolder} />
@@ -942,7 +942,7 @@ function FilesystemPage() {
         </div>
         ${/* Search, full width, its own row (CI's utility CSS has no `sm:`
              responsive width, so it must not share a flex row). */ ''}
-        <div className="mb-2 ci-wpds-fields" style=${{ width: '100%' }}>
+        <div className="mb-2 os-wpds-fields" style=${{ width: '100%' }}>
           <${WPSearchControl} __nextHasNoMarginBottom
             value=${query} onChange=${setQuery}
             placeholder=${cwd ? `Search in ${baseName(cwd)}…` : `Search ${activeRoot?.label || 'files'}…`} />

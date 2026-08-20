@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-final class Core_Index_Activity_Recorder {
+final class OS_Activity_Recorder {
 
 	public static function register(): void {
 		add_action( 'transition_post_status', array( __CLASS__, 'post_transition' ), 10, 3 );

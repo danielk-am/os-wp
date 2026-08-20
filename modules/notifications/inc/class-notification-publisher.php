@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-final class Core_Index_Notifications_Publisher {
+final class OS_Notifications_Publisher {
 
 	const LEGACY_CALENDAR_DUE_HOOK = 'reminders_for_wordpress_due';
 
@@ -22,7 +22,7 @@ final class Core_Index_Notifications_Publisher {
 
 	public static function register_calendar_hooks(): void {
 		add_action( 'core_index_calendar_reminder_due', array( __CLASS__, 'publish_reminder' ), 10, 2 );
-		if ( ! class_exists( 'Core_Index_Calendar_Reminders' ) ) {
+		if ( ! class_exists( 'OS_Calendar_Reminders' ) ) {
 			add_action( self::LEGACY_CALENDAR_DUE_HOOK, array( __CLASS__, 'publish_reminder' ), 10, 2 );
 		}
 	}

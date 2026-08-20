@@ -25,7 +25,7 @@ npm install codemirror @codemirror/state @codemirror/view @codemirror/language \
 The entry module (`index.js`) re-exports the CM6 API the app imports and a
 `languageFor(name)` helper that maps a CI language id to a CM6 language
 extension (`php` uses `{ plain: true }` so tag-free php files still highlight).
-Keep it in sync with the imports in `assets/ci-editors.js`. Its current content
+Keep it in sync with the imports in `assets/os-editors.js`. Its current content
 is the canonical source; if you change the language list, update both.
 
 The importmap (`inc/admin/class-context-app.php`) points `codemirror` and every

@@ -47,9 +47,9 @@ OS_Updates::register();
 
 require_once OS_DIR . 'inc/class-options.php';
 require_once OS_DIR . 'inc/class-option-migration.php';
-Core_Index_Option_Migration::register();
+OS_Option_Migration::register();
 require_once OS_DIR . 'inc/class-type-migration.php';
-Core_Index_Type_Migration::register();
+OS_Type_Migration::register();
 
 // The shared runtime every module's admin app is built on. One copy now; there
 // were ten, kept in step by a sync script that no longer needs to exist.

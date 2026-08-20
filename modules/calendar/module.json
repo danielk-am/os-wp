@@ -46,25 +46,25 @@
       "from": "ci_reminder",
       "to": "os_reminder",
       "kind": "post_type",
-      "note": "Registered by ci-reminders (legacy) and calendar; both code paths rename together."
+      "note": "Registered by os-reminders (legacy) and calendar; both code paths rename together."
     },
     {
       "from": "ci_reminder",
       "to": "os_reminder",
       "kind": "rest_base",
-      "note": "Registered by ci-reminders (legacy) and calendar; both code paths rename together."
+      "note": "Registered by os-reminders (legacy) and calendar; both code paths rename together."
     },
     {
       "from": "ci_automation",
       "to": "os_automation",
       "kind": "post_type",
-      "note": "Registered by ci-reminders and routines (both legacy) and calendar."
+      "note": "Registered by os-reminders and routines (both legacy) and calendar."
     },
     {
       "from": "ci_automation",
       "to": "os_automation",
       "kind": "rest_base",
-      "note": "Registered by ci-reminders and routines (both legacy) and calendar."
+      "note": "Registered by os-reminders and routines (both legacy) and calendar."
     },
     {
       "from": "ci_reminder_note",

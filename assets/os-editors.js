@@ -16,8 +16,8 @@ import { BlockEditorProvider, BlockList, BlockTools, BlockToolbar, BlockInspecto
 import { parse as parseBlocks, serialize as serializeBlocks, pasteHandler, createBlock, getBlockTypes } from '@wordpress/blocks';
 import { SlotFillProvider as WPSlotFillProvider, Toolbar as WPToolbar, ToolbarGroup as WPToolbarGroup, ToolbarButton as WPToolbarButton, Button as WPButton, TextareaControl as WPTextareaControl } from '@wordpress/components';
 import { ShortcutProvider } from '@wordpress/keyboard-shortcuts';
-import { h, BOOT, rest } from 'ci/core';
-import { Icon, Card, Toolbar as CIToolbar } from 'ci/ui';
+import { h, BOOT, rest } from 'os/core';
+import { Icon, Card, Toolbar as CIToolbar } from 'os/ui';
 
 // --- [[wikilink]] autocomplete (CM6 completion source) ---------------------
 // Typing `[[` in a prose body offers the existing skill / wiki slugs, so
@@ -68,7 +68,7 @@ const iconUndo = wpIcon('M18.3 11.7c-.6-.6-1.4-.9-2.3-.9H6.7l2.9-3.3-1.1-1-4.5 5
 const iconRedo = wpIcon('M15.6 6.5l-1.1 1 2.9 3.3H8c-.9 0-1.7.3-2.3.9-1.6 1.4-1.6 4.2-1.6 5.7v.2h1.5v-.3c0-1.1 0-3.5 1-4.5.3-.3.7-.5 1.3-.5h9.2l-2.7 2.7 1.1 1.1 4.5-4.5-4.6-5z');
 const iconListView = wpIcon('M3 6h11v1.5H3V6Zm3.5 5.5h11V13h-11v-1.5ZM21 17H10v1.5h11V17Z');
 const iconDrawerRight = wpIcon('M13 19h-2v-2h2v2zm0-6h-2v-2h2v2zm0-6h-2V5h2v2z');
-// Shared with the Fields designer canvas (ci-type), so its toolbar carries
+// Shared with the Fields designer canvas (os-type), so its toolbar carries
 // the exact same glyphs as this composer's.
 export const EDITOR_ICONS = {
   plus: iconPlus,
@@ -208,7 +208,7 @@ export function CMEditor({ value, onChange, language, jumpToLine, onJumpConsumed
     return () => { cancelled = true; };
   }, [jumpToLine]);
 
-  return h`<div ref=${ref} className="w-full h-full overflow-auto bg-card ci-cm6" />`;
+  return h`<div ref=${ref} className="w-full h-full overflow-auto bg-card os-cm6" />`;
 }
 
 
@@ -567,9 +567,9 @@ export function GutenbergComposer({
         iframeDoc = doc;
         doc.addEventListener('keydown', onKeyDown, true);
       }
-      if (doc && doc.head && !doc.getElementById('ci-canvas-styles')) {
+      if (doc && doc.head && !doc.getElementById('os-canvas-styles')) {
         const st = doc.createElement('style');
-        st.id = 'ci-canvas-styles';
+        st.id = 'os-canvas-styles';
         st.textContent = collectCanvasStyles()[0].css;
         doc.head.appendChild(st);
       }
@@ -590,7 +590,7 @@ export function GutenbergComposer({
         value=${value || ''}
         onChange=${onChange}
         rows=${6}
-        className="ci-md-fallback mt-2"
+        className="os-md-fallback mt-2"
         __nextHasNoMarginBottom=${true}
       />
     </${Card}>`;
@@ -612,10 +612,10 @@ export function GutenbergComposer({
   // inside this (overflow-hidden) wrapper, the editor's dropdown popovers
   // (Border, font-size "Fit text", the toolbar ⋮ menus) rendered at the
   // slot's DOM position — bottom-left over the content — and lost their
-  // padding to the #ci-root Tailwind reset. Without a slot, @wordpress
+  // padding to the #os-app-root Tailwind reset. Without a slot, @wordpress
   // Popover falls back to its default document.body portal: anchored
-  // correctly to the trigger AND styled natively (outside #ci-root).
-  return h`<div ref=${wrapRef} className=${'ci-ed-wrap ci-step-block-editor bg-card ' + className}>
+  // correctly to the trigger AND styled natively (outside #os-app-root).
+  return h`<div ref=${wrapRef} className=${'os-ed-wrap os-step-block-editor bg-card ' + className}>
     <${SlotFill}>
     <${Shortcuts}>
     <${BlockEditorProvider}
@@ -637,10 +637,10 @@ export function GutenbergComposer({
         titlePlaceholder: '',
         // Static content blocks only when the output leaves WordPress
         // (dynamic blocks serialize to empty markers there). Either way the
-        // ci-designer/* blocks stay out — they are the Fields-tab structure
+        // os-designer/* blocks stay out — they are the Fields-tab structure
         // designer's vocabulary, meaningless inside a content body.
         allowedBlockTypes: dynamicBlocks
-          ? (() => { try { return (getBlockTypes() || []).map((b) => b.name).filter((n) => !n.startsWith('ci-designer/')); } catch { return true; } })()
+          ? (() => { try { return (getBlockTypes() || []).map((b) => b.name).filter((n) => !n.startsWith('os-designer/')); } catch { return true; } })()
           : STATIC_BLOCKS,
       }}
     >
@@ -655,26 +655,26 @@ export function GutenbergComposer({
         onShowVisual=${showVisual}
         onShowCode=${showCode}
       />
-      ${mode === 'code' ? h`<div className="ci-ed-code">
+      ${mode === 'code' ? h`<div className="os-ed-code">
         <${CMEditor} value=${markup} onChange=${onCodeChange} language="html" />
-      </div>` : h`<div className="ci-ed-row flex items-stretch">
-        ${showListView && WPListView ? h`<div className="ci-block-list-view w-64 shrink-0 border-r border-border bg-card overflow-y-auto max-h-[60vh] p-1 text-sm">
+      </div>` : h`<div className="os-ed-row flex items-stretch">
+        ${showListView && WPListView ? h`<div className="os-block-list-view w-64 shrink-0 border-r border-border bg-card overflow-y-auto max-h-[60vh] p-1 text-sm">
           <${WPListView} />
         </div>` : null}
-        <div className="ci-ed-main flex-1 min-w-0">
+        <div className="os-ed-main flex-1 min-w-0">
           <${BlockTools}>
-            ${BlockCanvas ? h`<div ref=${canvasRef} className="ci-ed-canvas ci-ed-canvas--bc block-editor__container" style=${{ minHeight: `${minHeight}px` }}>
+            ${BlockCanvas ? h`<div ref=${canvasRef} className="os-ed-canvas os-ed-canvas--bc block-editor__container" style=${{ minHeight: `${minHeight}px` }}>
               <${BlockCanvas} height=${`${Math.max(minHeight, 240)}px`} styles=${collectCanvasStyles()} />
             </div>` : h`<${WritingFlow}>
               <${ObserveTyping}>
-                <div ref=${canvasRef} className="ci-ed-canvas px-3 py-3 block-editor__container" style=${{ minHeight: `${minHeight}px` }}>
+                <div ref=${canvasRef} className="os-ed-canvas px-3 py-3 block-editor__container" style=${{ minHeight: `${minHeight}px` }}>
                   <${BlockList} />
                 </div>
               </${ObserveTyping}>
             </${WritingFlow}>`}
           </${BlockTools}>
         </div>
-        ${hasInspector && showInspector ? h`<div className="ci-block-inspector w-64 shrink-0 border-l border-border bg-card overflow-y-auto max-h-[60vh] text-sm">
+        ${hasInspector && showInspector ? h`<div className="os-block-inspector w-64 shrink-0 border-l border-border bg-card overflow-y-auto max-h-[60vh] text-sm">
           <${BlockInspector} />
         </div>` : null}
       </div>`}
@@ -697,15 +697,15 @@ function GutenbergComposerToolbar({ canToggleInspector, inspectorOpen, onToggleI
   const redo = useCallback(() => {
     try { dispatch?.('core/block-editor')?.redo(); } catch {}
   }, [dispatch]);
-  return h`<div className="ci-block-editor-chrome sticky top-0 z-20 flex items-center gap-1 border-b border-border bg-card overflow-x-auto">
-    <${CIToolbar} label="Document tools" className="ci-composer-toolbar shrink-0">
+  return h`<div className="os-block-editor-chrome sticky top-0 z-20 flex items-center gap-1 border-b border-border bg-card overflow-x-auto">
+    <${CIToolbar} label="Document tools" className="os-composer-toolbar shrink-0">
       <${WPToolbarGroup}>
         ${Inserter ? h`<${Inserter}
           position="bottom right"
           renderToggle=${({ onToggle, isOpen, disabled }) => h`<${WPToolbarButton}
             icon=${iconPlus}
             label="Add block"
-            className="ci-inserter-toggle"
+            className="os-inserter-toggle"
             onClick=${onToggle}
             disabled=${disabled}
             isActive=${isOpen}
@@ -721,15 +721,15 @@ function GutenbergComposerToolbar({ canToggleInspector, inspectorOpen, onToggleI
         />` : null}
       </${WPToolbarGroup}>
     </${CIToolbar}>
-    ${BlockToolbar ? h`<div className="ci-composer-blocktoolbar flex-1 min-w-0">
+    ${BlockToolbar ? h`<div className="os-composer-blocktoolbar flex-1 min-w-0">
       <${BlockToolbar} hideDragHandle />
     </div>` : null}
     <div className="ml-auto shrink-0 flex items-center gap-1">
-      <div className="ci-composer-viewtoggle flex items-center">
+      <div className="os-composer-viewtoggle flex items-center">
         <${WPButton} size="small" isPressed=${mode !== 'code'} onClick=${mode === 'code' ? onShowVisual : undefined}>Visual</${WPButton}>
         <${WPButton} size="small" isPressed=${mode === 'code'} onClick=${mode !== 'code' ? onShowCode : undefined}>Code</${WPButton}>
       </div>
-      ${canToggleInspector ? h`<${CIToolbar} label="Settings" className="ci-composer-toolbar">
+      ${canToggleInspector ? h`<${CIToolbar} label="Settings" className="os-composer-toolbar">
         <${WPToolbarGroup}>
           <${WPToolbarButton}
             icon=${iconDrawerRight}

@@ -26,11 +26,11 @@ import {
   TabPanel as WPTabPanel, SlotFillProvider as WPSlotFillProvider,
 } from '@wordpress/components';
 import { marked } from 'marked';
-import { h, BOOT, rest, restAllPages, decodeEntities, typeMeta, CIRegistry, registerEditor, registerRoute } from 'ci/core';
-import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, CI_ICONS, SelectCheckbox } from 'ci/ui';
-import { useToast, useDialog } from 'ci/shell';
-import { GutenbergComposer, useEditorFullWidth, EditorFullWidthButton } from 'ci/editors';
-import { rewriteWikilinks } from 'ci/core';
+import { h, BOOT, rest, restAllPages, decodeEntities, typeMeta, CIRegistry, registerEditor, registerRoute } from 'os/core';
+import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, CI_ICONS, SelectCheckbox } from 'os/ui';
+import { useToast, useDialog } from 'os/shell';
+import { GutenbergComposer, useEditorFullWidth, EditorFullWidthButton } from 'os/editors';
+import { rewriteWikilinks } from 'os/core';
 
 // Shared chrome via the registry (set by the main bundle before mount).
 const TypeLayout = ({ children, ...rest }) => h`<${CIRegistry.TypeLayout} ...${rest}>${children}</${CIRegistry.TypeLayout}>`;
@@ -391,7 +391,7 @@ function JsonWizardEditorPage() {
               </div>
             </div>
             ${isCollapsed ? null : h`<${WPCardBody}><div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 ci-wpds-fields">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 os-wpds-fields">
                 <${WPTextControl}
                   __nextHasNoMarginBottom
                   __next40pxDefaultSize
@@ -409,7 +409,7 @@ function JsonWizardEditorPage() {
                   value=${s.key}
                   onChange=${(value) => patchStep(i, { key: value.replace(/[^a-z0-9\-]/gi, '').toLowerCase() })}
                   placeholder="step-key (url slug)"
-                  className="ci-mono-field"
+                  className="os-mono-field"
                 />
                 <${WPTextControl}
                   __nextHasNoMarginBottom
@@ -421,7 +421,7 @@ function JsonWizardEditorPage() {
                   placeholder="Short description (shown under H1)"
                 />
               </div>
-              <div className="ci-wpds-fields">
+              <div className="os-wpds-fields">
                 <${WPCheckboxControl}
                   __nextHasNoMarginBottom
                   checked=${!!s.wide}

@@ -2,7 +2,7 @@
 /**
  * Self-contained regression checks for the ci_ -> os_ option migration.
  *
- * Runs Core_Index_Option_Migration against an in-memory $wpdb, so the paths
+ * Runs OS_Option_Migration against an in-memory $wpdb, so the paths
  * that matter on a real site are the ones exercised here: the plan states, the
  * byte-exact copy, the refusal to overwrite an existing target, and the revert
  * when the readback disagrees with what was written.
@@ -109,7 +109,7 @@ $passed = 0;
 $failed = 0;
 
 /** Record one assertion. */
-function ci_check( string $label, bool $ok, string $detail = '' ): void {
+function os_check( string $label, bool $ok, string $detail = '' ): void {
 	global $passed, $failed;
 	if ( $ok ) {
 		++$passed;
@@ -131,44 +131,44 @@ $wpdb->rows = array(
 	'ci_totally_unknown_thing'                 => array( 'option_value' => 'y', 'autoload' => 'no' ),
 );
 
-$plan   = Core_Index_Option_Migration::plan();
+$plan   = OS_Option_Migration::plan();
 $states = array_column( $plan, 'state', 'from' );
-ci_check( 'a legacy row with no target is pending', ( $states['ci_custom_cpts'] ?? '' ) === 'pending' );
-ci_check( 'a moved row reports done', ( $states['ci_instance_id'] ?? '' ) === 'done' );
-ci_check( 'both rows present reports conflict', ( $states['ci_fs_roots'] ?? '' ) === 'conflict' );
-ci_check( 'prefix family members are discovered', isset( $states['ci_field_groups_core_index_content_types'] ) );
-ci_check( 'ci_custom_cpts is planned first', $plan[0]['from'] === 'ci_custom_cpts', $plan[0]['from'] );
+os_check( 'a legacy row with no target is pending', ( $states['ci_custom_cpts'] ?? '' ) === 'pending' );
+os_check( 'a moved row reports done', ( $states['ci_instance_id'] ?? '' ) === 'done' );
+os_check( 'both rows present reports conflict', ( $states['ci_fs_roots'] ?? '' ) === 'conflict' );
+os_check( 'prefix family members are discovered', isset( $states['ci_field_groups_core_index_content_types'] ) );
+os_check( 'ci_custom_cpts is planned first', $plan[0]['from'] === 'ci_custom_cpts', $plan[0]['from'] );
 
 echo "unmapped() surfaces gaps rather than skipping them\n";
-$orphans = Core_Index_Option_Migration::unmapped();
-ci_check( 'an unknown ci_ option is flagged', in_array( 'ci_totally_unknown_thing', $orphans, true ) );
-ci_check( 'a mapped option is not flagged', ! in_array( 'ci_custom_cpts', $orphans, true ) );
-ci_check( 'a family member is not flagged', ! in_array( 'ci_field_groups_core_index_content_types', $orphans, true ) );
+$orphans = OS_Option_Migration::unmapped();
+os_check( 'an unknown ci_ option is flagged', in_array( 'ci_totally_unknown_thing', $orphans, true ) );
+os_check( 'a mapped option is not flagged', ! in_array( 'ci_custom_cpts', $orphans, true ) );
+os_check( 'a family member is not flagged', ! in_array( 'ci_field_groups_core_index_content_types', $orphans, true ) );
 
 echo "move() copies exactly, then deletes\n";
 $before = $wpdb->rows['ci_custom_cpts'];
-$result = Core_Index_Option_Migration::move( 'ci_custom_cpts', 'os_custom_cpts' );
-ci_check( 'reports success', $result['ok'], $result['message'] );
-ci_check( 'target holds the same bytes', ( $wpdb->rows['os_custom_cpts']['option_value'] ?? '' ) === $before['option_value'] );
-ci_check( 'autoload flag survives', ( $wpdb->rows['os_custom_cpts']['autoload'] ?? '' ) === 'yes' );
-ci_check( 'source row is gone', ! isset( $wpdb->rows['ci_custom_cpts'] ) );
+$result = OS_Option_Migration::move( 'ci_custom_cpts', 'os_custom_cpts' );
+os_check( 'reports success', $result['ok'], $result['message'] );
+os_check( 'target holds the same bytes', ( $wpdb->rows['os_custom_cpts']['option_value'] ?? '' ) === $before['option_value'] );
+os_check( 'autoload flag survives', ( $wpdb->rows['os_custom_cpts']['autoload'] ?? '' ) === 'yes' );
+os_check( 'source row is gone', ! isset( $wpdb->rows['ci_custom_cpts'] ) );
 
 echo "move() is idempotent\n";
-$result = Core_Index_Option_Migration::move( 'ci_custom_cpts', 'os_custom_cpts' );
-ci_check( 'a second run is a no-op', $result['ok'] && 'already moved' === $result['message'], $result['message'] );
+$result = OS_Option_Migration::move( 'ci_custom_cpts', 'os_custom_cpts' );
+os_check( 'a second run is a no-op', $result['ok'] && 'already moved' === $result['message'], $result['message'] );
 
 echo "move() never overwrites an existing target\n";
-$result = Core_Index_Option_Migration::move( 'ci_fs_roots', 'os_fs_roots' );
-ci_check( 'refuses the move', ! $result['ok'], $result['message'] );
-ci_check( 'source is untouched', ( $wpdb->rows['ci_fs_roots']['option_value'] ?? '' ) === '/srv' );
-ci_check( 'target is untouched', ( $wpdb->rows['os_fs_roots']['option_value'] ?? '' ) === '/other' );
+$result = OS_Option_Migration::move( 'ci_fs_roots', 'os_fs_roots' );
+os_check( 'refuses the move', ! $result['ok'], $result['message'] );
+os_check( 'source is untouched', ( $wpdb->rows['ci_fs_roots']['option_value'] ?? '' ) === '/srv' );
+os_check( 'target is untouched', ( $wpdb->rows['os_fs_roots']['option_value'] ?? '' ) === '/other' );
 
 echo "move() reverts when the readback disagrees\n";
 $wpdb->corrupt_readback_for = 'os_taxonomies';
-$result                     = Core_Index_Option_Migration::move( 'ci_taxonomies', 'os_taxonomies' );
-ci_check( 'reports failure', ! $result['ok'], $result['message'] );
-ci_check( 'the partial copy is removed', ! isset( $wpdb->rows['os_taxonomies'] ) );
-ci_check( 'the source survives', isset( $wpdb->rows['ci_taxonomies'] ) );
+$result                     = OS_Option_Migration::move( 'ci_taxonomies', 'os_taxonomies' );
+os_check( 'reports failure', ! $result['ok'], $result['message'] );
+os_check( 'the partial copy is removed', ! isset( $wpdb->rows['os_taxonomies'] ) );
+os_check( 'the source survives', isset( $wpdb->rows['ci_taxonomies'] ) );
 $wpdb->corrupt_readback_for = null;
 
 echo "\n{$passed} passed, {$failed} failed\n";

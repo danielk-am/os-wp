@@ -16,8 +16,8 @@
  * page is open). No build step — native ES module; specifiers via importmap.
  */
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { h, BOOT, rest, registerRoute, registerNavRow, CIRegistry } from 'ci/core';
-import { Icon, Card, Badge, Spinner, Button, PageHeading, LogTable, LiveBadge } from 'ci/ui';
+import { h, BOOT, rest, registerRoute, registerNavRow, CIRegistry } from 'os/core';
+import { Icon, Card, Badge, Spinner, Button, PageHeading, LogTable, LiveBadge } from 'os/ui';
 
 const FEED = '/activity/v1/activity';
 
@@ -91,7 +91,7 @@ function EventsTable({ events, now }) {
         getValue: ({ item }) => item.summary || '',
         render: ({ item }) => h`<span className="flex items-center gap-2 min-w-0">
           <span className=${`inline-block w-2 h-2 rounded-full shrink-0 ${eventTone(item.type)}`} aria-hidden="true" />
-          <span className="ci-cell-text" style=${{ fontWeight: 400 }}>${item.summary}</span>
+          <span className="os-cell-text" style=${{ fontWeight: 400 }}>${item.summary}</span>
         </span>`,
       },
       {

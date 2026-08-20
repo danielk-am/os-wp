@@ -20,7 +20,7 @@ define( 'CI_FILESYSTEM_URL', plugin_dir_url( __FILE__ ) );
  * cache (CI core versions its own module URLs the same way; without this the
  * importmap specifier resolves to a stale module).
  */
-function ci_filesystem_asset_url( string $rel ): string {
+function os_filesystem_asset_url( string $rel ): string {
 	$path = CI_FILESYSTEM_DIR . $rel;
 	$ver  = file_exists( $path ) ? (string) filemtime( $path ) : '0';
 	return CI_FILESYSTEM_URL . $rel . '?v=' . $ver;

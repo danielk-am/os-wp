@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/inc/class-activity-recorder.php';
 
-final class Core_Index_Activity {
+final class OS_Activity {
 
 	const VERSION   = '1.0.2';
 	const NAMESPACE = 'activity';
@@ -409,22 +409,22 @@ final class Core_Index_Activity {
 
 ( static function (): void {
 	if ( ! class_exists( 'Activity_Log_For_WordPress' ) ) {
-		class_alias( Core_Index_Activity::class, 'Activity_Log_For_WordPress' );
+		class_alias( OS_Activity::class, 'Activity_Log_For_WordPress' );
 	}
 	if ( ! class_exists( 'Activity_Log_For_WordPress_Recorder' ) ) {
-		class_alias( Core_Index_Activity_Recorder::class, 'Activity_Log_For_WordPress_Recorder' );
+		class_alias( OS_Activity_Recorder::class, 'Activity_Log_For_WordPress_Recorder' );
 	}
 } )();
 
-Core_Index_Activity::register();
-Core_Index_Activity_Recorder::register();
+OS_Activity::register();
+OS_Activity_Recorder::register();
 OS_Standalone_Admin::boot(
 	array(
 		'slug' => 'os-activity', 'name' => 'OS Activity',
-		'mode' => 'activity', 'rest_ns' => Core_Index_Activity::REST_NS,
+		'mode' => 'activity', 'rest_ns' => OS_Activity::REST_NS,
 		'parent_slug' => 'tools.php', 'menu_priority' => 60,
 		'compat_field_options' => array( 'ci_field_groups_activity_log_for_wordpress' ),
-		'types' => Core_Index_Activity::TYPES,
+		'types' => OS_Activity::TYPES,
 		'description' => 'Review human, WordPress, and agent activity in one timeline.',
 		'ai_chat_instructions' => 'Help administrators investigate this activity timeline. Ground answers in the visible records, distinguish people, WordPress, and agent events, and do not imply that an event changed site state.',
 	),

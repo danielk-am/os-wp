@@ -2,7 +2,7 @@
  * Context — global command palette.
  *
  * Renders on every wp-admin screen (enqueued by
- * Core_Index_Global_Palette). Uses wp.element so we don't ship
+ * OS_Global_Palette). Uses wp.element so we don't ship
  * a separate React bundle — wp-element is already enqueued on admin.
  *
  * Shortcuts (capture phase, so WP's own ⌘K palette doesn't open first):
@@ -199,46 +199,46 @@
 			else if ( e.key === 'Enter' )    { e.preventDefault(); pick( results[ activeIndex ] ); }
 		}
 
-		return el( 'div', { className: 'ci-gp-root', onClick: onClose },
-			el( 'div', { className: 'ci-gp-backdrop' } ),
-			el( 'div', { className: 'ci-gp-wrap' },
-				el( 'div', { className: 'ci-gp-card', onClick: ( e ) => e.stopPropagation() },
-					el( 'div', { className: 'ci-gp-input-row' },
-						el( 'span', { className: 'ci-gp-kbd' }, '⌘⇧`' ),
+		return el( 'div', { className: 'os-gp-root', onClick: onClose },
+			el( 'div', { className: 'os-gp-backdrop' } ),
+			el( 'div', { className: 'os-gp-wrap' },
+				el( 'div', { className: 'os-gp-card', onClick: ( e ) => e.stopPropagation() },
+					el( 'div', { className: 'os-gp-input-row' },
+						el( 'span', { className: 'os-gp-kbd' }, '⌘⇧`' ),
 						el( 'input', {
 							ref: inputRef,
 							value: q,
 							onChange: ( e ) => setQ( e.target.value ),
 							onKeyDown: onKey,
 							placeholder: 'Search admin pages, settings, content, commands…',
-							className: 'ci-gp-input',
+							className: 'os-gp-input',
 						} ),
-						loading ? el( 'span', { className: 'ci-gp-spinner' } ) : null,
+						loading ? el( 'span', { className: 'os-gp-spinner' } ) : null,
 					),
-					el( 'div', { className: 'ci-gp-results' },
+					el( 'div', { className: 'os-gp-results' },
 						! q.trim()
-							? el( 'div', { className: 'ci-gp-empty' }, 'Type to search.' )
+							? el( 'div', { className: 'os-gp-empty' }, 'Type to search.' )
 							: results.length === 0 && ! loading
-								? el( 'div', { className: 'ci-gp-empty' }, 'No matches' )
+								? el( 'div', { className: 'os-gp-empty' }, 'No matches' )
 								: results.map( ( r, i ) => el( 'div', {
 									key: r.id,
-									className: 'ci-gp-result' + ( i === activeIndex ? ' is-active' : '' ),
+									className: 'os-gp-result' + ( i === activeIndex ? ' is-active' : '' ),
 									onClick: () => pick( r ),
 									onMouseEnter: () => setActiveIndex( i ),
 								},
-									el( 'span', { className: 'ci-gp-icon' }, r.icon ),
-									el( 'div', { className: 'ci-gp-text' },
-										el( 'div', { className: 'ci-gp-title' }, r.title ),
-										el( 'div', { className: 'ci-gp-sub' }, r.subtitle ),
+									el( 'span', { className: 'os-gp-icon' }, r.icon ),
+									el( 'div', { className: 'os-gp-text' },
+										el( 'div', { className: 'os-gp-title' }, r.title ),
+										el( 'div', { className: 'os-gp-sub' }, r.subtitle ),
 									),
-									el( 'span', { className: 'ci-gp-kind' },
+									el( 'span', { className: 'os-gp-kind' },
 										r.kind === 'content' ? 'Content' :
 										r.kind === 'admin-page' ? 'Page' :
 										r.kind === 'admin-setting' ? 'Setting' : 'Command'
 									),
 								) )
 					),
-					el( 'div', { className: 'ci-gp-footer' },
+					el( 'div', { className: 'os-gp-footer' },
 						el( 'span', null, '↑↓ navigate · ↵ open · esc close · ⌘⇧`, ⌘⇧P, ⌘K to reopen' ),
 						results.length
 							? el( 'span', null, results.length + ' result' + ( results.length === 1 ? '' : 's' ) )
@@ -252,7 +252,7 @@
 	// ---- Mount + keyboard binding ----------------------------------------
 
 	const host = document.createElement( 'div' );
-	host.id = 'ci-global-palette-host';
+	host.id = 'os-global-palette-host';
 	document.body.appendChild( host );
 	const root = createRoot( host );
 

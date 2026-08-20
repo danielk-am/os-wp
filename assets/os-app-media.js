@@ -23,9 +23,9 @@ import {
   ItemGroup as WPItemGroup, Item as WPItem, MenuGroup as WPMenuGroup, MenuItem as WPMenuItem,
   TabPanel as WPTabPanel, SlotFillProvider as WPSlotFillProvider,
 } from '@wordpress/components';
-import { h, BOOT, rest, restAllPages, restWithHeaders, decodeEntities, typeMeta, CIRegistry, registerEditor } from 'ci/core';
-import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, CI_ICONS, SelectCheckbox, PageHeading, ViewToggle, useViewMode, ResizablePane } from 'ci/ui';
-import { useToast, useDialog } from 'ci/shell';
+import { h, BOOT, rest, restAllPages, restWithHeaders, decodeEntities, typeMeta, CIRegistry, registerEditor } from 'os/core';
+import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, CI_ICONS, SelectCheckbox, PageHeading, ViewToggle, useViewMode, ResizablePane } from 'os/ui';
+import { useToast, useDialog } from 'os/shell';
 
 // Chrome glyphs (FA-backed Icon elements) used by the media surface.
 const iconClose = h`<${Icon} name="close" />`;
@@ -44,7 +44,7 @@ const iconClose = h`<${Icon} name="close" />`;
 //   - Drag a grid item onto a folder assigns it to that folder.
 // ---------------------------------------------------------------------------
 
-const MEDIA_VIEW_KEY = 'ci-media-view';
+const MEDIA_VIEW_KEY = 'os-media-view';
 
 /**
  * Resolve the best thumbnail URL for an attachment. Prefers `medium` size
@@ -298,7 +298,7 @@ function MediaPage() {
 
   const AppHeader = CIRegistry.AppHeader;
   const mediaActions = h`<${Fragment}>
-    <${WPToolbar} label="Media actions" className="ci-composer-toolbar ci-media-toolbar shrink-0">
+    <${WPToolbar} label="Media actions" className="os-composer-toolbar os-media-toolbar shrink-0">
       <${ViewToggle} view=${view} onChange=${setView} />
       ${/* New folder sits at the toolbar's right edge, beside Upload; the group
             boundary renders the separator to the right of the view toggles. */ ''}
@@ -449,7 +449,7 @@ function Breadcrumb({ path, count, loading, onNavigate }) {
  * Child folders of the current level, rendered Files-style as a card grid above
  * the file list. Click to drill in; each card is also a drop target, so dragging
  * a media selection onto it moves those items into the folder (reusing the bulk
- * `assignFolder` path and the same `x-ci-media-ids` payload media cards carry).
+ * `assignFolder` path and the same `x-os-media-ids` payload media cards carry).
  */
 function FolderCards({ folders, onOpen, onAssign, busy }) {
   return h`<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-4">
@@ -460,14 +460,14 @@ function FolderCards({ folders, onOpen, onAssign, busy }) {
 function FolderCard({ folder, onOpen, onAssign, busy }) {
   const [over, setOver] = useState(false);
   return h`<button type="button" disabled=${busy} onClick=${() => onOpen(folder.id)}
-    onDragOver=${(e) => { if (e.dataTransfer.types.includes('application/x-ci-media-ids')) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; if (!over) setOver(true); } }}
+    onDragOver=${(e) => { if (e.dataTransfer.types.includes('application/x-os-media-ids')) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; if (!over) setOver(true); } }}
     onDragLeave=${(e) => { if (e.currentTarget.contains(e.relatedTarget)) return; setOver(false); }}
     onDrop=${(e) => {
-      if (!e.dataTransfer.types.includes('application/x-ci-media-ids')) return;
+      if (!e.dataTransfer.types.includes('application/x-os-media-ids')) return;
       e.preventDefault(); e.stopPropagation(); setOver(false);
-      try { const ids = JSON.parse(e.dataTransfer.getData('application/x-ci-media-ids')); if (ids?.length) onAssign(ids, folder.id); } catch {}
+      try { const ids = JSON.parse(e.dataTransfer.getData('application/x-os-media-ids')); if (ids?.length) onAssign(ids, folder.id); } catch {}
     }}
-    className=${`flex items-center gap-2 px-3 py-2 rounded-md border text-left transition-colors ${over ? 'border-ring bg-muted' : 'border-border bg-card ci-card-hover'}`}>
+    className=${`flex items-center gap-2 px-3 py-2 rounded-md border text-left transition-colors ${over ? 'border-ring bg-muted' : 'border-border bg-card os-card-hover'}`}>
     <${Icon} name="folder" className="w-4 h-4 text-muted-foreground shrink-0" />
     <span className="flex-1 min-w-0 text-sm font-medium truncate">${folder.name}</span>
     <span className="text-xs text-muted-foreground shrink-0">${folder.count}</span>
@@ -490,7 +490,7 @@ function MediaGrid({ items, selectedIds, onSelectChange, onOpen }) {
         draggable=${true}
         onDragStart=${(e) => {
           const ids = isSelected ? Array.from(selectedIds) : [it.id];
-          e.dataTransfer.setData('application/x-ci-media-ids', JSON.stringify(ids));
+          e.dataTransfer.setData('application/x-os-media-ids', JSON.stringify(ids));
           e.dataTransfer.effectAllowed = 'move';
         }}
         onClick=${(e) => {
@@ -499,7 +499,7 @@ function MediaGrid({ items, selectedIds, onSelectChange, onOpen }) {
           onOpen(it.id);
         }}
         className=${`group relative rounded-md border bg-card cursor-pointer overflow-hidden transition-shadow ${
-          isSelected ? 'border-foreground ring-2 ring-ring' : 'border-border ci-card-hover'
+          isSelected ? 'border-foreground ring-2 ring-ring' : 'border-border os-card-hover'
         }`}>
         <div className="aspect-square bg-muted relative">
           ${thumb
@@ -553,7 +553,7 @@ function MediaListView({ items, selectedIds, onSelectChange, onOpen }) {
           draggable=${true}
           onDragStart=${(e) => {
             const ids = isSelected ? Array.from(selectedIds) : [it.id];
-            e.dataTransfer.setData('application/x-ci-media-ids', JSON.stringify(ids));
+            e.dataTransfer.setData('application/x-os-media-ids', JSON.stringify(ids));
             e.dataTransfer.effectAllowed = 'move';
           }}
           onClick=${(e) => {
@@ -657,7 +657,7 @@ function MediaDetailPanel({ item, folders, onClose, onSave, onTrash }) {
 
       ${isImage ? h`<${WPButton} variant="secondary" href=${editImageUrl} className="justify-center w-full">Edit image (crop, rotate, scale)</${WPButton}>` : null}
 
-      <div className="ci-wpds-fields space-y-4">
+      <div className="os-wpds-fields space-y-4">
         <${WPTextControl}
           __nextHasNoMarginBottom __next40pxDefaultSize
           label="Title" value=${title} onChange=${(v) => { setTitle(v); setDirty(true); }} />

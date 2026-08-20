@@ -5,7 +5,7 @@
  * and nothing about where the list came from.
  *
  * That split is the point. WordPress hands it three sources (Media, Posts,
- * ci-filesystem roots); VS Code never opens this at all, because a native
+ * os-filesystem roots); VS Code never opens this at all, because a native
  * showOpenDialog beats anything reimplementable in a webview, and it gets recent
  * files, favourites and keyboard handling for free. Standalone has no sources,
  * so the button that opens this is hidden rather than present-and-dead.
@@ -99,7 +99,7 @@ export function openPicker({ sources, accept }) {
       }
     }
 
-    /** ci-filesystem: roots, then one directory at a time. Jailed server-side. */
+    /** os-filesystem: roots, then one directory at a time. Jailed server-side. */
     async function showFiles() {
       crumbs.hidden = false;
       if (!root) {

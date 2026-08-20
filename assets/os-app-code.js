@@ -2,7 +2,7 @@
  * Context App — Code Snippets editor (self-contained leaf module).
  *
  * Authors php / js / css / html snippets that are materialised to real files
- * under wp-content/ci-snippets/ (browsable in the Filesystem app). PHP runs via
+ * under wp-content/os-snippets/ (browsable in the Filesystem app). PHP runs via
  * the mu-plugin circuit-breaker loader; a snippet that fatals is auto-disabled
  * and surfaced here with a one-click recover. Self-registers the `code` editor
  * (dispatched from the type map's `editor: code`) on import.
@@ -11,22 +11,22 @@
  */
 import { useState, useEffect, useCallback, Fragment } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { h, rest, registerEditor, registerNewFile, CIRegistry } from 'ci/core';
-import { Icon, Card, Button, Badge, Spinner, SelectMenu } from 'ci/ui';
-import { useToast } from 'ci/shell';
-import { CodeEditor } from 'ci/editors';
+import { h, rest, registerEditor, registerNewFile, CIRegistry } from 'os/core';
+import { Icon, Card, Button, Badge, Spinner, SelectMenu } from 'os/ui';
+import { useToast } from 'os/shell';
+import { CodeEditor } from 'os/editors';
 
 const REST_BASE = '/wp/v2/os_code';
 const NS = '/code/v1';
 
 // Match the editor title's gutter (16px / 24px at the 783px breakpoint, set by
-// `.ci-editor-titlebar` in CI core). Tailwind's `md:mx-6` isn't in the compiled
+// `.os-editor-titlebar` in CI core). Tailwind's `md:mx-6` isn't in the compiled
 // build, so the helper/error sat at 16px while the title moved to 24px on
 // desktop. Inject a one-time responsive rule instead of relying on that class.
-if ( typeof document !== 'undefined' && ! document.getElementById( 'ci-code-gutter-style' ) ) {
+if ( typeof document !== 'undefined' && ! document.getElementById( 'os-code-gutter-style' ) ) {
   const s = document.createElement( 'style' );
-  s.id = 'ci-code-gutter-style';
-  s.textContent = '#ci-root .ci-code-gutter{margin-left:16px;margin-right:16px}@media(min-width:783px){#ci-root .ci-code-gutter{margin-left:24px;margin-right:24px}}';
+  s.id = 'os-code-gutter-style';
+  s.textContent = '#os-app-root .os-code-gutter{margin-left:16px;margin-right:16px}@media(min-width:783px){#os-app-root .os-code-gutter{margin-left:24px;margin-right:24px}}';
   document.head.appendChild( s );
 }
 const LANGS = [['php', 'PHP'], ['js', 'JavaScript'], ['css', 'CSS'], ['html', 'HTML']];
@@ -174,12 +174,12 @@ function CodeEditorPage() {
         title=${title}
         setTitle=${(v) => { setTitle(v); setDirty(true); }}
         placeholder="Code file title…"
-        className="ci-code-gutter pt-4 shrink-0"
+        className="os-code-gutter pt-4 shrink-0"
       />` : null}
 
-      ${language === 'php' ? h`<p className="shrink-0 ci-code-gutter mt-2 text-sm text-muted-foreground">Write PHP <strong>without</strong> the opening <code className="font-mono bg-muted px-1 rounded">${'<?php'}</code> tag. Runs via the guarded mu-plugin loader.</p>` : null}
+      ${language === 'php' ? h`<p className="shrink-0 os-code-gutter mt-2 text-sm text-muted-foreground">Write PHP <strong>without</strong> the opening <code className="font-mono bg-muted px-1 rounded">${'<?php'}</code> tag. Runs via the guarded mu-plugin loader.</p>` : null}
 
-      ${error ? h`<div className="shrink-0 ci-code-gutter mt-3 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm">
+      ${error ? h`<div className="shrink-0 os-code-gutter mt-3 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm">
         <div className="font-medium text-red-700 flex items-center gap-2"><${Icon} name="bolt" className="w-4 h-4" /> Disabled by the circuit breaker — this snippet fataled.</div>
         <div className="mt-1 text-red-600 font-mono text-xs break-all">${error.msg}${error.file ? ` (${error.file}:${error.line})` : ''}</div>
         <div className="mt-2 text-muted-foreground text-xs">Fix the code and Save to clear the error and re-enable.</div>

@@ -24,13 +24,13 @@
       "from": "ci_csv",
       "to": "os_csv",
       "kind": "post_type",
-      "note": "Registered by ci-csv (legacy) and content-types; both code paths rename together."
+      "note": "Registered by os-csv (legacy) and content-types; both code paths rename together."
     },
     {
       "from": "ci_csv",
       "to": "os_csv",
       "kind": "rest_base",
-      "note": "Registered by ci-csv (legacy) and content-types; both code paths rename together."
+      "note": "Registered by os-csv (legacy) and content-types; both code paths rename together."
     },
     {
       "from": "ci_language",

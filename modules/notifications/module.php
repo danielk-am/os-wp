@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/inc/class-notification-publisher.php';
 
-final class Core_Index_Notifications {
+final class OS_Notifications {
 
 	const VERSION   = '1.0.2';
 	const NAMESPACE = 'notifications';
@@ -408,22 +408,22 @@ final class Core_Index_Notifications {
 
 ( static function (): void {
 	if ( ! class_exists( 'Notifications_For_WordPress' ) ) {
-		class_alias( Core_Index_Notifications::class, 'Notifications_For_WordPress' );
+		class_alias( OS_Notifications::class, 'Notifications_For_WordPress' );
 	}
 	if ( ! class_exists( 'Notifications_For_WordPress_Publisher' ) ) {
-		class_alias( Core_Index_Notifications_Publisher::class, 'Notifications_For_WordPress_Publisher' );
+		class_alias( OS_Notifications_Publisher::class, 'Notifications_For_WordPress_Publisher' );
 	}
 } )();
 
-Core_Index_Notifications::register();
-Core_Index_Notifications_Publisher::register();
+OS_Notifications::register();
+OS_Notifications_Publisher::register();
 OS_Standalone_Admin::boot(
 	array(
 		'slug' => 'os-notifications', 'name' => 'OS Notifications',
-		'mode' => 'notifications', 'rest_ns' => Core_Index_Notifications::REST_NS,
+		'mode' => 'notifications', 'rest_ns' => OS_Notifications::REST_NS,
 		'position' => '3.1', 'menu_priority' => 39,
 		'compat_field_options' => array( 'ci_field_groups_notifications_for_wordpress' ),
-		'types' => Core_Index_Notifications::TYPES,
+		'types' => OS_Notifications::TYPES,
 		'description' => 'Triage notices from WordPress, people, and agents.',
 		'ai_chat_instructions' => 'Help administrators triage these notifications. Ground answers in the visible inbox, preserve source and delivery context, and distinguish unread state from urgency or impact.',
 	),

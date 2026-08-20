@@ -1,7 +1,7 @@
 /**
  * Context — global command palette styles.
  *
- * Scoped under `.ci-gp-root` so we don't leak into the host page's own
+ * Scoped under `.os-gp-root` so we don't leak into the host page's own
  * styles (most wp-admin pages are highly opinionated about layout).
  *
  * The look matches the React-app palette: card on dark backdrop, top-
@@ -10,12 +10,12 @@
  * screen, including ones that don't load our Tailwind bundle).
  */
 
-#ci-global-palette-host {
+#os-global-palette-host {
 	position: relative;
 	z-index: 100000;
 }
 
-.ci-gp-root {
+.os-gp-root {
 	position: fixed;
 	inset: 0;
 	z-index: 100000;
@@ -25,7 +25,7 @@
 	padding: 10vh 16px 32px;
 }
 
-.ci-gp-backdrop {
+.os-gp-backdrop {
 	position: fixed;
 	inset: 0;
 	background: rgba(0, 0, 0, 0.4);
@@ -33,13 +33,13 @@
 	-webkit-backdrop-filter: blur(4px);
 }
 
-.ci-gp-wrap {
+.os-gp-wrap {
 	position: relative;
 	width: 100%;
 	max-width: 760px;
 }
 
-.ci-gp-card {
+.os-gp-card {
 	background: #fff;
 	color: #1d2327;
 	border: 1px solid #dcdcde;
@@ -50,7 +50,7 @@
 	font-size: 14px;
 }
 
-.ci-gp-input-row {
+.os-gp-input-row {
 	display: flex;
 	align-items: center;
 	gap: 10px;
@@ -58,7 +58,7 @@
 	border-bottom: 1px solid #dcdcde;
 }
 
-.ci-gp-kbd {
+.os-gp-kbd {
 	font-family: "SF Mono", Menlo, Consolas, monospace;
 	font-size: 11px;
 	color: #646970;
@@ -67,7 +67,7 @@
 	padding: 2px 6px;
 }
 
-.ci-gp-input {
+.os-gp-input {
 	flex: 1;
 	border: 0;
 	outline: none;
@@ -78,32 +78,32 @@
 	padding: 0;
 }
 
-.ci-gp-spinner {
+.os-gp-spinner {
 	width: 14px;
 	height: 14px;
 	border-radius: 50%;
 	border: 2px solid #c3c4c7;
 	border-top-color: #2271b1;
-	animation: ci-gp-spin 0.8s linear infinite;
+	animation: os-gp-spin 0.8s linear infinite;
 }
 
-@keyframes ci-gp-spin {
+@keyframes os-gp-spin {
 	to { transform: rotate(360deg); }
 }
 
-.ci-gp-results {
+.os-gp-results {
 	max-height: 60vh;
 	overflow-y: auto;
 }
 
-.ci-gp-empty {
+.os-gp-empty {
 	padding: 24px;
 	text-align: center;
 	color: #646970;
 	font-size: 13px;
 }
 
-.ci-gp-result {
+.os-gp-result {
 	display: flex;
 	align-items: center;
 	gap: 12px;
@@ -112,16 +112,16 @@
 	border-bottom: 1px solid #f6f7f7;
 }
 
-.ci-gp-result:last-child {
+.os-gp-result:last-child {
 	border-bottom: 0;
 }
 
-.ci-gp-result.is-active,
-.ci-gp-result:hover {
+.os-gp-result.is-active,
+.os-gp-result:hover {
 	background: #f0f0f1;
 }
 
-.ci-gp-icon {
+.os-gp-icon {
 	width: 20px;
 	text-align: center;
 	font-size: 15px;
@@ -129,12 +129,12 @@
 	flex-shrink: 0;
 }
 
-.ci-gp-text {
+.os-gp-text {
 	flex: 1;
 	min-width: 0;
 }
 
-.ci-gp-title {
+.os-gp-title {
 	font-size: 13.5px;
 	font-weight: 500;
 	color: #1d2327;
@@ -143,7 +143,7 @@
 	text-overflow: ellipsis;
 }
 
-.ci-gp-sub {
+.os-gp-sub {
 	font-size: 11.5px;
 	color: #646970;
 	white-space: nowrap;
@@ -152,7 +152,7 @@
 	margin-top: 2px;
 }
 
-.ci-gp-kind {
+.os-gp-kind {
 	font-size: 10px;
 	font-weight: 600;
 	text-transform: uppercase;
@@ -161,7 +161,7 @@
 	flex-shrink: 0;
 }
 
-.ci-gp-footer {
+.os-gp-footer {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -175,32 +175,32 @@
 
 /* Dark mode follows WP's user preference if set. */
 @media (prefers-color-scheme: dark) {
-	body.admin-color-modern .ci-gp-card,
-	body.admin-color-midnight .ci-gp-card {
+	body.admin-color-modern .os-gp-card,
+	body.admin-color-midnight .os-gp-card {
 		background: #1d2327;
 		color: #f0f0f1;
 		border-color: #3c434a;
 	}
-	body.admin-color-modern .ci-gp-kbd,
-	body.admin-color-midnight .ci-gp-kbd {
+	body.admin-color-modern .os-gp-kbd,
+	body.admin-color-midnight .os-gp-kbd {
 		background: #2c3338;
 		color: #c3c4c7;
 	}
-	body.admin-color-modern .ci-gp-result.is-active,
-	body.admin-color-midnight .ci-gp-result.is-active,
-	body.admin-color-modern .ci-gp-result:hover,
-	body.admin-color-midnight .ci-gp-result:hover {
+	body.admin-color-modern .os-gp-result.is-active,
+	body.admin-color-midnight .os-gp-result.is-active,
+	body.admin-color-modern .os-gp-result:hover,
+	body.admin-color-midnight .os-gp-result:hover {
 		background: #2c3338;
 	}
-	body.admin-color-modern .ci-gp-footer,
-	body.admin-color-midnight .ci-gp-footer {
+	body.admin-color-modern .os-gp-footer,
+	body.admin-color-midnight .os-gp-footer {
 		background: #2c3338;
 		border-color: #3c434a;
 	}
-	body.admin-color-modern .ci-gp-title,
-	body.admin-color-midnight .ci-gp-title { color: #f0f0f1; }
-	body.admin-color-modern .ci-gp-sub,
-	body.admin-color-midnight .ci-gp-sub,
-	body.admin-color-modern .ci-gp-footer,
-	body.admin-color-midnight .ci-gp-footer { color: #c3c4c7; }
+	body.admin-color-modern .os-gp-title,
+	body.admin-color-midnight .os-gp-title { color: #f0f0f1; }
+	body.admin-color-modern .os-gp-sub,
+	body.admin-color-midnight .os-gp-sub,
+	body.admin-color-modern .os-gp-footer,
+	body.admin-color-midnight .os-gp-footer { color: #c3c4c7; }
 }

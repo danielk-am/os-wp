@@ -251,7 +251,7 @@ $passed = 0;
 $failed = 0;
 
 /** Record one assertion. */
-function ci_check( string $label, bool $ok, string $detail = '' ): void {
+function os_check( string $label, bool $ok, string $detail = '' ): void {
 	global $passed, $failed;
 	if ( $ok ) {
 		++$passed;
@@ -263,7 +263,7 @@ function ci_check( string $label, bool $ok, string $detail = '' ): void {
 }
 
 /** Reset the world between cases. */
-function ci_seed(): void {
+function os_seed(): void {
 	global $wpdb;
 	$wpdb->rows = array(
 		1 => 'ci_snippet',
@@ -286,7 +286,7 @@ function ci_seed(): void {
 }
 
 /** Pull one plan entry by kind and source name. */
-function ci_entry( array $plan, string $kind, string $from ): ?array {
+function os_entry( array $plan, string $kind, string $from ): ?array {
 	foreach ( $plan as $entry ) {
 		if ( $entry['kind'] === $kind && $entry['from'] === $from ) {
 			return $entry;
@@ -296,15 +296,15 @@ function ci_entry( array $plan, string $kind, string $from ): ?array {
 }
 
 echo "plan() covers all three kinds and groups them\n";
-ci_seed();
-$plan = Core_Index_Type_Migration::plan();
-ci_check( 'counts post type rows', 2 === ( ci_entry( $plan, 'post_type', 'ci_snippet' )['rows'] ?? 0 ) );
-ci_check( 'counts taxonomy rows', 2 === ( ci_entry( $plan, 'taxonomy', 'ci_skill_type' )['rows'] ?? 0 ) );
-ci_check( 'counts meta rows', 1 === ( ci_entry( $plan, 'meta', 'ci_tip' )['rows'] ?? 0 ) );
-ci_check( 'attaches the taxonomy to its type', 'ci_skill' === ( ci_entry( $plan, 'taxonomy', 'ci_skill_type' )['group'] ?? '' ) );
-ci_check( 'attaches snippet meta to its type', 'ci_snippet' === ( ci_entry( $plan, 'meta', 'ci_tip' )['group'] ?? '' ) );
-ci_check( 'files a cross-type taxonomy as shared', 'shared' === ( ci_entry( $plan, 'taxonomy', 'ci_tag' )['group'] ?? '' ) );
-ci_check( 'omits identifiers with no rows', null === ci_entry( $plan, 'post_type', 'ci_memory' ) );
+os_seed();
+$plan = OS_Type_Migration::plan();
+os_check( 'counts post type rows', 2 === ( os_entry( $plan, 'post_type', 'ci_snippet' )['rows'] ?? 0 ) );
+os_check( 'counts taxonomy rows', 2 === ( os_entry( $plan, 'taxonomy', 'ci_skill_type' )['rows'] ?? 0 ) );
+os_check( 'counts meta rows', 1 === ( os_entry( $plan, 'meta', 'ci_tip' )['rows'] ?? 0 ) );
+os_check( 'attaches the taxonomy to its type', 'ci_skill' === ( os_entry( $plan, 'taxonomy', 'ci_skill_type' )['group'] ?? '' ) );
+os_check( 'attaches snippet meta to its type', 'ci_snippet' === ( os_entry( $plan, 'meta', 'ci_tip' )['group'] ?? '' ) );
+os_check( 'files a cross-type taxonomy as shared', 'shared' === ( os_entry( $plan, 'taxonomy', 'ci_tag' )['group'] ?? '' ) );
+os_check( 'omits identifiers with no rows', null === os_entry( $plan, 'post_type', 'ci_memory' ) );
 
 $kinds = array();
 foreach ( $plan as $entry ) {
@@ -312,108 +312,108 @@ foreach ( $plan as $entry ) {
 		$kinds[] = $entry['kind'];
 	}
 }
-ci_check( 'the post type moves last in its group', 'post_type' === end( $kinds ), implode( ',', $kinds ) );
+os_check( 'the post type moves last in its group', 'post_type' === end( $kinds ), implode( ',', $kinds ) );
 
 echo "move() refuses before the registration has moved\n";
-ci_seed();
+os_seed();
 $GLOBALS['ci_test_registered_types'] = array( 'post' );
 $GLOBALS['ci_test_registered_taxes'] = array( 'category' );
-$plan                                = Core_Index_Type_Migration::plan();
-$result                              = Core_Index_Type_Migration::move( ci_entry( $plan, 'post_type', 'ci_snippet' ) );
-ci_check( 'post type is refused', is_wp_error( $result ) && 'target_not_registered' === $result->get_error_code() );
-$result = Core_Index_Type_Migration::move( ci_entry( $plan, 'taxonomy', 'ci_skill_type' ) );
-ci_check( 'taxonomy is refused', is_wp_error( $result ) && 'target_not_registered' === $result->get_error_code() );
-ci_check( 'nothing was touched', 2 === count( array_filter( $wpdb->rows, static fn( $t ) => 'ci_snippet' === $t ) ) );
+$plan                                = OS_Type_Migration::plan();
+$result                              = OS_Type_Migration::move( os_entry( $plan, 'post_type', 'ci_snippet' ) );
+os_check( 'post type is refused', is_wp_error( $result ) && 'target_not_registered' === $result->get_error_code() );
+$result = OS_Type_Migration::move( os_entry( $plan, 'taxonomy', 'ci_skill_type' ) );
+os_check( 'taxonomy is refused', is_wp_error( $result ) && 'target_not_registered' === $result->get_error_code() );
+os_check( 'nothing was touched', 2 === count( array_filter( $wpdb->rows, static fn( $t ) => 'ci_snippet' === $t ) ) );
 
 echo "move() flips a whole group\n";
-ci_seed();
-$plan = Core_Index_Type_Migration::plan();
+os_seed();
+$plan = OS_Type_Migration::plan();
 foreach ( $plan as $entry ) {
 	if ( 'ci_snippet' === $entry['group'] || 'ci_skill' === $entry['group'] ) {
-		Core_Index_Type_Migration::move( $entry );
+		OS_Type_Migration::move( $entry );
 	}
 }
-ci_check( 'post types moved', 0 === count( array_filter( $wpdb->rows, static fn( $t ) => 'ci_snippet' === $t ) ) );
-ci_check( 'unrelated posts untouched', 'post' === $wpdb->rows[4] );
-ci_check( 'taxonomy moved', 2 === count( array_filter( $wpdb->terms, static fn( $t ) => 'os_skill_type' === $t ) ) );
-ci_check( 'core taxonomy untouched', in_array( 'category', $wpdb->terms, true ) );
-ci_check( 'meta key moved', 'os_tip' === $wpdb->meta[0][0] );
-ci_check( 'menu item object rewritten', 'os_skill' === $wpdb->meta[3][1] );
-ci_check( 'a different meta key is left alone', 'ci_skill' === $wpdb->meta[4][1] );
+os_check( 'post types moved', 0 === count( array_filter( $wpdb->rows, static fn( $t ) => 'ci_snippet' === $t ) ) );
+os_check( 'unrelated posts untouched', 'post' === $wpdb->rows[4] );
+os_check( 'taxonomy moved', 2 === count( array_filter( $wpdb->terms, static fn( $t ) => 'os_skill_type' === $t ) ) );
+os_check( 'core taxonomy untouched', in_array( 'category', $wpdb->terms, true ) );
+os_check( 'meta key moved', 'os_tip' === $wpdb->meta[0][0] );
+os_check( 'menu item object rewritten', 'os_skill' === $wpdb->meta[3][1] );
+os_check( 'a different meta key is left alone', 'ci_skill' === $wpdb->meta[4][1] );
 
 echo "move() carries meta values that name the post type\n";
-ci_seed();
+os_seed();
 $wpdb->meta[] = array( 'content_types_type_key', 'ci_snippet' );
 $wpdb->meta[] = array( 'content_types_type_key', 'something_else' );
-Core_Index_Type_Migration::rewrite_type_references_sweep();
+OS_Type_Migration::rewrite_type_references_sweep();
 $keys = array_values( array_filter( $wpdb->meta, static fn( $r ) => 'content_types_type_key' === $r[0] ) );
-ci_check( 'a definition pointing at the type follows it', 'os_snippet' === ( $keys[0][1] ?? '' ), $keys[0][1] ?? 'missing' );
-ci_check( 'an unrelated value is left alone', 'something_else' === ( $keys[1][1] ?? '' ) );
+os_check( 'a definition pointing at the type follows it', 'os_snippet' === ( $keys[0][1] ?? '' ), $keys[0][1] ?? 'missing' );
+os_check( 'an unrelated value is left alone', 'something_else' === ( $keys[1][1] ?? '' ) );
 
 // A type with no posts never enters the plan, but its references are just as stale.
-ci_seed();
+os_seed();
 $wpdb->rows   = array( 4 => 'post' );
 $wpdb->meta[] = array( 'content_types_type_key', 'ci_skill' );
-Core_Index_Type_Migration::rewrite_type_references_sweep();
+OS_Type_Migration::rewrite_type_references_sweep();
 $keys = array_values( array_filter( $wpdb->meta, static fn( $r ) => 'content_types_type_key' === $r[0] ) );
-ci_check( 'a reference to an empty type still moves', 'os_skill' === ( $keys[0][1] ?? '' ), $keys[0][1] ?? 'missing' );
+os_check( 'a reference to an empty type still moves', 'os_skill' === ( $keys[0][1] ?? '' ), $keys[0][1] ?? 'missing' );
 
 // And it refuses to run ahead of the code.
-ci_seed();
+os_seed();
 $GLOBALS['ci_test_registered_types'] = array( 'post' );
 $wpdb->meta[] = array( 'content_types_type_key', 'ci_snippet' );
-Core_Index_Type_Migration::rewrite_type_references_sweep();
+OS_Type_Migration::rewrite_type_references_sweep();
 $keys = array_values( array_filter( $wpdb->meta, static fn( $r ) => 'content_types_type_key' === $r[0] ) );
-ci_check( 'unregistered replacement leaves the reference alone', 'ci_snippet' === ( $keys[0][1] ?? '' ), $keys[0][1] ?? 'missing' );
+os_check( 'unregistered replacement leaves the reference alone', 'ci_snippet' === ( $keys[0][1] ?? '' ), $keys[0][1] ?? 'missing' );
 
 echo "move() tolerates a populated meta target but not a populated type\n";
-ci_seed();
+os_seed();
 $wpdb->meta[] = array( 'os_tip', 'already moved' );
-$plan         = Core_Index_Type_Migration::plan();
-$result       = Core_Index_Type_Migration::move( ci_entry( $plan, 'meta', 'ci_tip' ) );
-ci_check( 'meta merges without a flag', 1 === $result, var_export( $result, true ) );
+$plan         = OS_Type_Migration::plan();
+$result       = OS_Type_Migration::move( os_entry( $plan, 'meta', 'ci_tip' ) );
+os_check( 'meta merges without a flag', 1 === $result, var_export( $result, true ) );
 
-ci_seed();
+os_seed();
 $wpdb->rows[9] = 'os_snippet';
-$plan          = Core_Index_Type_Migration::plan();
-$result        = Core_Index_Type_Migration::move( ci_entry( $plan, 'post_type', 'ci_snippet' ) );
-ci_check( 'post type refuses a populated target', is_wp_error( $result ) && 'target_not_empty' === $result->get_error_code() );
-$result = Core_Index_Type_Migration::move( ci_entry( $plan, 'post_type', 'ci_snippet' ), true );
-ci_check( 'and merges when told to', 2 === $result, var_export( $result, true ) );
+$plan          = OS_Type_Migration::plan();
+$result        = OS_Type_Migration::move( os_entry( $plan, 'post_type', 'ci_snippet' ) );
+os_check( 'post type refuses a populated target', is_wp_error( $result ) && 'target_not_empty' === $result->get_error_code() );
+$result = OS_Type_Migration::move( os_entry( $plan, 'post_type', 'ci_snippet' ), true );
+os_check( 'and merges when told to', 2 === $result, var_export( $result, true ) );
 
 echo "move() catches a partial update in the readback\n";
-ci_seed();
+os_seed();
 $wpdb->partial_update_for = 'ci_snippet';
-$plan                     = Core_Index_Type_Migration::plan();
-$result                   = Core_Index_Type_Migration::move( ci_entry( $plan, 'post_type', 'ci_snippet' ) );
-ci_check( 'returns an error', is_wp_error( $result ) );
-ci_check( 'names the reason', 'readback_mismatch' === $result->get_error_code(), is_wp_error( $result ) ? $result->get_error_message() : '' );
+$plan                     = OS_Type_Migration::plan();
+$result                   = OS_Type_Migration::move( os_entry( $plan, 'post_type', 'ci_snippet' ) );
+os_check( 'returns an error', is_wp_error( $result ) );
+os_check( 'names the reason', 'readback_mismatch' === $result->get_error_code(), is_wp_error( $result ) ? $result->get_error_message() : '' );
 
 echo "taxonomy rename carries its core options\n";
-ci_seed();
+os_seed();
 $GLOBALS['ci_test_options']['default_term_ci_skill_type'] = 42;
 $GLOBALS['ci_test_options']['ci_skill_type_children']     = array( 1 => array( 2 ) );
-$plan                                                     = Core_Index_Type_Migration::plan();
-Core_Index_Type_Migration::move( ci_entry( $plan, 'taxonomy', 'ci_skill_type' ) );
-ci_check( 'default term option renamed', 42 === get_option( 'default_term_os_skill_type' ) );
-ci_check( 'children cache renamed', array( 1 => array( 2 ) ) === get_option( 'os_skill_type_children' ) );
-ci_check( 'legacy option names removed', false === get_option( 'default_term_ci_skill_type' ) && false === get_option( 'ci_skill_type_children' ) );
+$plan                                                     = OS_Type_Migration::plan();
+OS_Type_Migration::move( os_entry( $plan, 'taxonomy', 'ci_skill_type' ) );
+os_check( 'default term option renamed', 42 === get_option( 'default_term_os_skill_type' ) );
+os_check( 'children cache renamed', array( 1 => array( 2 ) ) === get_option( 'os_skill_type_children' ) );
+os_check( 'legacy option names removed', false === get_option( 'default_term_ci_skill_type' ) && false === get_option( 'ci_skill_type_children' ) );
 
 echo "shared meta waits for the code rename\n";
-ci_seed();
+os_seed();
 $wpdb->meta[]                        = array( 'ci_path', 'skills/thing' );
 $GLOBALS['ci_test_registered_types'] = array( 'post' );
-$plan                                = Core_Index_Type_Migration::plan();
-$result                              = Core_Index_Type_Migration::move( ci_entry( $plan, 'meta', 'ci_path' ) );
-ci_check( 'refused while no target type exists', is_wp_error( $result ) );
+$plan                                = OS_Type_Migration::plan();
+$result                              = OS_Type_Migration::move( os_entry( $plan, 'meta', 'ci_path' ) );
+os_check( 'refused while no target type exists', is_wp_error( $result ) );
 
 $GLOBALS['ci_test_registered_types'] = array( 'os_skill', 'post' );
-$plan                                = Core_Index_Type_Migration::plan();
-$result                              = Core_Index_Type_Migration::move( ci_entry( $plan, 'meta', 'ci_path' ) );
-ci_check( 'proceeds once one has landed', 1 === $result, var_export( $result, true ) );
+$plan                                = OS_Type_Migration::plan();
+$result                              = OS_Type_Migration::move( os_entry( $plan, 'meta', 'ci_path' ) );
+os_check( 'proceeds once one has landed', 1 === $result, var_export( $result, true ) );
 
 echo "rewrite_option_payloads() moves keys, slugs, and list entries\n";
-ci_seed();
+os_seed();
 $GLOBALS['ci_test_options'] = array(
 	'os_field_groups' => array(
 		'ci_skill' => array( 'version' => 3 ),
@@ -424,84 +424,84 @@ $GLOBALS['ci_test_options'] = array(
 	),
 	'os_adopted_cpts' => array( 'ci_skill', 'habitat' ),
 );
-$touched = Core_Index_Type_Migration::rewrite_option_payloads(
+$touched = OS_Type_Migration::rewrite_option_payloads(
 	array( 'ci_skill' => 'os_skill', 'ci_issue' => 'os_issue' )
 );
 $fields  = get_option( 'os_field_groups' );
 $types   = get_option( 'os_custom_cpts' );
 $adopted = get_option( 'os_adopted_cpts' );
-ci_check( 'rewrote three options', 3 === $touched, (string) $touched );
-ci_check( 'keyed option key moved', isset( $fields['os_skill'] ) && ! isset( $fields['ci_skill'] ) );
-ci_check( 'unrelated key survived', isset( $fields['post'] ) );
-ci_check( 'definition key moved', isset( $types['os_issue'] ) );
-ci_check( 'definition slug field moved', 'os_issue' === ( $types['os_issue']['slug'] ?? '' ) );
-ci_check( 'list entry moved', in_array( 'os_skill', $adopted, true ) && ! in_array( 'ci_skill', $adopted, true ) );
-ci_check( 'unrelated list entry survived', in_array( 'habitat', $adopted, true ) );
+os_check( 'rewrote three options', 3 === $touched, (string) $touched );
+os_check( 'keyed option key moved', isset( $fields['os_skill'] ) && ! isset( $fields['ci_skill'] ) );
+os_check( 'unrelated key survived', isset( $fields['post'] ) );
+os_check( 'definition key moved', isset( $types['os_issue'] ) );
+os_check( 'definition slug field moved', 'os_issue' === ( $types['os_issue']['slug'] ?? '' ) );
+os_check( 'list entry moved', in_array( 'os_skill', $adopted, true ) && ! in_array( 'ci_skill', $adopted, true ) );
+os_check( 'unrelated list entry survived', in_array( 'habitat', $adopted, true ) );
 
 echo "a dynamic type with no posts still gets its definition renamed\n";
-ci_seed();
+os_seed();
 $wpdb->rows = array( 4 => 'post' );
 $GLOBALS['ci_test_options']['os_custom_cpts'] = array( 'ci_issue' => array( 'slug' => 'ci_issue', 'label' => 'Issue' ) );
 $GLOBALS['ci_test_options']['os_adopted_cpts'] = array( 'ci_issue' );
-Core_Index_Type_Migration::rewrite_option_payloads( Core_Index_Type_Migration::dynamic_pairs_for_test() );
+OS_Type_Migration::rewrite_option_payloads( OS_Type_Migration::dynamic_pairs_for_test() );
 $types = get_option( 'os_custom_cpts' );
-ci_check( 'definition key renamed with no rows to move', isset( $types['os_issue'] ), implode( ',', array_keys( (array) $types ) ) );
-ci_check( 'definition slug renamed too', 'os_issue' === ( $types['os_issue']['slug'] ?? '' ) );
-ci_check( 'the adopted list follows', in_array( 'os_issue', (array) get_option( 'os_adopted_cpts' ), true ) );
+os_check( 'definition key renamed with no rows to move', isset( $types['os_issue'] ), implode( ',', array_keys( (array) $types ) ) );
+os_check( 'definition slug renamed too', 'os_issue' === ( $types['os_issue']['slug'] ?? '' ) );
+os_check( 'the adopted list follows', in_array( 'os_issue', (array) get_option( 'os_adopted_cpts' ), true ) );
 
 echo "dynamic types from os_custom_cpts are planned\n";
-ci_seed();
+os_seed();
 $GLOBALS['ci_test_options']['os_custom_cpts'] = array( 'ci_project' => array( 'slug' => 'ci_project' ) );
 $wpdb->rows[7]                                = 'ci_project';
 $GLOBALS['ci_test_registered_types'][]        = 'os_project';
-$plan                                         = Core_Index_Type_Migration::plan();
-ci_check( 'dynamic type is planned', null !== ci_entry( $plan, 'post_type', 'ci_project' ) );
-ci_check( 'dynamic target is derived', 'os_project' === ( ci_entry( $plan, 'post_type', 'ci_project' )['to'] ?? '' ) );
+$plan                                         = OS_Type_Migration::plan();
+os_check( 'dynamic type is planned', null !== os_entry( $plan, 'post_type', 'ci_project' ) );
+os_check( 'dynamic target is derived', 'os_project' === ( os_entry( $plan, 'post_type', 'ci_project' )['to'] ?? '' ) );
 
 echo "redirect_legacy_query() only fires once the old name is gone\n";
-ci_seed();
+os_seed();
 $GLOBALS['ci_test_registered_types'] = array( 'ci_skill', 'os_skill' );
 $query                               = new CI_Test_Query( array( 'post_type' => 'ci_skill' ) );
-Core_Index_Type_Migration::redirect_legacy_query( $query );
-ci_check( 'leaves the query alone while both are registered', 'ci_skill' === $query->get( 'post_type' ) );
+OS_Type_Migration::redirect_legacy_query( $query );
+os_check( 'leaves the query alone while both are registered', 'ci_skill' === $query->get( 'post_type' ) );
 
 $GLOBALS['ci_test_registered_types'] = array( 'os_skill' );
 $query                               = new CI_Test_Query( array( 'post_type' => 'ci_skill' ) );
-Core_Index_Type_Migration::redirect_legacy_query( $query );
-ci_check( 'redirects once the legacy type is unregistered', 'os_skill' === $query->get( 'post_type' ) );
+OS_Type_Migration::redirect_legacy_query( $query );
+os_check( 'redirects once the legacy type is unregistered', 'os_skill' === $query->get( 'post_type' ) );
 
 $query = new CI_Test_Query( array( 'post_type' => array( 'ci_skill', 'post' ) ) );
-Core_Index_Type_Migration::redirect_legacy_query( $query );
-ci_check( 'leaves a multi-type query alone', array( 'ci_skill', 'post' ) === $query->get( 'post_type' ) );
+OS_Type_Migration::redirect_legacy_query( $query );
+os_check( 'leaves a multi-type query alone', array( 'ci_skill', 'post' ) === $query->get( 'post_type' ) );
 
 
 echo "reschedule_cron() moves the event, not the data\n";
 $GLOBALS['ci_test_cron'] = array( 'ci_reminders_cron' => array( 'next' => 1800000000, 'schedule' => 'hourly' ) );
-$report = Core_Index_Type_Migration::reschedule_cron( false );
-ci_check( 'dry run reports the move', isset( $report['ci_reminders_cron'] ) );
-ci_check( 'dry run changes nothing', isset( $GLOBALS['ci_test_cron']['ci_reminders_cron'] ) );
-Core_Index_Type_Migration::reschedule_cron( true );
-ci_check( 'legacy hook cleared', ! isset( $GLOBALS['ci_test_cron']['ci_reminders_cron'] ) );
-ci_check( 'new hook booked at the same time', 1800000000 === ( $GLOBALS['ci_test_cron']['os_reminders_cron']['next'] ?? 0 ) );
-ci_check( 'recurrence preserved', 'hourly' === ( $GLOBALS['ci_test_cron']['os_reminders_cron']['schedule'] ?? '' ) );
+$report = OS_Type_Migration::reschedule_cron( false );
+os_check( 'dry run reports the move', isset( $report['ci_reminders_cron'] ) );
+os_check( 'dry run changes nothing', isset( $GLOBALS['ci_test_cron']['ci_reminders_cron'] ) );
+OS_Type_Migration::reschedule_cron( true );
+os_check( 'legacy hook cleared', ! isset( $GLOBALS['ci_test_cron']['ci_reminders_cron'] ) );
+os_check( 'new hook booked at the same time', 1800000000 === ( $GLOBALS['ci_test_cron']['os_reminders_cron']['next'] ?? 0 ) );
+os_check( 'recurrence preserved', 'hourly' === ( $GLOBALS['ci_test_cron']['os_reminders_cron']['schedule'] ?? '' ) );
 $GLOBALS['ci_test_cron'] = array();
-ci_check( 'nothing scheduled is a no-op', array() === Core_Index_Type_Migration::reschedule_cron( true ) );
+os_check( 'nothing scheduled is a no-op', array() === OS_Type_Migration::reschedule_cron( true ) );
 
 echo "rewrite_legacy_rest_route() re-points the pre-rename collection\n";
 $request = new CI_Test_Request( '/wp/v2/ci_skill' );
-Core_Index_Type_Migration::rewrite_legacy_rest_route( null, null, $request );
-ci_check( 'collection route re-pointed', '/wp/v2/os_skill' === $request->get_route() );
+OS_Type_Migration::rewrite_legacy_rest_route( null, null, $request );
+os_check( 'collection route re-pointed', '/wp/v2/os_skill' === $request->get_route() );
 
 $request = new CI_Test_Request( '/wp/v2/ci_skill/42' );
-Core_Index_Type_Migration::rewrite_legacy_rest_route( null, null, $request );
-ci_check( 'item route keeps its suffix', '/wp/v2/os_skill/42' === $request->get_route() );
+OS_Type_Migration::rewrite_legacy_rest_route( null, null, $request );
+os_check( 'item route keeps its suffix', '/wp/v2/os_skill/42' === $request->get_route() );
 
 $request = new CI_Test_Request( '/wp/v2/posts' );
-Core_Index_Type_Migration::rewrite_legacy_rest_route( null, null, $request );
-ci_check( 'an unrelated route is untouched', '/wp/v2/posts' === $request->get_route() );
+OS_Type_Migration::rewrite_legacy_rest_route( null, null, $request );
+os_check( 'an unrelated route is untouched', '/wp/v2/posts' === $request->get_route() );
 
 $request = new CI_Test_Request( '/wp/v2/ci_skill' );
-Core_Index_Type_Migration::rewrite_legacy_rest_route( 'short-circuited', null, $request );
-ci_check( 'a short-circuited request is left alone', '/wp/v2/ci_skill' === $request->get_route() );
+OS_Type_Migration::rewrite_legacy_rest_route( 'short-circuited', null, $request );
+os_check( 'a short-circuited request is left alone', '/wp/v2/ci_skill' === $request->get_route() );
 echo "\n{$passed} passed, {$failed} failed\n";
 exit( $failed > 0 ? 1 : 0 );

@@ -15,8 +15,8 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { h, BOOT, rest, decodeEntities } from 'ci/core';
-import { Icon } from 'ci/ui';
+import { h, BOOT, rest, decodeEntities } from 'os/core';
+import { Icon } from 'os/ui';
 import { Button, Spinner, Notice, ItemGroup as WPItemGroup, Item as WPItem } from '@wordpress/components';
 
 const VFS = '/activity/v1/vfs';
@@ -103,7 +103,7 @@ export function ReferencePanel() {
                 <h3 style=${{ fontSize: '13px', fontWeight: 600, flex: 1, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>${content.title}</h3>
                 ${node?.app_route ? h`<${Button} size="small" variant="secondary" onClick=${() => { const r = hashRoute(node.app_route); if (r) navigate(r); }}>Open ↗</${Button}>` : null}
               </div>
-              <div className="ci-ref-rendered" style=${{ fontSize: '13px', lineHeight: 1.5, wordBreak: 'break-word' }}
+              <div className="os-ref-rendered" style=${{ fontSize: '13px', lineHeight: 1.5, wordBreak: 'break-word' }}
                 dangerouslySetInnerHTML=${{ __html: content.html || '<p><em>(empty)</em></p>' }} />
             </div>` :
           node && node.kind === 'not_found' ? h`<div style=${{ padding: '24px' }}><${Notice} status="warning" isDismissible=${false}>Nothing at that path.</${Notice}></div>` :

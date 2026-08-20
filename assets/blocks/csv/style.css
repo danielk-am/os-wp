@@ -1,17 +1,17 @@
 /* CSV Preview block — frontend + editor styles */
-.ci-csv-block {
+.os-csv-block {
 	margin: 1rem 0;
 	font-size: 14px;
 	line-height: 1.4;
 }
-.ci-csv-block .ci-csv-toolbar {
+.os-csv-block .os-csv-toolbar {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
 	align-items: center;
 	margin-bottom: 8px;
 }
-.ci-csv-block .ci-csv-filter {
+.os-csv-block .os-csv-filter {
 	flex: 1 1 240px;
 	min-width: 200px;
 	padding: 6px 10px;
@@ -20,24 +20,24 @@
 	border-radius: 4px;
 	background: #fff;
 }
-.ci-csv-block .ci-csv-count {
+.os-csv-block .os-csv-count {
 	font-size: 12px;
 	color: #666;
 	margin-left: auto;
 	white-space: nowrap;
 }
-.ci-csv-block .ci-csv-wrap {
+.os-csv-block .os-csv-wrap {
 	border: 1px solid rgba(0, 0, 0, 0.12);
 	border-radius: 4px;
 	overflow: auto;
 	max-height: 60vh;
 }
-.ci-csv-block table {
+.os-csv-block table {
 	width: 100%;
 	border-collapse: collapse;
 	font-size: 13px;
 }
-.ci-csv-block thead th {
+.os-csv-block thead th {
 	background: #f6f7f7;
 	text-align: left;
 	padding: 8px 12px;
@@ -47,14 +47,14 @@
 	top: 0;
 	z-index: 1;
 }
-.ci-csv-block thead tr.ci-csv-col-filters th {
+.os-csv-block thead tr.os-csv-col-filters th {
 	padding: 4px 6px;
 	background: #fafafa;
 	position: sticky;
 	top: 35px; /* sits under the header row */
 	z-index: 1;
 }
-.ci-csv-block .ci-csv-col-filter {
+.os-csv-block .os-csv-col-filter {
 	width: 100%;
 	padding: 3px 6px;
 	font-size: 11px;
@@ -62,18 +62,18 @@
 	border-radius: 3px;
 	background: #fff;
 }
-.ci-csv-block tbody td {
+.os-csv-block tbody td {
 	padding: 8px 12px;
 	border-top: 1px solid rgba(0, 0, 0, 0.06);
 	vertical-align: top;
 }
-.ci-csv-block tbody tr:hover td {
+.os-csv-block tbody tr:hover td {
 	background: rgba(0, 0, 0, 0.025);
 }
-.ci-csv-block tbody tr:last-child td {
+.os-csv-block tbody tr:last-child td {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
-.ci-csv-block .ci-csv-chip {
+.os-csv-block .os-csv-chip {
 	display: inline-block;
 	padding: 2px 8px;
 	margin: 0 4px 2px 0;
@@ -84,13 +84,13 @@
 	color: inherit;
 	border: 1px solid rgba(0, 0, 0, 0.08);
 }
-.ci-csv-block figcaption {
+.os-csv-block figcaption {
 	font-size: 12px;
 	color: #666;
 	margin-top: 6px;
 	text-align: center;
 }
-.ci-csv-block .ci-csv-placeholder {
+.os-csv-block .os-csv-placeholder {
 	font-style: italic;
 	color: #888;
 	padding: 12px;

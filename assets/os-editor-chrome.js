@@ -6,8 +6,8 @@
  * (the Insert drawer, consumed by wizard). Also registers the `block`
  * editor — the Gutenberg redirect for block-mode CPTs.
  *
- * Formerly ci-app-markdown.js: the markdown editor it hosted is retired (CSV
- * moved to the ci-csv companion; prose authoring is the Fields form editor), so
+ * Formerly os-app-markdown.js: the markdown editor it hosted is retired (CSV
+ * moved to the os-csv companion; prose authoring is the Fields form editor), so
  * that editor and its file / CSV / Mermaid-graph code is gone and only the
  * shared chrome remains.
  *
@@ -32,11 +32,11 @@ import {
 } from '@wordpress/components';
 import { marked } from 'marked';
 import { faPython, faJs, faPhp, faCode, faFileCode, faTable, faTerminal, faMarkdown, faDiagramProject } from '@ci/fa-icons';
-import { h, BOOT, rest, restAllPages, decodeEntities, typeMeta, editorChoices, CIRegistry, registerEditor } from 'ci/core';
-import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, CI_ICONS, Toolbar as CIToolbar, CptIcon, SelectMenu } from 'ci/ui';
-import { useToast, useDialog } from 'ci/shell';
-import { CodeEditor, useEditorFullWidth, EditorFullWidthButton } from 'ci/editors';
-import { CANVAS_ADD_ITEMS } from 'ci/core';
+import { h, BOOT, rest, restAllPages, decodeEntities, typeMeta, editorChoices, CIRegistry, registerEditor } from 'os/core';
+import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, CI_ICONS, Toolbar as CIToolbar, CptIcon, SelectMenu } from 'os/ui';
+import { useToast, useDialog } from 'os/shell';
+import { CodeEditor, useEditorFullWidth, EditorFullWidthButton } from 'os/editors';
+import { CANVAS_ADD_ITEMS } from 'os/core';
 
 // Shared type chrome via the registry (set by the main bundle before mount).
 const TypeLayout = ({ children, ...rest }) => h`<${CIRegistry.TypeLayout} ...${rest}>${children}</${CIRegistry.TypeLayout}>`;
@@ -60,7 +60,7 @@ const MARKDOWN_INSERT_TEMPLATES = CANVAS_ADD_ITEMS
 // editor underneath stays still) and the 25-item catalogue can fit
 // without bumping into the viewport edge. Anchors to the right of
 // the content area — respects the WP admin sidebar offset via the
-// `--ci-sidebar-w` CSS var, same as the command palette.
+// `--os-sidebar-w` CSS var, same as the command palette.
 // Lightweight YAML-ish frontmatter parser for custom snippet bodies.
 // Returns `{ meta: { key: value, … }, body: rest-of-content }`. Keys are
 // lowercased so authors can write `Section:`, `section:`, or `SECTION:`
@@ -129,7 +129,7 @@ function MarkdownInsertPopover({ onPick, onClose, open }) {
           const { meta: fm, body } = parseSnippetFrontmatter(p.content?.raw || '');
           const cursorOffset = parseInt(fm.cursoroffset || fm['cursor-offset'] || '0', 10) || 0;
           return {
-            id: 'ci-snippet-' + p.id,
+            id: 'os-snippet-' + p.id,
             label: fm.label || fm.name || (p.title?.raw || p.title?.rendered || p.slug || 'Snippet').trim(),
             section: fm.section || fm.category || (p.meta?.os_section || '').trim() || 'Custom',
             tip: fm.tip || fm.description || (p.meta?.os_tip || '').trim() || (p.excerpt?.raw || '').trim(),
@@ -197,10 +197,10 @@ function MarkdownInsertPopover({ onPick, onClose, open }) {
   return h`<aside
     ref=${ref}
     aria-hidden=${!open}
-    style=${{ top: 'calc(var(--ci-adminbar-h, 32px) + 56px)', right: 0, bottom: 0 }}
+    style=${{ top: 'calc(var(--os-adminbar-h, 32px) + 56px)', right: 0, bottom: 0 }}
     className=${`fixed z-[1000] w-96 max-w-full bg-card border-l border-border shadow-2xl flex flex-col transition-transform duration-200 ${ open ? 'translate-x-0' : 'translate-x-full pointer-events-none' }`}
   >
-    <div className="p-3 border-b border-border shrink-0 flex items-center gap-2 ci-wpds-fields ci-sidebar-search">
+    <div className="p-3 border-b border-border shrink-0 flex items-center gap-2 os-wpds-fields os-sidebar-search">
       <div className="flex-1 min-w-0">
         <${WPSearchControl}
           __nextHasNoMarginBottom
@@ -215,7 +215,7 @@ function MarkdownInsertPopover({ onPick, onClose, open }) {
     <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
       ${sectionOrder.length === 0
         ? h`<div className="px-3 py-6 text-center text-xs text-muted-foreground italic">No matches</div>`
-        : h`<${WPPanel} className="ci-insert-panel">
+        : h`<${WPPanel} className="os-insert-panel">
           ${sectionOrder.map((section) => {
             const isOpen = !!q.trim() || expanded.has(section);
             const rows = grouped[section] || [];
@@ -223,7 +223,7 @@ function MarkdownInsertPopover({ onPick, onClose, open }) {
               key=${section}
               opened=${isOpen}
               onToggle=${() => toggleSection(section)}
-              title=${h`<span className="ci-insert-sec"><span className="ci-insert-sec-label">${section}</span><span className="ci-insert-count">${rows.length}</span></span>`}
+              title=${h`<span className="os-insert-sec"><span className="os-insert-sec-label">${section}</span><span className="os-insert-count">${rows.length}</span></span>`}
             >
               <${WPItemGroup}>
                 ${rows.map((it) => h`<${WPItem}
@@ -352,18 +352,18 @@ function EditorToolbarItem({ group = 'right', icon, label, onClick, isActive = f
 
 // Shared, prominent title input for editors that render the title IN their
 // content flow (title-as-field) rather than in the fixed titlebar. Same look as
-// the titlebar input (.ci-editor-title), just placed as the first content
+// the titlebar input (.os-editor-title), just placed as the first content
 // element so it scrolls with the fields / body / table. Published on the
 // registry as CIRegistry.EditorTitleField.
 function EditorTitleField({ title, setTitle, placeholder, slug, className = '' }) {
-  return h`<div className=${`ci-editor-titlefield ${className}`.trim()}>
+  return h`<div className=${`os-editor-titlefield ${className}`.trim()}>
     <input
       value=${title}
       onChange=${(e) => setTitle(e.target.value)}
       placeholder=${placeholder}
-      className="ci-editor-title w-full min-w-0 font-semibold leading-tight bg-transparent border-0 focus:outline-none placeholder:text-muted-foreground"
+      className="os-editor-title w-full min-w-0 font-semibold leading-tight bg-transparent border-0 focus:outline-none placeholder:text-muted-foreground"
     />
-    ${slug ? h`<span className="ci-editor-slug block font-mono text-muted-foreground truncate" title=${slug}>${slug}</span>` : null}
+    ${slug ? h`<span className="os-editor-slug block font-mono text-muted-foreground truncate" title=${slug}>${slug}</span>` : null}
   </div>`;
 }
 
@@ -376,7 +376,7 @@ function EditorTitleField({ title, setTitle, placeholder, slug, className = '' }
 // get a trailing arrow; in-place toggles (PageFooter.Action) do not.
 // ---------------------------------------------------------------------------
 function PageFooter({ title = 'Options', children, className = '' }) {
-  return h`<footer className=${`ci-page-footer pt-4 border-t border-border space-y-2 ${className}`.trim()} style=${{ marginTop: '2.5rem' }}>
+  return h`<footer className=${`os-page-footer pt-4 border-t border-border space-y-2 ${className}`.trim()} style=${{ marginTop: '2.5rem' }}>
     <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">${title}</div>
     <div className="space-y-1.5 text-sm text-muted-foreground">${children}</div>
   </footer>`;
@@ -492,8 +492,8 @@ function EditorHeader({ title, setTitle, placeholder, dirty, isNew, saving, onSa
   // slot) opens a right-hand panel via the gear (like UI Playground's SETTINGS).
   return h`<${Fragment}>
     <header
-      className="ci-editor-header fixed z-30 h-14 bg-card border-b border-border shadow-sm px-3 md:px-4 flex items-center gap-2"
-      style=${{ top: 'var(--ci-adminbar-h, 32px)', right: 0 }}
+      className="os-editor-header fixed z-30 h-14 bg-card border-b border-border shadow-sm px-3 md:px-4 flex items-center gap-2"
+      style=${{ top: 'var(--os-adminbar-h, 32px)', right: 0 }}
     >
       <${MobileMenuButton} />
       ${onClose ? h`<button
@@ -514,7 +514,7 @@ function EditorHeader({ title, setTitle, placeholder, dirty, isNew, saving, onSa
       </div>` : null}
 
       ${/* Left toolbar zone — editor-contributed buttons portal in here. */''}
-      <div className="ci-editor-toolbar shrink-0 flex items-center">
+      <div className="os-editor-toolbar shrink-0 flex items-center">
         <${ToolbarLeftSlot} bubblesVirtually=${true} className="flex items-center" />
       </div>
 
@@ -529,9 +529,9 @@ function EditorHeader({ title, setTitle, placeholder, dirty, isNew, saving, onSa
       ${/* One cohesive Gutenberg-style icon group: editor-contributed buttons
           (right slot), then the legacy `actions` slot, the Settings gear, and
           Close-as-icon. Save stays a separate primary button (WP-native). */''}
-      <div className="ci-editor-toolbar shrink-0 flex items-center">
+      <div className="os-editor-toolbar shrink-0 flex items-center">
         <${ToolbarRightSlot} bubblesVirtually=${true} className="flex items-center" />
-        ${actions ? h`<div className="ci-editor-actions flex items-center">${actions}</div>` : null}
+        ${actions ? h`<div className="os-editor-actions flex items-center">${actions}</div>` : null}
         ${hasInspector ? h`<${WPToolbarGroup}>
           <${WPToolbarButton} isActive=${showSettings} onClick=${() => setShowSettings((v) => !v)} label="Settings" showTooltip=${true}>
             <${Icon} name="sidebar-flip" className="w-4 h-4" />
@@ -547,25 +547,25 @@ function EditorHeader({ title, setTitle, placeholder, dirty, isNew, saving, onSa
         disabled=${saving || (!dirty && !isNew)}
       >${saving ? h`<${Spinner} />` : (saveLabel || 'Save')}</${Button}>
     </header>
-    ${hideTitlebar ? null : h`<div className="ci-editor-titlebar shrink-0 bg-card border-b border-border">
+    ${hideTitlebar ? null : h`<div className="os-editor-titlebar shrink-0 bg-card border-b border-border">
       <input
         value=${title}
         onChange=${(e) => setTitle(e.target.value)}
         placeholder=${placeholder}
-        className="ci-editor-title w-full min-w-0 font-semibold leading-tight bg-transparent border-0 focus:outline-none placeholder:text-muted-foreground"
+        className="os-editor-title w-full min-w-0 font-semibold leading-tight bg-transparent border-0 focus:outline-none placeholder:text-muted-foreground"
       />
-      ${showSlug ? h`<span className="ci-editor-slug block font-mono text-muted-foreground truncate" title=${slug}>${slug}</span>` : null}
+      ${showSlug ? h`<span className="os-editor-slug block font-mono text-muted-foreground truncate" title=${slug}>${slug}</span>` : null}
     </div>`}
     ${hasInspector && showSettings ? h`<aside
-      className="ci-editor-settings fixed bg-card border-l border-border shadow-2xl flex flex-col"
-      style=${{ top: 'var(--ci-adminbar-h, 32px)', right: 0, bottom: 0, width: '300px', maxWidth: '90vw', zIndex: 29 }}
+      className="os-editor-settings fixed bg-card border-l border-border shadow-2xl flex flex-col"
+      style=${{ top: 'var(--os-adminbar-h, 32px)', right: 0, bottom: 0, width: '300px', maxWidth: '90vw', zIndex: 29 }}
     >
       <div className="h-14 px-4 flex items-center justify-between border-b border-border shrink-0">
         <span className="text-sm font-semibold">Settings</span>
         <button onClick=${() => setShowSettings(false)} aria-label="Close settings"
           className="text-muted-foreground hover:text-foreground text-xl leading-none w-7 h-7 flex items-center justify-center">×</button>
       </div>
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 ci-wpds-fields">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 os-wpds-fields">
         ${settings}
         <${SettingsSlot} bubblesVirtually=${true} />
       </div>
@@ -576,12 +576,12 @@ function EditorHeader({ title, setTitle, placeholder, dirty, isNew, saving, onSa
 // App-page header — the same fixed top bar as EditorHeader, for non-editor
 // destinations (Apps, Media, Files, …) that have no save/back-to-list. A static
 // title on the left, the page's own actions on the right. Reuses the
-// `ci-editor-header` class so it inherits the sidebar-width left offset, and
+// `os-editor-header` class so it inherits the sidebar-width left offset, and
 // pairs with a `pt-14` content wrapper exactly like the editors.
 function AppHeader({ title, icon, iconSvg, actions, onBack, backLabel }) {
   return h`<header
-    className="ci-editor-header fixed z-30 h-14 bg-card border-b border-border shadow-sm px-3 md:px-4 flex items-center gap-2"
-    style=${{ top: 'var(--ci-adminbar-h, 32px)', right: 0 }}
+    className="os-editor-header fixed z-30 h-14 bg-card border-b border-border shadow-sm px-3 md:px-4 flex items-center gap-2"
+    style=${{ top: 'var(--os-adminbar-h, 32px)', right: 0 }}
   >
     <${MobileMenuButton} />
     ${onBack ? h`<button type="button" onClick=${onBack} aria-label="Back"

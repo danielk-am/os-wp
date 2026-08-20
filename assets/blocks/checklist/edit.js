@@ -13,13 +13,13 @@
 	registerBlockType( 'core-index/checklist', {
 		edit: function Edit( { attributes, setAttributes } ) {
 			const { title } = attributes;
-			const blockProps = useBlockProps( { className: 'ci-checklist' } );
+			const blockProps = useBlockProps( { className: 'os-checklist' } );
 			return h(
 				'div',
 				blockProps,
 				h( RichText, {
 					tagName: 'h4',
-					className: 'ci-checklist__title',
+					className: 'os-checklist__title',
 					value: title || '',
 					onChange: ( v ) => setAttributes( { title: v } ),
 					placeholder: 'Checklist title (optional)…',
@@ -36,15 +36,15 @@
 		save: function Save( { attributes } ) {
 			const { title } = attributes;
 			const blockProps = ( wp.blockEditor.useBlockProps && wp.blockEditor.useBlockProps.save )
-				? wp.blockEditor.useBlockProps.save( { className: 'ci-checklist' } )
-				: { className: 'ci-checklist' };
+				? wp.blockEditor.useBlockProps.save( { className: 'os-checklist' } )
+				: { className: 'os-checklist' };
 			return h(
 				'div',
 				blockProps,
 				title
 					? h( RichText.Content, {
 						tagName: 'h4',
-						className: 'ci-checklist__title',
+						className: 'os-checklist__title',
 						value: title,
 					} )
 					: null,

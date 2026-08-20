@@ -13,10 +13,10 @@
  * No build step — native ES module; specifiers resolve via the importmap.
  */
 import { useState, useEffect } from 'react';
-import { h, rest, registerRoute } from 'ci/core';
-import { PageHeading, Spinner } from 'ci/ui';
+import { h, rest, registerRoute } from 'os/core';
+import { PageHeading, Spinner } from 'os/ui';
 import { Button, ComboboxControl, TextControl } from '@wordpress/components';
-import { useToast } from 'ci/shell';
+import { useToast } from 'os/shell';
 
 const BASE = '/content-types/v1/type-menus';
 

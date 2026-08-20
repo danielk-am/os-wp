@@ -1,10 +1,10 @@
 <?php
 /**
- * CI_Code_Abilities — code snippet abilities
+ * OS_Code_Abilities — code snippet abilities
  *
  * Per-app ability registrar for Core Index, extracted from
  * class-abilities.php (issue 797) onto the shared
- * CI_Code_Ability_Base.
+ * OS_Code_Ability_Base.
  *
  * @package Core_Index
  */
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CI_Code_Abilities extends CI_Code_Ability_Base {
+class OS_Code_Abilities extends OS_Code_Ability_Base {
 
 	public static function register_all(): void {
 		if ( ! function_exists( 'wp_register_ability' ) ) {
@@ -23,18 +23,18 @@ class CI_Code_Abilities extends CI_Code_Ability_Base {
 		// === Code snippets (AI-authored code as real files) ============
 		//
 		// PHP snippets are mini-plugins; an agent can DRAFT runnable code here,
-		// materialised to wp-content/ci-snippets/<lang>/<slug> and guarded by
+		// materialised to wp-content/os-snippets/<lang>/<slug> and guarded by
 		// the mu-plugin circuit breaker. Guardrails: writes need manage_options
 		// (executable code), new snippets default to INACTIVE, and activating
 		// PHP over MCP is refused unless a human enabled it in Settings — the
 		// circuit breaker still auto-disables a snippet that fatals.
-		if ( class_exists( 'CI_Code' ) ) {
+		if ( class_exists( 'OS_Code' ) ) {
 			$code_cap = static fn() => current_user_can( 'manage_options' );
 
 			self::reg( self::NS . '/code-list', array(
 				'label'             => 'List code snippets',
 				'description'       => 'List os_code snippets (php/js/css/html) with language, scope, active state, and any circuit-breaker error.',
-				'category' => CI_Code_Ability_Base::CATEGORY,
+				'category' => OS_Code_Ability_Base::CATEGORY,
 				'input_schema'      => array( 'type' => 'object', 'properties' => array( 'language' => array( 'type' => 'string', 'enum' => array( '', 'php', 'js', 'css', 'html' ), 'default' => '' ) ) ),
 				'output_schema'     => array( 'type' => 'object' ),
 				'permission_callback' => array( __CLASS__, 'can_read' ),
@@ -45,7 +45,7 @@ class CI_Code_Abilities extends CI_Code_Ability_Base {
 			self::reg( self::NS . '/code-read', array(
 				'label'             => 'Read code snippet',
 				'description'       => 'Fetch one os_code snippet by id or slug. Returns the code body, language, scope, active state, and last error.',
-				'category' => CI_Code_Ability_Base::CATEGORY,
+				'category' => OS_Code_Ability_Base::CATEGORY,
 				'input_schema'      => array( 'type' => 'object', 'properties' => array( 'id' => array( 'type' => 'integer' ), 'slug' => array( 'type' => 'string' ) ) ),
 				'output_schema'     => array( 'type' => 'object' ),
 				'permission_callback' => array( __CLASS__, 'can_read' ),
@@ -56,7 +56,7 @@ class CI_Code_Abilities extends CI_Code_Ability_Base {
 			self::reg( self::NS . '/code-create', array(
 				'label'             => 'Create code snippet',
 				'description'       => 'Create a php/js/css/html snippet. For PHP, OMIT the opening <?php tag — write the body only. Defaults to INACTIVE: a human (or ci/code-activate) must turn it on. Activating PHP over MCP is blocked unless enabled in Settings. Returns id + slug.',
-				'category' => CI_Code_Ability_Base::CATEGORY,
+				'category' => OS_Code_Ability_Base::CATEGORY,
 				'input_schema'      => array(
 					'type'       => 'object',
 					'required'   => array( 'title', 'language', 'code' ),
@@ -78,7 +78,7 @@ class CI_Code_Abilities extends CI_Code_Ability_Base {
 			self::reg( self::NS . '/code-update', array(
 				'label'             => 'Update code snippet',
 				'description'       => 'Update an existing snippet by id or slug (title / code / scope / priority). Editing re-materialises the file and re-arms the circuit breaker. Does not change active state — use ci/code-activate.',
-				'category' => CI_Code_Ability_Base::CATEGORY,
+				'category' => OS_Code_Ability_Base::CATEGORY,
 				'input_schema'      => array(
 					'type'       => 'object',
 					'properties' => array(
@@ -99,7 +99,7 @@ class CI_Code_Abilities extends CI_Code_Ability_Base {
 			self::reg( self::NS . '/code-activate', array(
 				'label'             => 'Activate / deactivate code snippet',
 				'description'       => 'Turn a snippet on or off. Activating PHP over MCP is refused unless a human enabled it in Settings (returns ok:false with a reason). Deactivating is always allowed.',
-				'category' => CI_Code_Ability_Base::CATEGORY,
+				'category' => OS_Code_Ability_Base::CATEGORY,
 				'input_schema'      => array(
 					'type'       => 'object',
 					'required'   => array( 'active' ),
@@ -118,7 +118,7 @@ class CI_Code_Abilities extends CI_Code_Ability_Base {
 			self::reg( self::NS . '/code-delete', array(
 				'label'             => 'Delete code snippet',
 				'description'       => 'Trash a code snippet (recoverable) and remove its materialised file.',
-				'category' => CI_Code_Ability_Base::CATEGORY,
+				'category' => OS_Code_Ability_Base::CATEGORY,
 				'input_schema'      => array( 'type' => 'object', 'properties' => array( 'id' => array( 'type' => 'integer' ), 'slug' => array( 'type' => 'string' ) ) ),
 				'output_schema'     => array( 'type' => 'object' ),
 				'permission_callback' => $code_cap,
@@ -133,26 +133,26 @@ class CI_Code_Abilities extends CI_Code_Ability_Base {
 		$id = (int) ( $input['id'] ?? 0 );
 		if ( $id > 0 ) {
 			$p = get_post( $id );
-			return ( $p && CI_Code::CPT === $p->post_type ) ? $p : null;
+			return ( $p && OS_Code::CPT === $p->post_type ) ? $p : null;
 		}
 		$slug = (string) ( $input['slug'] ?? '' );
 		if ( '' === $slug ) {
 			return null;
 		}
-		$p = get_page_by_path( $slug, OBJECT, CI_Code::CPT );
+		$p = get_page_by_path( $slug, OBJECT, OS_Code::CPT );
 		return $p instanceof \WP_Post ? $p : null;
 	}
 
 	private static function code_summary( \WP_Post $p ): array {
-		$errs = CI_Code::get_errors();
+		$errs = OS_Code::get_errors();
 		return array(
 			'id'       => (int) $p->ID,
 			'slug'     => (string) $p->post_name,
 			'title'    => (string) $p->post_title,
-			'language' => (string) ( get_post_meta( $p->ID, CI_Code::META_LANG, true ) ?: 'php' ),
-			'scope'    => (string) ( get_post_meta( $p->ID, CI_Code::META_SCOPE, true ) ?: 'everywhere' ),
-			'active'   => (bool) get_post_meta( $p->ID, CI_Code::META_ACTIVE, true ),
-			'priority' => (int) ( get_post_meta( $p->ID, CI_Code::META_PRIORITY, true ) ?: 10 ),
+			'language' => (string) ( get_post_meta( $p->ID, OS_Code::META_LANG, true ) ?: 'php' ),
+			'scope'    => (string) ( get_post_meta( $p->ID, OS_Code::META_SCOPE, true ) ?: 'everywhere' ),
+			'active'   => (bool) get_post_meta( $p->ID, OS_Code::META_ACTIVE, true ),
+			'priority' => (int) ( get_post_meta( $p->ID, OS_Code::META_PRIORITY, true ) ?: 10 ),
 			'error'    => $errs[ $p->ID ] ?? null,
 		);
 	}
@@ -160,7 +160,7 @@ class CI_Code_Abilities extends CI_Code_Ability_Base {
 	public static function execute_code_list( $input ): array {
 		$lang  = (string) ( $input['language'] ?? '' );
 		$posts = get_posts( array(
-			'post_type'      => CI_Code::CPT,
+			'post_type'      => OS_Code::CPT,
 			'posts_per_page' => 200,
 			'post_status'    => array( 'publish', 'draft', 'private' ),
 			'orderby'        => 'title',
@@ -187,13 +187,13 @@ class CI_Code_Abilities extends CI_Code_Ability_Base {
 	public static function execute_code_create( $input ): array {
 		$title = trim( (string) ( $input['title'] ?? '' ) );
 		$lang  = (string) ( $input['language'] ?? '' );
-		if ( '' === $title || ! in_array( $lang, CI_Code::LANGS, true ) ) {
+		if ( '' === $title || ! in_array( $lang, OS_Code::LANGS, true ) ) {
 			return array( 'ok' => false, 'message' => 'title and a valid language are required' );
 		}
-		CI_Code::begin_sync_batch();
+		OS_Code::begin_sync_batch();
 		try {
 			$id = wp_insert_post( array(
-				'post_type'    => CI_Code::CPT,
+				'post_type'    => OS_Code::CPT,
 				'post_status'  => 'publish',
 				'post_title'   => $title,
 				'post_content' => (string) ( $input['code'] ?? '' ),
@@ -201,13 +201,13 @@ class CI_Code_Abilities extends CI_Code_Ability_Base {
 			if ( is_wp_error( $id ) ) {
 				return array( 'ok' => false, 'message' => $id->get_error_message() );
 			}
-			update_post_meta( $id, CI_Code::META_LANG, $lang );
-			update_post_meta( $id, CI_Code::META_SCOPE, in_array( ( $input['scope'] ?? '' ), array( 'everywhere', 'admin', 'frontend' ), true ) ? $input['scope'] : 'everywhere' );
-			update_post_meta( $id, CI_Code::META_PRIORITY, (int) ( $input['priority'] ?? 10 ) );
-			CI_Code::sync_post( (int) $id );
+			update_post_meta( $id, OS_Code::META_LANG, $lang );
+			update_post_meta( $id, OS_Code::META_SCOPE, in_array( ( $input['scope'] ?? '' ), array( 'everywhere', 'admin', 'frontend' ), true ) ? $input['scope'] : 'everywhere' );
+			update_post_meta( $id, OS_Code::META_PRIORITY, (int) ( $input['priority'] ?? 10 ) );
+			OS_Code::sync_post( (int) $id );
 			$out = array( 'ok' => true, 'id' => (int) $id, 'slug' => get_post( $id )->post_name, 'active' => false );
 			if ( ! empty( $input['active'] ) ) {
-				$r = CI_Code::set_active( (int) $id, true, 'mcp' );
+				$r = OS_Code::set_active( (int) $id, true, 'mcp' );
 				if ( is_wp_error( $r ) ) {
 					$out['active']             = false;
 					$out['activation_blocked'] = $r->get_error_message();
@@ -217,7 +217,7 @@ class CI_Code_Abilities extends CI_Code_Ability_Base {
 			}
 			return $out;
 		} finally {
-			CI_Code::end_sync_batch();
+			OS_Code::end_sync_batch();
 		}
 	}
 
@@ -226,7 +226,7 @@ class CI_Code_Abilities extends CI_Code_Ability_Base {
 		if ( ! $p ) {
 			return array( 'ok' => false, 'message' => 'snippet not found' );
 		}
-		CI_Code::begin_sync_batch();
+		OS_Code::begin_sync_batch();
 		try {
 			$args = array( 'ID' => $p->ID );
 			if ( array_key_exists( 'title', $input ) ) {
@@ -240,15 +240,15 @@ class CI_Code_Abilities extends CI_Code_Ability_Base {
 				return array( 'ok' => false, 'message' => $res->get_error_message() );
 			}
 			if ( array_key_exists( 'scope', $input ) && in_array( $input['scope'], array( 'everywhere', 'admin', 'frontend' ), true ) ) {
-				update_post_meta( $p->ID, CI_Code::META_SCOPE, $input['scope'] );
+				update_post_meta( $p->ID, OS_Code::META_SCOPE, $input['scope'] );
 			}
 			if ( array_key_exists( 'priority', $input ) ) {
-				update_post_meta( $p->ID, CI_Code::META_PRIORITY, (int) $input['priority'] );
+				update_post_meta( $p->ID, OS_Code::META_PRIORITY, (int) $input['priority'] );
 			}
-			CI_Code::sync_post( (int) $p->ID );
+			OS_Code::sync_post( (int) $p->ID );
 			return array( 'ok' => true, 'id' => (int) $p->ID, 'slug' => (string) $p->post_name );
 		} finally {
-			CI_Code::end_sync_batch();
+			OS_Code::end_sync_batch();
 		}
 	}
 
@@ -258,7 +258,7 @@ class CI_Code_Abilities extends CI_Code_Ability_Base {
 			return array( 'ok' => false, 'message' => 'snippet not found' );
 		}
 		$active = (bool) ( $input['active'] ?? false );
-		$r = CI_Code::set_active( (int) $p->ID, $active, 'mcp' );
+		$r = OS_Code::set_active( (int) $p->ID, $active, 'mcp' );
 		if ( is_wp_error( $r ) ) {
 			return array( 'ok' => false, 'message' => $r->get_error_message() );
 		}

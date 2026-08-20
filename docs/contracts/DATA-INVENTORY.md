@@ -75,7 +75,7 @@ registration call belongs in this document with its kind marked unknown, not in
 a `data_migrations` entry.
 
 The archived rollback shells (`reminders-for-wordpress`, `routines-for-wordpress`,
-`ci-csv`, `ci-llm`, `ci-reminders`) are deliberately excluded. A rollback package
+`os-csv`, `os-llm`, `os-reminders`) are deliberately excluded. A rollback package
 has to keep matching what is installed, so its identifiers stay frozen.
 
 ## Outstanding: options
@@ -147,7 +147,7 @@ falls back to the legacy row:
 
 | Plugin | Helper | Call sites |
 |---|---|---|
-| os-index | `inc/lib/class-options.php` (`Core_Index_Options`) | 57, plus 16 constant declarations |
+| os-index | `inc/lib/class-options.php` (`OS_Options`) | 57, plus 16 constant declarations |
 | os-code | `inc/class-code-options.php` (`CI_Code_Options`) | 8 + the mu-plugin loader |
 | os-filesystem | `inc/class-filesystem-options.php` (`CI_Filesystem_Options`) | 7 |
 
@@ -156,10 +156,10 @@ plugin must not require Core Index, which is what
 `tools/check-standalone-plugin.php` enforces. Forty duplicated lines is the
 price of that independence.
 
-`os-code/inc/loader/ci-code-loader.php` gets the same behaviour as three inline
+`os-code/inc/loader/os-code-loader.php` gets the same behaviour as three inline
 functions rather than the class, because it runs as an mu-plugin, before the
 plugin that owns the class is loaded. Its `CI Code Loader Version` and
-`CI_Code::LOADER_VERSION` both moved to 4, which is what triggers the installed
+`OS_Code::LOADER_VERSION` both moved to 4, which is what triggers the installed
 copy in `WPMU_PLUGIN_DIR` to be replaced.
 
 In all three, a write goes to the new row and deletes the legacy one in the same
@@ -171,8 +171,8 @@ assuming the data has already moved.
 
 ### Contract: not yet
 
-Delete `Core_Index_Options`, the two copies, the loader's inline functions, the
-`pre_option_*` shim, and `Core_Index_Option_Migration` once every install has
+Delete `OS_Options`, the two copies, the loader's inline functions, the
+`pre_option_*` shim, and `OS_Option_Migration` once every install has
 run the migration. Until then they are all load-bearing.
 
 The three suffixed families deserve a decision rather than a mechanical rename.
@@ -287,7 +287,7 @@ The four snippet meta keys belong to `core-index-ai-library` in practice, since
 they attach to `ci_snippet`, but `os-index` is the code that registers them.
 They move when that registration moves.
 
-The copies inside the frozen `ci-reminders` shell stay put. A rollback package
+The copies inside the frozen `os-reminders` shell stay put. A rollback package
 keeps its identifiers by design.
 
 ## Outstanding: cron hooks and filters
@@ -298,9 +298,9 @@ rename breaks any consumer, and every known consumer is inside this family.
 
 | From | To | Kind | Registered by |
 |---|---|---|---|
-| `ci_reminders_cron` | `os_reminders_cron` | cron | os-index, ci-reminders |
-| `ci_automation_chain_run` | `os_automation_chain_run` | cron | ci-reminders |
-| `ci_five_minutes` | `os_five_minutes` | cron | ci-reminders, a schedule name |
+| `ci_reminders_cron` | `os_reminders_cron` | cron | os-index, os-reminders |
+| `ci_automation_chain_run` | `os_automation_chain_run` | cron | os-reminders |
+| `ci_five_minutes` | `os_five_minutes` | cron | os-reminders, a schedule name |
 | `ci_default_block` | `os_default_block` | filter | os-index |
 | `ci_admin_search_post_types` | `os_admin_search_post_types` | filter | os-index |
 | `ci_agents_for_cpt` | `os_agents_for_cpt` | filter | os-index |
@@ -309,7 +309,7 @@ rename breaks any consumer, and every known consumer is inside this family.
 | `ci_tag_object_types` | `os_tag_object_types` | filter | os-index |
 | `ci_okf_type` | `os_okf_type` | filter | os-index |
 | `ci_okf_key_aliases` | `os_okf_key_aliases` | filter | os-index |
-| `ci_llm_post_types` | `os_llm_post_types` | filter | ci-llm (legacy) |
+| `ci_llm_post_types` | `os_llm_post_types` | filter | os-llm (legacy) |
 
 ## Referenced but not registered here
 
@@ -345,7 +345,7 @@ install before migrating, because a dynamic type's posts carry its slug in
    needed a `register_rest_field()` alias instead.
 
    Then 715 more references across assets and prose, 660 CSS selectors, and the
-   `inc/schemas/ci-*.{schema.json,agents.md}` files, which resolve by
+   `inc/schemas/os-*.{schema.json,agents.md}` files, which resolve by
    `str_replace( '_', '-', $cpt )` and would have silently stopped loading.
 
    **A literal rename is not the whole job.** Identifiers built at runtime,
@@ -355,7 +355,7 @@ install before migrating, because a dynamic type's posts carry its slug in
    the migration becomes invisible to its own editor.
 
 4. **REST bases and filters.** Done. `rest_base` follows the post type name
-   again, and `Core_Index_Type_Migration::rewrite_legacy_rest_route()` answers
+   again, and `OS_Type_Migration::rewrite_legacy_rest_route()` answers
    the pre-rename paths so saved agent configurations and MCP clients keep
    working. The eight renamed filters re-broadcast under their old names at a
    late priority, so a legacy consumer still fires.
@@ -370,8 +370,8 @@ install before migrating, because a dynamic type's posts carry its slug in
    `os-index`, `os-activity`, `os-calendar`, `os-code`, `os-content-types`,
    `os-filesystem`, `os-graph`, `os-notifications`, `os-wiki`, `os-wizard`.
 
-   PHP class names were deliberately left as `Core_Index_*`. They are internal
-   code identifiers, invisible to users, and `Core_Index_Legacy_Compat` already
+   PHP class names were deliberately left as `OS_*`. They are internal
+   code identifiers, invisible to users, and `OS_Legacy_Compat` already
    aliases them for companions built against the older names. Renaming them buys
    nothing and risks that machinery.
 
