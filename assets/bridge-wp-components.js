@@ -100,4 +100,13 @@ export const TreeGridCell = c?.__experimentalTreeGridCell;
 export const ItemGroup = c?.__experimentalItemGroup;
 export const Item = c?.__experimentalItem;
 
+// Consumed by ci-ai-chat.js. Missing these took down the whole admin app: a
+// named import of an export this module does not declare is a parse-time
+// SyntaxError, so every screen died on a spinner, not just the chat panel.
+// The default export cannot cover for a missing named export.
+export const DropZone = c?.DropZone;
+export const FormFileUpload = c?.FormFileUpload;
+export const ResizableBox = c?.ResizableBox;
+export const __experimentalConfirmDialog = c?.__experimentalConfirmDialog;
+
 export default c;

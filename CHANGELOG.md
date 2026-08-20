@@ -3,6 +3,29 @@
 What changed in each release, from a user's point of view. Started at 3.4.0.
 Earlier releases are on the [releases page](https://github.com/danielk-am/os-wp/releases).
 
+## 3.4.1
+
+### The admin screens work again on WordPress 7.1
+
+Every OS screen showed a loading spinner and never finished, on WordPress
+7.1. Nothing loaded: not Content Types, not Wiki, not Calendar.
+
+The cause was four missing lines. OS hands WordPress's own components to its
+screens through a small bridge file, and that bridge listed most components
+but not `DropZone`, `FormFileUpload`, `ResizableBox`, or the confirm dialog.
+Asking for a component the bridge does not list is not a small failure. It
+stops the entire screen from starting, which is why one unlisted component in
+the Ask AI panel took down everything.
+
+If you are on WordPress 7.1, update. Earlier versions of OS have the same
+problem.
+
+### Still broken, and honest about it
+
+The Ask AI panel does not load on WordPress 7.1. It was built for an older
+way of loading code and needs rebuilding, not patching. Every other screen
+works. This is the next thing being fixed.
+
 ## 3.4.0
 
 ### Content types can be declared in a file
