@@ -13,7 +13,7 @@ import { createElement } from 'react';
 import htm from 'htm';
 
 export const h = htm.bind(createElement);
-export const BOOT = window.CI_BOOTSTRAP;
+export const BOOT = window.OS_BOOTSTRAP;
 
 // Public API major for the ci/* modules (ci/core, ci/ui, ci/shell, ci/editors,
 // ci/type). Companion plugins in other repos import these, so removing or
@@ -103,7 +103,7 @@ export function decodeEntities(s) {
 }
 
 // ---------------------------------------------------------------------------
-// Relevance search & ranking — ONE scoring model shared by every ci-* surface
+// Relevance search & ranking — ONE scoring model shared by every os-* surface
 // (the content-type lists AND the Filesystem browser), so "search" means the
 // same thing everywhere.
 //
@@ -241,7 +241,7 @@ export function registerEditor(key, render, opts = {}) {
   if (opts.newFile) CIRegistry.newFile[key] = opts.newFile;
   // `selectable: true` opts an editor into the per-content-type editor picker
   // (Content Types). This is what lets editors live in their own leaf modules
-  // (ci-app-*.js) yet still appear as a choice — the picker reads the registry,
+  // (os-app-*.js) yet still appear as a choice — the picker reads the registry,
   // not a hard-coded list. title/description describe it in the UI.
   if (opts.selectable) {
     CIRegistry.editorMeta[key] = { title: opts.title || key, description: opts.description || '' };
@@ -264,8 +264,8 @@ export function onRegistryChange(fn) {
 function notifyRegistry() { registryListeners.forEach((f) => f()); }
 export function registerRoute(path, element) { CIRegistry.routes.push({ path, element }); notifyRegistry(); }
 export function registerNewFile(key, def) { CIRegistry.newFile[key] = def; notifyRegistry(); }
-// Calendar event-source registry. Any app module (ci-app-*.js or a sideloaded
-// uploads/ci-apps/*.js) can contribute events to the Calendar without the
+// Calendar event-source registry. Any app module (os-app-*.js or a sideloaded
+// uploads/os-apps/*.js) can contribute events to the Calendar without the
 // Calendar leaf knowing about it — this is how e.g. WooCommerce Bookings /
 // Subscriptions hook in. A source is:
 //   { key, label, color, fetch({ after, before, start, end }) => [{ date:'YYYY-MM-DD', title, time?, url?, color? }] }
@@ -282,10 +282,10 @@ export function registerCalendarSource(source) {
 
 // Top-level nav registry. Apps register a destination row that renders at the
 // top of the sidebar alongside the built-in Calendar / Content Types rows —
-// the extension point that lets a leaf module (ci-app-*.js) add an OS-style
+// the extension point that lets a leaf module (os-app-*.js) add an OS-style
 // "place" without the type layer hard-coding it. A row is:
 //   { key, label, icon, path, order?, match?(pathname)=>bool }
-// `icon` is a CI_ICONS name; `path` is the hash route (without '#'); `match`
+// `icon` is a OS_ICONS name; `path` is the hash route (without '#'); `match`
 // decides the active state (defaults to exact-path or path-prefix). Higher
 // `order` sinks lower (default 0). Re-registering the same key replaces it.
 export function registerNavRow(row) {
@@ -576,7 +576,7 @@ export function buildParentTree(items) {
 }
 
 // Build a os_path folder tree from items' os_path meta. Pure; shared by the
-// nav tree + type list. (Moved from the monolith during the ci-type split.)
+// nav tree + type list. (Moved from the monolith during the os-type split.)
 export function buildPathTree(items, emptyFolders = [], trashedItems = []) {
   const root = { name: '', fullPath: '', children: new Map(), items: [] };
   const orphans = { name: '(unrouted)', fullPath: '__orphans__', children: new Map(), items: [] };

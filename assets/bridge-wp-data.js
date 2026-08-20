@@ -4,7 +4,7 @@
  */
 const d = window.wp && window.wp.data;
 if ( ! d ) {
-  console.error( '[core-index] window.wp.data not available — wp-data not enqueued?' );
+  console.error( '[os] window.wp.data not available — wp-data not enqueued?' );
 }
 
 export const select       = d?.select;

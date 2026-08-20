@@ -7,7 +7,7 @@
  */
 const bk = window.wp && window.wp.blocks;
 if (!bk) {
-  console.error('[core-index] window.wp.blocks not available — wp-blocks script not enqueued?');
+  console.error('[os] window.wp.blocks not available — wp-blocks script not enqueued?');
 }
 
 export const parse                = bk?.parse;

@@ -18,7 +18,7 @@ OS_Type_Menus_Screen::register();
 require_once __DIR__ . '/inc/class-dynamic-types.php';
 require_once __DIR__ . '/inc/class-type-runtime.php';
 
-final class Core_Index_Content_Types {
+final class OS_Content_Types {
 
 	const VERSION   = '1.1.7';
 	const NAMESPACE = 'content-types';
@@ -486,31 +486,23 @@ final class Core_Index_Content_Types {
 	}
 }
 
-( static function (): void {
-	if ( ! class_exists( 'Content_Types_For_WordPress' ) ) {
-		class_alias( Core_Index_Content_Types::class, 'Content_Types_For_WordPress' );
-	}
-	if ( ! class_exists( 'Content_Types_For_WordPress_Dynamic_Types' ) ) {
-		class_alias( Core_Index_Content_Types_Dynamic_Types::class, 'Content_Types_For_WordPress_Dynamic_Types' );
-	}
-} )();
 
-Core_Index_Content_Types::register();
+OS_Content_Types::register();
 // Declared types register at init:25, ahead of the stored-definition path at
 // init:30, so types.json wins. The stored path already yields on
 // post_type_exists(), so nothing else needs coordinating.
 OS_Type_Runtime::register();
-Core_Index_Content_Types_Dynamic_Types::register();
+OS_Content_Types_Dynamic_Types::register();
 OS_Standalone_Admin::boot(
 	array(
 		'slug' => 'os-content-types', 'name' => 'OS Content Types',
-		'mode' => 'content-types', 'rest_ns' => Core_Index_Content_Types::REST_NS,
+		'mode' => 'content-types', 'rest_ns' => OS_Content_Types::REST_NS,
 		'compat_field_options' => array( 'ci_field_groups_content_types_for_wordpress' ),
 		'menu_title' => 'Content type', 'position' => '41.0',
-		'separator_before' => array( 'position' => '39.0', 'slug' => 'separator-ci-content-library' ),
+		'separator_before' => array( 'position' => '39.0', 'slug' => 'separator-os-content-library' ),
 		'types' => array_replace_recursive(
-			Core_Index_Content_Types::TYPES,
-			array( 'content-type' => array( 'icon' => Core_Index_Content_Types::menu_icon() ) )
+			OS_Content_Types::TYPES,
+			array( 'content-type' => array( 'icon' => OS_Content_Types::menu_icon() ) )
 		),
 		'menu_types' => array( 'content-type' ),
 		'editor_providers' => array( 'llm', 'csv', 'source' ),

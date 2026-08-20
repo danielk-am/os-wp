@@ -19,7 +19,7 @@
 		const selected = options.find( ( option ) => option.value === value );
 		const selectedLabel = selected ? selected.label : placeholder;
 		const accessibleLabel = ariaLabel || label || placeholder;
-		return h( 'div', { className: 'components-base-control ci-block-popover-select' },
+		return h( 'div', { className: 'components-base-control os-block-popover-select' },
 			label ? h( 'div', {
 				className: hideLabelFromVision ? 'screen-reader-text' : 'components-base-control__label',
 				style: hideLabelFromVision ? undefined : { display: 'block', marginBottom: 8 },
@@ -91,11 +91,11 @@
 		return 't_' + Math.random().toString( 36 ).slice( 2, 14 );
 	}
 
-	registerBlockType( 'core-index/task', {
+	registerBlockType( 'os/task', {
 		edit: function Edit( { attributes, setAttributes } ) {
 			const { taskId, text, checked, dueDate, priority } = attributes;
 			const blockProps = useBlockProps( {
-				className: 'ci-task' + ( checked ? ' is-checked' : '' ),
+				className: 'os-task' + ( checked ? ' is-checked' : '' ),
 			} );
 
 			// Ensure every task has a stable id (used by view.js to persist state).
@@ -109,7 +109,7 @@
 			const statusLabel = checked ? 'Done' : 'Pending';
 			return h(
 				'div',
-				{ ...blockProps, className: ( blockProps.className || '' ) + ' wp-block-ci-task' + ( checked ? ' is-checked' : '' ) },
+				{ ...blockProps, className: ( blockProps.className || '' ) + ' wp-block-os-task' + ( checked ? ' is-checked' : '' ) },
 				h(
 					InspectorControls,
 					null,
@@ -154,11 +154,11 @@
 						} )
 					)
 				),
-				h( 'div', { className: 'wp-block-ci-task__status' },
-					h( 'span', { className: 'wp-block-ci-task__emoji-status', title: statusLabel }, statusEmoji + ' ' ),
-					h( 'div', { className: 'wp-block-ci-task__checkbox-wrapper' },
+				h( 'div', { className: 'wp-block-os-task__status' },
+					h( 'span', { className: 'wp-block-os-task__emoji-status', title: statusLabel }, statusEmoji + ' ' ),
+					h( 'div', { className: 'wp-block-os-task__checkbox-wrapper' },
 						h( 'span', {
-							className: 'wp-block-ci-task__checkbox' + ( checked ? ' is-aria-checked-true' : ' is-aria-checked-false' ),
+							className: 'wp-block-os-task__checkbox' + ( checked ? ' is-aria-checked-true' : ' is-aria-checked-false' ),
 							role: 'checkbox',
 							tabIndex: 0,
 							title: statusLabel,
@@ -173,38 +173,38 @@
 						} )
 					)
 				),
-				h( 'div', { className: 'wp-block-ci-task__main' },
-					h( 'div', { className: 'wp-block-ci-task__left' },
-						h( 'div', { className: 'wp-block-ci-task__content-wrapper' },
+				h( 'div', { className: 'wp-block-os-task__main' },
+					h( 'div', { className: 'wp-block-os-task__left' },
+						h( 'div', { className: 'wp-block-os-task__content-wrapper' },
 							h( RichText, {
 								tagName: 'span',
-								className: 'wp-block-ci-task__content',
+								className: 'wp-block-os-task__content',
 								value: text || '',
 								onChange: ( v ) => setAttributes( { text: v } ),
 								placeholder: 'Task description…',
 								allowedFormats: [ 'core/bold', 'core/italic', 'core/link', 'core/code' ],
 							} )
 						),
-						h( 'div', { className: 'wp-block-ci-task__dates' },
+						h( 'div', { className: 'wp-block-os-task__dates' },
 							splitDue( dueDate ).date ? h( 'span', {
-								className: 'wp-block-ci-task__date wp-block-ci-task__date--due',
+								className: 'wp-block-os-task__date wp-block-os-task__date--due',
 								'data-iso': dueDate,
 							}, splitDue( dueDate ).date ) : null,
 							splitDue( dueDate ).time ? h( 'span', {
-								className: 'wp-block-ci-task__date wp-block-ci-task__date--time',
+								className: 'wp-block-os-task__date wp-block-os-task__date--time',
 							}, splitDue( dueDate ).time ) : null,
 							priority ? h( 'span', {
-								className: 'wp-block-ci-task__priority wp-block-ci-task__priority--' + priority,
+								className: 'wp-block-os-task__priority wp-block-os-task__priority--' + priority,
 							}, priority ) : null
 						)
 					),
-					h( 'div', { className: 'wp-block-ci-task__right' },
-						h( 'div', { className: 'wp-block-ci-task__assignees-avatars' } )
+					h( 'div', { className: 'wp-block-os-task__right' },
+						h( 'div', { className: 'wp-block-os-task__assignees-avatars' } )
 					)
 				)
 			);
 		},
-		// Dynamic block: server renders via Core_Index_Task_Blocks::render_task().
+		// Dynamic block: server renders via OS_Task_Blocks::render_task().
 		// Sidesteps save/parse markup-validation pain — attrs in the
 		// comment delimiter are the canonical source of truth.
 		save: () => null,

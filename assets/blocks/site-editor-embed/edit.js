@@ -33,7 +33,7 @@
 		const selected = options.find( ( option ) => option.value === value );
 		const selectedLabel = selected ? selected.label : placeholder;
 		const accessibleLabel = ariaLabel || label || placeholder;
-		return h( 'div', { className: 'components-base-control ci-block-popover-select' },
+		return h( 'div', { className: 'components-base-control os-block-popover-select' },
 			label ? h( 'div', {
 				className: hideLabelFromVision ? 'screen-reader-text' : 'components-base-control__label',
 				style: hideLabelFromVision ? undefined : { display: 'block', marginBottom: 8 },
@@ -147,7 +147,7 @@
 	function PathPicker( { value, onChange } ) {
 		const options = useSiteEditorTargets();
 		if ( ! options ) {
-			return h( 'div', { className: 'ci-se-embed-loading' },
+			return h( 'div', { className: 'os-se-embed-loading' },
 				h( Spinner, null ), h( 'span', { style: { marginLeft: 6, fontSize: 12 } }, 'Loading targets…' )
 			);
 		}
@@ -162,10 +162,10 @@
 		} );
 	}
 
-	registerBlockType( 'core-index/site-editor-embed', {
+	registerBlockType( 'os/site-editor-embed', {
 		edit: function Edit( { attributes, setAttributes } ) {
 			const { path, height, wide, label } = attributes;
-			const blockProps = useBlockProps( { className: 'ci-site-editor-embed' + ( wide ? ' is-wide' : '' ) } );
+			const blockProps = useBlockProps( { className: 'os-site-editor-embed' + ( wide ? ' is-wide' : '' ) } );
 			const url = useMemo(
 				() => path ? SITE_EDITOR_BASE + encodeURIComponent( path ) : '',
 				[ path ]
@@ -233,8 +233,8 @@
 				'div',
 				blockProps,
 				inspector,
-				label ? h( 'div', { className: 'ci-se-embed-caption' }, label ) : null,
-				h( 'div', { className: 'ci-se-embed-frame', style: { height: ( height || 600 ) + 'px', position: 'relative' } },
+				label ? h( 'div', { className: 'os-se-embed-caption' }, label ) : null,
+				h( 'div', { className: 'os-se-embed-frame', style: { height: ( height || 600 ) + 'px', position: 'relative' } },
 					h( 'iframe', {
 						src: url,
 						title: 'Site Editor — ' + path,

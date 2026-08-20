@@ -11,7 +11,7 @@
  *
  * The real extension points already exist, and every sibling uses them:
  *
- *   registerEditor(key, render, opts)   ci-core.js:116
+ *   registerEditor(key, render, opts)   os-core.js:116
  *   opts.selectable: true               puts the editor in the Content Types
  *                                       picker; "the picker reads the registry,
  *                                       not a hard-coded list"
@@ -25,13 +25,13 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { h, rest, registerEditor, typeMeta, CIRegistry } from 'ci/core';
+import { h, rest, registerEditor, typeMeta, CIRegistry } from 'os/core';
 
 /**
  * Where the canvas's own files are, worked out from this file's own URL.
  *
- * This leaf sits at  …/ci-llm/assets/ci-app-llm.js
- * and the canvas at  …/ci-llm/assets/llm-editor/src/…
+ * This leaf sits at  …/os-llm/assets/os-app-llm.js
+ * and the canvas at  …/os-llm/assets/llm-editor/src/…
  *
  * import.meta.url rather than a PHP-supplied path. I first wrote a
  * `context_intelligence_boot` filter to inject it and then checked: that filter
@@ -157,7 +157,7 @@ function loadCss() {
 		// This host's overrides. Loaded AFTER, so it wins on source order at
 		// equal specificity. NOT admin.css: that one is for the wp-admin
 		// fallback screen and would strip the padding off CI's app shell.
-		sheet( stamped( new URL( 'ci-app-llm.css', import.meta.url ).href ) ),
+		sheet( stamped( new URL( 'os-app-llm.css', import.meta.url ).href ) ),
 	] );
 	return cssReady;
 }
@@ -179,15 +179,15 @@ async function mountCanvas( el, ctx, hooks = {} ) {
 	// namespace and CI's own error handling. Reaching for window.wpApiSettings
 	// here would be reimplementing that badly.
 	//
-	// The route is built from `meta.rest_base`, which is what ci-type.js:1705
+	// The route is built from `meta.rest_base`, which is what os-type.js:1705
 	// uses. My first cut read `ctx.restBase`: a property I INVENTED. The
-	// dispatch at ci-type.js:7007 passes exactly { type, id, isNew, meta } and
+	// dispatch at os-type.js:7007 passes exactly { type, id, isNew, meta } and
 	// nothing else, so it was undefined, and template interpolation turned that
 	// into the string "undefined" rather than throwing. The request went to
 	// `/wp-jsonundefined/7` and 404'd. An undefined that reads as a URL is why
 	// this looked like a mount failure instead of a typo.
 	//
-	// Leading slash, because rest() is `REST_BASE + path` (ci-core.js:43) and
+	// Leading slash, because rest() is `REST_BASE + path` (os-core.js:43) and
 	// REST_BASE has its trailing slash stripped.
 	const base = `/wp/v2/${ ctx.meta.rest_base }`;
 
@@ -207,7 +207,7 @@ async function mountCanvas( el, ctx, hooks = {} ) {
 	let ciPath = null;
 
 	setHost( {
-		name: 'ci-app',
+		name: 'os-app',
 		async load() {
 			if ( ctx.isNew ) return SEED;
 			const post = await rest( `${ base }/${ ctx.id }?context=edit&_fields=content,meta` );
@@ -220,7 +220,7 @@ async function mountCanvas( el, ctx, hooks = {} ) {
 			// would revert whatever the canvas has done since load.
 			hooks.onText?.( text );
 			// `body`, not `data`: rest() spreads opts straight into fetch()
-			// (ci-core.js:50), so it takes a serialised body like every other
+			// (os-core.js:50), so it takes a serialised body like every other
 			// caller. A `data` key would have been silently dropped and the
 			// POST would have saved nothing while reporting success.
 			//
@@ -275,17 +275,17 @@ async function ciReadFile( uri ) {
 /**
  * The page: CI's chrome on top, the canvas underneath.
  *
- * This is the ci-canvas shape (ci-app-canvas.js:3429), and it is the shape for a
+ * This is the os-canvas shape (os-app-canvas.js:3429), and it is the shape for a
  * reason. The EDITOR SWITCHER, which is the whole of what CORE-30 asked for,
  * lives inside CI's EditorHeader and "self-discovers from the route so every
  * editor that uses this shared header gets it for free"
- * (ci-editor-chrome.js:447). An editor that draws its own header instead does
+ * (os-editor-chrome.js:447). An editor that draws its own header instead does
  * not get it, and .llm did not: the type advertised the editor and offered no
  * way to reach it short of typing ?ed=llm by hand.
  *
  * So CI owns the title, the save button and the switcher. The canvas keeps its
  * own toolbar below (inserter, undo/redo, positions, source/agent), which is
- * canvas-specific and has no CI equivalent. Exactly how ci-canvas splits it, and
+ * canvas-specific and has no CI equivalent. Exactly how os-canvas splits it, and
  * why it passes canInsert=false.
  */
 function LlmEditorPage() {
@@ -373,7 +373,7 @@ function LlmEditorPage() {
 			        warning, so this div rendered with no class at all and the mount
 			        had no styles and nothing to select it by. */ }
 			<div
-				className="ci-llm-mount flex-1 min-h-0 relative"
+				className="os-llm-mount flex-1 min-h-0 relative"
 				ref=${ ( el ) => { if ( el ) mountCanvas( el, { type, id, isNew, meta }, hooks.current ); } }
 			/>
 		</div>
@@ -398,7 +398,7 @@ function LlmEditorPage() {
  *
  * `fill`: fill the parent's height instead of the default 72vh. Opt-in, so the
  * scrolling body composer keeps its viewport-relative size while a height-bounded
- * host (the ci-filesystem preview pane) can stretch the canvas edge to edge.
+ * host (the os-filesystem preview pane) can stretch the canvas edge to edge.
  */
 async function buildBodyFrame( iframe, hostApi ) {
 	const [ shell ] = await Promise.all( [
@@ -410,7 +410,7 @@ async function buildBodyFrame( iframe, hostApi ) {
 	doc.write( `<!doctype html><html><head><meta charset="utf-8">
 		${ canvasImportMap() }
 		<link rel="stylesheet" href="${ stamped( `${ ASSETS }src/editor/editor.css` ) }">
-		<link rel="stylesheet" href="${ stamped( new URL( 'ci-app-llm.css', import.meta.url ).href ) }">
+		<link rel="stylesheet" href="${ stamped( new URL( 'os-app-llm.css', import.meta.url ).href ) }">
 		<style>body{margin:0}</style></head><body></body></html>` );
 	doc.close();
 	iframe.contentWindow.__ciLlmHost = hostApi;
@@ -422,7 +422,7 @@ async function buildBodyFrame( iframe, hostApi ) {
 	s.textContent = `
 		const H = window.__ciLlmHost;
 		const { setHost } = await import( ${ JSON.stringify( `${ ASSETS }src/host/host.js` ) } );
-		setHost( { name: 'ci-body', load: H.load, save: H.save, onSaveState: H.onSaveState, pickFile: H.pickFile, readFile: H.readFile } );
+		setHost( { name: 'os-body', load: H.load, save: H.save, onSaveState: H.onSaveState, pickFile: H.pickFile, readFile: H.readFile } );
 		await import( ${ JSON.stringify( `${ ASSETS }src/editor/boot.js` ) } );
 	`;
 	doc.body.appendChild( s );
@@ -461,7 +461,7 @@ function LlmBodyEditor( { value, onChange, fill = false } ) {
 	}, [] );
 
 	// Default: viewport-relative height for the scrolling body composer. `fill`:
-	// stretch to the parent's height (a height-bounded pane, e.g. the ci-filesystem
+	// stretch to the parent's height (a height-bounded pane, e.g. the os-filesystem
 	// preview) and drop the inner frame, since the pane already supplies chrome.
 	return h`<div ref=${ boxRef }
 		className=${ fill ? 'relative overflow-hidden bg-card' : 'relative border border-border rounded-md overflow-hidden bg-card' }

@@ -33,24 +33,24 @@
 	function applyState( wrap, checked ) {
 		wrap.classList.toggle( 'is-checked', checked );
 		wrap.setAttribute( 'data-checked', checked ? '1' : '0' );
-		const cb = wrap.querySelector( '.wp-block-ci-task__checkbox' );
+		const cb = wrap.querySelector( '.wp-block-os-task__checkbox' );
 		if ( cb ) {
 			cb.classList.toggle( 'is-aria-checked-true', checked );
 			cb.classList.toggle( 'is-aria-checked-false', ! checked );
 			cb.setAttribute( 'aria-checked', checked ? 'true' : 'false' );
 		}
-		const emoji = wrap.querySelector( '.wp-block-ci-task__emoji-status' );
+		const emoji = wrap.querySelector( '.wp-block-os-task__emoji-status' );
 		if ( emoji ) {
 			emoji.textContent = ( checked ? '✅' : '⬜' ) + ' ';
 			emoji.setAttribute( 'title', checked ? 'Done' : 'Pending' );
 		}
-		// Legacy compatibility for older `.ci-task__checkbox` input markup.
-		const legacy = wrap.querySelector( 'input.ci-task__checkbox' );
+		// Legacy compatibility for older `.os-task__checkbox` input markup.
+		const legacy = wrap.querySelector( 'input.os-task__checkbox' );
 		if ( legacy ) legacy.checked = checked;
 	}
 
 	function bindNew( cb ) {
-		const wrap = cb.closest( '.wp-block-ci-task' );
+		const wrap = cb.closest( '.wp-block-os-task' );
 		if ( ! wrap ) return;
 		const taskId = wrap.getAttribute( 'data-task-id' );
 		if ( ! taskId ) return;
@@ -69,7 +69,7 @@
 	}
 
 	function bindLegacy( el ) {
-		const wrap = el.closest( '.ci-task' );
+		const wrap = el.closest( '.os-task' );
 		if ( ! wrap ) return;
 		const taskId = wrap.getAttribute( 'data-task-id' );
 		if ( ! taskId ) return;
@@ -88,9 +88,9 @@
 	}
 
 	function init() {
-		document.querySelectorAll( '.wp-block-ci-task .wp-block-ci-task__checkbox' ).forEach( bindNew );
+		document.querySelectorAll( '.wp-block-os-task .wp-block-os-task__checkbox' ).forEach( bindNew );
 		// Pre-v0.3 markup (before the p2-style redesign).
-		document.querySelectorAll( '.ci-task input.ci-task__checkbox' ).forEach( bindLegacy );
+		document.querySelectorAll( '.os-task input.os-task__checkbox' ).forEach( bindLegacy );
 	}
 	if ( document.readyState === 'loading' ) {
 		document.addEventListener( 'DOMContentLoaded', init );

@@ -16,7 +16,7 @@ require_once __DIR__ . '/inc/class-calendar-features.php';
 require_once __DIR__ . '/inc/class-calendar-reminders.php';
 require_once __DIR__ . '/inc/class-calendar-automations.php';
 
-final class Core_Index_Calendar {
+final class OS_Calendar {
 
 	const VERSION   = '1.2.1';
 	const NAMESPACE = 'calendar';
@@ -512,29 +512,15 @@ final class Core_Index_Calendar {
 	}
 }
 
-( static function (): void {
-	if ( ! class_exists( 'Calendar_For_WordPress' ) ) {
-		class_alias( Core_Index_Calendar::class, 'Calendar_For_WordPress' );
-	}
-	if ( ! class_exists( 'Calendar_For_WordPress_Features' ) ) {
-		class_alias( Core_Index_Calendar_Features::class, 'Calendar_For_WordPress_Features' );
-	}
-	if ( ! class_exists( 'Calendar_For_WordPress_Reminders' ) ) {
-		class_alias( Core_Index_Calendar_Reminders::class, 'Calendar_For_WordPress_Reminders' );
-	}
-	if ( ! class_exists( 'Calendar_For_WordPress_Automations' ) ) {
-		class_alias( Core_Index_Calendar_Automations::class, 'Calendar_For_WordPress_Automations' );
-	}
-} )();
 
-Core_Index_Calendar::register();
-Core_Index_Calendar_Features::register();
-Core_Index_Calendar_Reminders::register();
-Core_Index_Calendar_Automations::register();
+OS_Calendar::register();
+OS_Calendar_Features::register();
+OS_Calendar_Reminders::register();
+OS_Calendar_Automations::register();
 OS_Standalone_Admin::boot(
 	array(
 		'slug' => 'os-calendar', 'name' => 'OS Calendar',
-		'mode' => 'calendar', 'rest_ns' => Core_Index_Calendar::REST_NS,
+		'mode' => 'calendar', 'rest_ns' => OS_Calendar::REST_NS,
 		'compat_rest_namespaces' => array( 'reminders/v1', 'routines/v1' ),
 		'compat_field_options' => array(
 			'ci_field_groups_calendar_for_wordpress',
@@ -542,12 +528,12 @@ OS_Standalone_Admin::boot(
 			'ci_field_groups_routines_for_wordpress',
 		),
 		'menu_title' => 'Calendar', 'position' => '3.0', 'menu_priority' => 38,
-		'types' => Core_Index_Calendar::TYPES,
+		'types' => OS_Calendar::TYPES,
 		'description' => 'Plan events, keep reminders visible, and automate scheduled work.',
 		'ai_chat_instructions' => 'Help administrators work with this calendar. Ground answers in the visible events, reminders, and automations, preserve dates and time zones, and clearly distinguish suggestions from scheduled changes.',
 	),
 	OS_PLUGIN_FILE
 );
 
-register_activation_hook( __FILE__, array( Core_Index_Calendar_Reminders::class, 'activate' ) );
-register_deactivation_hook( __FILE__, array( Core_Index_Calendar_Reminders::class, 'deactivate' ) );
+register_activation_hook( __FILE__, array( OS_Calendar_Reminders::class, 'activate' ) );
+register_deactivation_hook( __FILE__, array( OS_Calendar_Reminders::class, 'deactivate' ) );

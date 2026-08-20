@@ -27,24 +27,24 @@ import {
 } from '@wordpress/components';
 import { parse as parseBlocks, serialize as serializeBlocks } from '@wordpress/blocks';
 import { ReactFlow, ReactFlowProvider, Background, Controls, MarkerType } from '@xyflow/react';
-import { h, BOOT, rest, restAllPages, restWithHeaders, decodeEntities, typeMeta, REST_BASE, CIRegistry, registerEditor, registerRoute } from 'ci/core';
-import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, CI_ICONS, SelectCheckbox, SegmentedToggle, PageHeading, SelectMenu } from 'ci/ui';
-import { useToast, useDialog } from 'ci/shell';
-import { GutenbergComposer, useEditorFullWidth } from 'ci/editors';
+import { h, BOOT, rest, restAllPages, restWithHeaders, decodeEntities, typeMeta, REST_BASE, CIRegistry, registerEditor, registerRoute } from 'os/core';
+import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, OS_ICONS, SelectCheckbox, SegmentedToggle, PageHeading, SelectMenu } from 'os/ui';
+import { useToast, useDialog } from 'os/shell';
+import { GutenbergComposer, useEditorFullWidth } from 'os/editors';
 
 // The automation graph uses React Flow, whose CSS must load for the nodes to
 // render. Inject the vendored stylesheet once, resolved relative to this module
-// so it works wherever the plugin is installed. Skip if ci-canvas already
+// so it works wherever the plugin is installed. Skip if os-canvas already
 // injected the same vendored CSS.
 ( () => {
   try {
-    if ( document.querySelector( 'link[data-ci-reminders-css]' ) || document.querySelector( 'link[data-ci-canvas-css]' ) ) {
+    if ( document.querySelector( 'link[data-os-reminders-css]' ) || document.querySelector( 'link[data-os-canvas-css]' ) ) {
       return;
     }
     const link = document.createElement( 'link' );
     link.rel = 'stylesheet';
     link.href = new URL( './vendor/xyflow-react.css', import.meta.url ).href;
-    link.setAttribute( 'data-ci-reminders-css', '' );
+    link.setAttribute( 'data-os-reminders-css', '' );
     document.head.appendChild( link );
   } catch ( e ) {}
 } )();
@@ -91,7 +91,7 @@ function buildReminderIcs({ title, notes, dueDate, dueTime, id }) {
   const esc = (s) => String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
   const now = new Date();
   const dtstamp = `${now.getUTCFullYear()}${pad(now.getUTCMonth() + 1)}${pad(now.getUTCDate())}T${pad(now.getUTCHours())}${pad(now.getUTCMinutes())}${pad(now.getUTCSeconds())}Z`;
-  const uid = `ci-reminder-${id || 'new'}-${now.getTime()}@${(typeof location !== 'undefined' && location.hostname) || 'context'}`;
+  const uid = `os-reminder-${id || 'new'}-${now.getTime()}@${(typeof location !== 'undefined' && location.hostname) || 'context'}`;
   const ymd = (dueDate || '').replace(/-/g, '');
   const fmtLocal = (d) => `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
   let dtstart, dtend;
@@ -105,7 +105,7 @@ function buildReminderIcs({ title, notes, dueDate, dueTime, id }) {
     dtend = `DTEND;VALUE=DATE:${ymd}`;
   }
   const lines = [
-    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Core Index Calendar//EN', 'CALSCALE:GREGORIAN',
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//OS Calendar//EN', 'CALSCALE:GREGORIAN',
     'BEGIN:VEVENT', `UID:${uid}`, `DTSTAMP:${dtstamp}`, dtstart, dtend,
     `SUMMARY:${esc(title || 'Reminder')}`,
     notes ? `DESCRIPTION:${esc(notes)}` : null,
@@ -129,7 +129,7 @@ function readReminderTaskAttrs(body) {
     const blocks = parseBlocks(body || '') || [];
     const find = (list) => {
       for (const b of list) {
-        if (b?.name === 'core-index/task') return b;
+        if (b?.name === 'os/task') return b;
         if (b?.innerBlocks?.length) {
           const inner = find(b.innerBlocks);
           if (inner) return inner;
@@ -156,13 +156,13 @@ function patchReminderTaskAttrs(body, patch) {
     let found = false;
     const walk = (list) => {
       for (const b of list) {
-        if (!found && b?.name === 'core-index/task') { apply(b); found = true; return; }
+        if (!found && b?.name === 'os/task') { apply(b); found = true; return; }
         if (b?.innerBlocks?.length) walk(b.innerBlocks);
       }
     };
     walk(blocks);
     if (!found) {
-      const seed = parseBlocks('<!-- wp:core-index/task /-->') || [];
+      const seed = parseBlocks('<!-- wp:os/task /-->') || [];
       if (seed[0]) { apply(seed[0]); blocks = seed.concat(blocks); }
     }
     return serializeBlocks(blocks) || '';
@@ -520,7 +520,7 @@ function useAutomationSettings() {
 }
 
 // Model choices come from the automation config route. PHP's
-// Core_Index_Reminders::MODELS is the single source of truth for which API
+// OS_Reminders::MODELS is the single source of truth for which API
 // model each alias maps to. No model id appears in this file. This alias is
 // only the pre-load default for a fresh form; pickModel() re-checks it against
 // the real list once conf arrives.
@@ -827,10 +827,10 @@ function ReminderEditorPage() {
   useEffect(() => {
     if (isNew) {
       setTitle('');
-      // Empty seed; the CPT's `template => [['core-index/task']]`
+      // Empty seed; the CPT's `template => [['os/task']]`
       // is the wp-admin/post.php default — for our in-app editor we
       // seed the same single block so the user sees a Task immediately.
-      setBody('<!-- wp:core-index/task /-->');
+      setBody('<!-- wp:os/task /-->');
       setTags([]);
       setNotes('');
       setDirty(true);
@@ -936,7 +936,7 @@ function ReminderEditorPage() {
           value=${title}
           onChange=${(e) => { setTitle(e.target.value); setDirty(true); }}
           placeholder="Reminder title…"
-          className=${'ci-editor-title flex-1 min-w-0 font-semibold leading-tight bg-transparent border-0 focus:outline-none placeholder:text-muted-foreground ' + (checked ? 'line-through text-muted-foreground' : '')}
+          className=${'os-editor-title flex-1 min-w-0 font-semibold leading-tight bg-transparent border-0 focus:outline-none placeholder:text-muted-foreground ' + (checked ? 'line-through text-muted-foreground' : '')}
         />
       </div>
 
@@ -946,7 +946,7 @@ function ReminderEditorPage() {
         <${WPButton} variant="link" onClick=${() => setDue(YMD(new Date()), due.time)}>Set to today</${WPButton}>
       </${WPNotice}>` : null}
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 ci-wpds-fields">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 os-wpds-fields">
         <${WPTextControl}
           __nextHasNoMarginBottom
           __next40pxDefaultSize
@@ -980,7 +980,7 @@ function ReminderEditorPage() {
         />
       </div>
 
-      <div className="ci-wpds-fields">
+      <div className="os-wpds-fields">
         <${WPFormTokenField}
           __nextHasNoMarginBottom
           __next40pxDefaultSize
@@ -992,7 +992,7 @@ function ReminderEditorPage() {
         />
       </div>
 
-      <div className="ci-wpds-fields">
+      <div className="os-wpds-fields">
         <${WPTextareaControl}
           __nextHasNoMarginBottom
           label="Notes"
@@ -1451,13 +1451,13 @@ function AutomationEditorPage() {
       ${CIRegistry.EditorTitleField ? h`<${CIRegistry.EditorTitleField} title=${title} setTitle=${mark(setTitle)} placeholder="Automation name…" />` : null}
 
       <${WPTabPanel}
-        className="ci-settings-tabs"
+        className="os-settings-tabs"
         activeClass="is-active"
         tabs=${[{ name: 'editor', title: 'Editor' }, { name: 'logs', title: 'Logs' }]}
       >${(tab) => tab.name === 'logs'
         ? h`<div className="pt-6"><${AutomationLogs} id=${id} /></div>`
         : h`<div className="pt-6 space-y-6">
-      <div className="ci-wpds-fields">
+      <div className="os-wpds-fields">
         <${WPCheckboxControl}
           __nextHasNoMarginBottom
           label="Enabled"
@@ -1467,7 +1467,7 @@ function AutomationEditorPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ci-wpds-fields">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 os-wpds-fields">
         <${SelectMenu}
           __nextHasNoMarginBottom
           __next40pxDefaultSize
@@ -1487,7 +1487,7 @@ function AutomationEditorPage() {
       </div>
 
       ${isAgent ? h`<div className="space-y-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ci-wpds-fields">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 os-wpds-fields">
           <${SelectMenu}
             __nextHasNoMarginBottom
             __next40pxDefaultSize
@@ -1505,7 +1505,7 @@ function AutomationEditorPage() {
             options=${[{ label: 'This site (Anthropic)', value: 'local' }, { label: 'External runner', value: 'external' }]}
           />
         </div>
-        ${agentMode === 'local' ? h`<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ci-wpds-fields items-end">
+        ${agentMode === 'local' ? h`<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 os-wpds-fields items-end">
           <${SelectMenu}
             __nextHasNoMarginBottom
             __next40pxDefaultSize
@@ -1515,7 +1515,7 @@ function AutomationEditorPage() {
             options=${modelConf?.models || []}
           />
           <p className="text-xs text-muted-foreground pb-2">Runs server-side with the agent's prompt + the reminder as the task; the result is emailed to you. Needs an ${''}<${Link} to="/settings" className="text-primary">Anthropic API key</${Link}> in Settings.</p>
-        </div>` : h`<div className="ci-wpds-fields">
+        </div>` : h`<div className="os-wpds-fields">
           <${WPTextControl}
             __nextHasNoMarginBottom
             __next40pxDefaultSize
@@ -1527,7 +1527,7 @@ function AutomationEditorPage() {
             help="POST endpoint that runs the agent. Receives the agent slug + a token-gated prompt URL it can fetch."
           />
         </div>`}
-      </div>` : h`<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ci-wpds-fields">
+      </div>` : h`<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 os-wpds-fields">
         <${WPTextControl}
           __nextHasNoMarginBottom
           __next40pxDefaultSize
@@ -1556,7 +1556,7 @@ function AutomationEditorPage() {
         </div>
       </div>` : isAgent ? h`<div>
         <${WPButton} variant="link" onClick=${() => setShowAdvanced((v) => !v)}>${showAdvanced ? 'Hide' : 'Show'} custom headers</${WPButton}>
-        ${showAdvanced ? h`<div className="mt-2 ci-wpds-fields">
+        ${showAdvanced ? h`<div className="mt-2 os-wpds-fields">
           <${WPTextareaControl}
             __nextHasNoMarginBottom
             label="Custom headers"
@@ -1564,13 +1564,13 @@ function AutomationEditorPage() {
             value=${headers}
             onChange=${mark(setHeaders)}
             rows=${3}
-            className="ci-mono-field"
+            className="os-mono-field"
             placeholder="Authorization: Bearer …"
           />
         </div>` : null}
       </div>` : h`<div>
         <${WPButton} variant="link" onClick=${() => setShowAdvanced((v) => !v)}>${showAdvanced ? 'Hide' : 'Show'} advanced body + headers</${WPButton}>
-        ${showAdvanced ? h`<div className="mt-2 space-y-3 ci-wpds-fields">
+        ${showAdvanced ? h`<div className="mt-2 space-y-3 os-wpds-fields">
           <div className="max-w-xs">
             <${SelectMenu}
               __nextHasNoMarginBottom
@@ -1596,7 +1596,7 @@ function AutomationEditorPage() {
             value=${payload}
             onChange=${mark(setPayload)}
             rows=${5}
-            className="ci-mono-field"
+            className="os-mono-field"
             placeholder=${bodyType === 'form'
               ? 'grant_type=client_credentials&client_id=…&client_secret=…'
               : bodyType === 'raw'
@@ -1610,7 +1610,7 @@ function AutomationEditorPage() {
             value=${headers}
             onChange=${mark(setHeaders)}
             rows=${3}
-            className="ci-mono-field"
+            className="os-mono-field"
             placeholder="Authorization: Bearer …"
           />
         </div>` : null}
@@ -1619,7 +1619,7 @@ function AutomationEditorPage() {
       ${trigger === 'reminder_due' ? h`<${Fragment}>
         <div>
           ${sectionHead('Match filter')}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 ci-wpds-fields">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 os-wpds-fields">
             <${SelectMenu}
               __nextHasNoMarginBottom
               __next40pxDefaultSize
@@ -1642,7 +1642,7 @@ function AutomationEditorPage() {
           </div>
           <p className="text-xs text-muted-foreground mt-2">Leave both empty to notify for every due reminder. Otherwise the reminder must match the priority and have at least one tag.</p>
         </div>
-        <div className="max-w-xs ci-wpds-fields">
+        <div className="max-w-xs os-wpds-fields">
           <${WPTextControl}
             __nextHasNoMarginBottom
             __next40pxDefaultSize
@@ -1655,7 +1655,7 @@ function AutomationEditorPage() {
         </div>
       </${Fragment}>` : null}
 
-      ${trigger === 'daily_digest' ? h`<div className="max-w-xs ci-wpds-fields">
+      ${trigger === 'daily_digest' ? h`<div className="max-w-xs os-wpds-fields">
         <${WPTextControl}
           __nextHasNoMarginBottom
           __next40pxDefaultSize
@@ -1673,7 +1673,7 @@ function AutomationEditorPage() {
 
       <div>
         ${sectionHead('Then run (chain)')}
-        ${others.length === 0 ? h`<p className="text-xs text-muted-foreground">No other automations yet. Create more to chain them.</p>` : h`<div className="space-y-1 ci-wpds-fields">
+        ${others.length === 0 ? h`<p className="text-xs text-muted-foreground">No other automations yet. Create more to chain them.</p>` : h`<div className="space-y-1 os-wpds-fields">
           ${others.map((o) => h`<${WPCheckboxControl}
             key=${o.id}
             __nextHasNoMarginBottom
@@ -1685,7 +1685,7 @@ function AutomationEditorPage() {
         <p className="text-xs text-muted-foreground mt-2">After this fires, also run the checked automations (each honours its own chain delay below).</p>
       </div>
 
-      <div className="max-w-xs ci-wpds-fields">
+      <div className="max-w-xs os-wpds-fields">
         <${WPTextControl}
           __nextHasNoMarginBottom
           __next40pxDefaultSize

@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-final class Core_Index_Wizard_Builder_Runner {
+final class OS_Wizard_Builder_Runner {
 
 	public static function register(): void {
 		add_action( 'rest_api_init', array( __CLASS__, 'register_routes' ) );

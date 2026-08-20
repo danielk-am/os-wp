@@ -6,7 +6,7 @@
  */
 const c = window.wp && window.wp.components;
 if (!c) {
-  console.error('[core-index] window.wp.components not available — wp-components script not enqueued?');
+  console.error('[os] window.wp.components not available — wp-components script not enqueued?');
 }
 
 // Re-export everything available on window.wp.components. We list the
@@ -79,7 +79,7 @@ export const ColorPicker = c?.ColorPicker;
 // SlotFillProvider wires a block's InspectorControls (Fills) to the
 // BlockInspector (Slot) so the embedded editor can show a settings panel.
 // Slot / Fill / createSlotFill are the same primitive used by the editor
-// toolbar API (ci-editor-chrome.js): editors render Fills, the header renders
+// toolbar API (os-editor-chrome.js): editors render Fills, the header renders
 // the matching Slots, so any type can contribute toolbar buttons.
 export const SlotFillProvider = c?.SlotFillProvider;
 export const Slot = c?.Slot;
@@ -100,7 +100,7 @@ export const TreeGridCell = c?.__experimentalTreeGridCell;
 export const ItemGroup = c?.__experimentalItemGroup;
 export const Item = c?.__experimentalItem;
 
-// Consumed by ci-ai-chat.js. Missing these took down the whole admin app: a
+// Consumed by os-ai-chat.js. Missing these took down the whole admin app: a
 // named import of an export this module does not declare is a parse-time
 // SyntaxError, so every screen died on a spinner, not just the chat panel.
 // The default export cannot cover for a missing named export.

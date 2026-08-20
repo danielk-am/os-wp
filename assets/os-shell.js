@@ -11,8 +11,8 @@
  */
 import { createContext, useContext, useState, useRef, useCallback, useMemo } from 'react';
 import { Modal, SnackbarList, TextControl } from '@wordpress/components';
-import { h } from 'ci/core';
-import { Button } from 'ci/ui';
+import { h } from 'os/core';
+import { Button } from 'os/ui';
 
 // ---------------------------------------------------------------------------
 // Toast system
@@ -132,7 +132,7 @@ function DialogModal({ state, onCancel, onConfirm }) {
   return h`<${Modal}
     title=${state.title || ''}
     onRequestClose=${onCancel}
-    className="ci-dialog-modal"
+    className="os-dialog-modal"
     size="small"
   >
     ${state.body ? h`<p className="mt-0 text-sm text-muted-foreground whitespace-pre-line">${state.body}</p>` : null}

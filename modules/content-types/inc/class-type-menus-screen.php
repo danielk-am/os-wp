@@ -4,7 +4,7 @@
  * decided. Menu label, icon, and position, for built-in and user-defined types
  * alike; same shape as Secure Custom Fields, one screen, no code.
  *
- * The screen itself is a WPDS app page (assets/ci-app-type-menus.js), the same
+ * The screen itself is a WPDS app page (assets/os-app-type-menus.js), the same
  * grammar as every other surface of the plugin; this class supplies the admin
  * page mount and the REST endpoints behind it. Cosmetic configuration has no
  * recovery role, so unlike the OS Modules screen it has no reason to avoid the
@@ -45,7 +45,7 @@ final class OS_Type_Menus_Screen {
 			'manage_options',
 			self::SLUG,
 			static function (): void {
-				echo '<div class="wrap" style="margin:0;padding:0;max-width:none"><div id="ci-root"></div></div>';
+				echo '<div class="wrap" style="margin:0;padding:0;max-width:none"><div id="os-app-root"></div></div>';
 			}
 		);
 	}

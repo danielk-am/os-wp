@@ -10,14 +10,14 @@
  *
  *   Media   wp.media, the same modal every block uses. Free.
  *   Posts   /wp/v2/search, core's own cross-type search endpoint. Free.
- *   Files   ci-filesystem's /fs/roots + /fs/list, which already exists and is
+ *   Files   os-filesystem's /fs/roots + /fs/list, which already exists and is
  *           already jailed to admin-configured roots. Free, and the jail is the
  *           reason to reach for it rather than inventing a browser: an editor
  *           that can read any path on the box is a vulnerability wearing a
  *           feature's clothes.
  *
  * Each source returns a URI (see host.js). Media gives a real upload URL, posts
- * give a permalink, ci-filesystem gives root-relative path. All three round-trip
+ * give a permalink, os-filesystem gives root-relative path. All three round-trip
  * through a git checkout as readable text, which is the requirement.
  */
 
@@ -70,7 +70,7 @@ async function searchPosts(term) {
   return rows.map((p) => ({ uri: p.url, label: `${p.title} (${p.subtype})` }));
 }
 
-/** ci-filesystem: roots first, then one directory at a time. Jailed server-side. */
+/** os-filesystem: roots first, then one directory at a time. Jailed server-side. */
 async function fsRoots() {
   const r = await fetch(REST('context-intelligence/v1/fs/roots'), {
     headers: headers(), credentials: 'same-origin',
@@ -128,7 +128,7 @@ export function installWordPressHost({ postId, restBase = 'wp/v2/os_skill' }) {
     },
 
     async readFile(uri) {
-      // Only ci-filesystem can hand back text; a media URL is just fetched.
+      // Only os-filesystem can hand back text; a media URL is just fetched.
       try {
         const r = await fetch(uri, { credentials: 'same-origin' });
         return r.ok ? await r.text() : null;

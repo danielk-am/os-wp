@@ -1,20 +1,20 @@
 /**
  * ci/blueprints — the content-type blueprint catalog (pure data module).
  *
- * Extracted from the ci-type monolith (the ongoing "ci-type split") so the
+ * Extracted from the os-type monolith (the ongoing "os-type split") so the
  * blueprint recipes are authored and read as data, not tangled in the editor
  * UI. Each entry is a recipe consumed by CreateTypePage (/structure/new?bp=<id>
- * in ci-type.js): it seeds starter `fields` + an `editor`, and — for lifecycle
- * recipes — an optional JSON `schema` (a `status` enum + an `x-ci-lifecycle`
- * state machine) that is POSTed as a schema-override on create so ci-schema-get
+ * in os-type.js): it seeds starter `fields` + an `editor`, and — for lifecycle
+ * recipes — an optional JSON `schema` (a `status` enum + an `x-os-lifecycle`
+ * state machine) that is POSTed as a schema-override on create so os-schema-get
  * orients agents to the legal transitions.
  *
- * No imports, no side effects. Icons are string names resolved against CI_ICONS
+ * No imports, no side effects. Icons are string names resolved against OS_ICONS
  * at render time, so this module stays dependency-free and safe to read/write
  * from tooling (e.g. the type self-learning skill).
  */
 
-export const CI_BLUEPRINTS = [
+export const OS_BLUEPRINTS = [
   {
     id: 'tracker', label: 'Tracker', plural: 'Trackers', icon: 'clipboard', editor: 'cpt',
     description: 'Items with status, priority, and a due date — a Kanban-ish list.',
@@ -174,16 +174,16 @@ export const CI_BLUEPRINTS = [
   // ── Lifecycle recipes ──────────────────────────────────────────────────
   // Each composes the kernel primitives (docs/TYPE-LAYER-SPEC.md +
   // docs/RELATIONS-PRIMITIVE.md): lifecycle = a `status` select whose options
-  // are the board columns in order, plus an `x-ci-lifecycle` state machine in
+  // are the board columns in order, plus an `x-os-lifecycle` state machine in
   // `schema`; relations = child-owned `relationship` fields (inverse resolved
-  // via ci-backlinks, never stored); scheduling = date fields; assignment =
+  // via os-backlinks, never stored); scheduling = date fields; assignment =
   // an owner text field. The blueprint `id` doubles as the default slug on
-  // create, so default-slug types wire the x-ci-relations targets
+  // create, so default-slug types wire the x-os-relations targets
   // (ci_project, ci_workitem, …) with no extra setup. `schema` is POSTed as a
-  // schema override on create so ci-schema-get orients agents to the legal
+  // schema override on create so os-schema-get orients agents to the legal
   // transitions and the type graph.
   {
-    // Work item (Linear/Jira). What the deprecated ci-tracker's ci_issue was:
+    // Work item (Linear/Jira). What the deprecated os-tracker's ci_issue was:
     // lifecycle + assignment (owner) + relations (project/module/milestone/
     // cycle containment, blocks/blocked-by/related links, hierarchical
     // sub-items) + scheduling (due).
@@ -216,13 +216,13 @@ export const CI_BLUEPRINTS = [
     schema: {
       '$schema': 'http://json-schema.org/draft-07/schema#',
       title: 'Work item',
-      description: 'A Linear/Jira-style work item. Set `status` only along a legal transition declared in x-ci-lifecycle; states are ordered as board columns (left→right). Containment/link fields are declared in x-ci-relations — the inverse of every edge is resolved via ci-backlinks, never stored.',
+      description: 'A Linear/Jira-style work item. Set `status` only along a legal transition declared in x-os-lifecycle; states are ordered as board columns (left→right). Containment/link fields are declared in x-os-relations — the inverse of every edge is resolved via os-backlinks, never stored.',
       type: 'object',
       additionalProperties: true,
       properties: {
-        status: { type: 'string', title: 'Status', description: 'Current lifecycle state. Change only via a legal transition (see x-ci-lifecycle).', enum: ['backlog', 'todo', 'in_progress', 'in_review', 'done', 'canceled'] },
+        status: { type: 'string', title: 'Status', description: 'Current lifecycle state. Change only via a legal transition (see x-os-lifecycle).', enum: ['backlog', 'todo', 'in_progress', 'in_review', 'done', 'canceled'] },
       },
-      'x-ci-lifecycle': {
+      'x-os-lifecycle': {
         field: 'status',
         initial: 'backlog',
         final: ['done', 'canceled'],
@@ -236,7 +236,7 @@ export const CI_BLUEPRINTS = [
           canceled: ['backlog'],
         },
       },
-      'x-ci-relations': {
+      'x-os-relations': {
         edges: [
           { field: 'project', target: 'ci_project', cardinality: 'one', role: 'belongs-to' },
           { field: 'module', target: 'ci_module', cardinality: 'one', role: 'grouped-in' },
@@ -274,13 +274,13 @@ export const CI_BLUEPRINTS = [
     schema: {
       '$schema': 'http://json-schema.org/draft-07/schema#',
       title: 'Project (PMBOK)',
-      description: 'A PMBOK-managed project. `status` is the current process group; advance it only along the legal transitions in x-ci-lifecycle (Monitoring and Execution loop). Work items, modules, milestones, and cycles point AT this project — list them via ci-backlinks.',
+      description: 'A PMBOK-managed project. `status` is the current process group; advance it only along the legal transitions in x-os-lifecycle (Monitoring and Execution loop). Work items, modules, milestones, and cycles point AT this project — list them via os-backlinks.',
       type: 'object',
       additionalProperties: true,
       properties: {
-        status: { type: 'string', title: 'Phase', description: 'Current PMBOK process group. Change only via a legal transition (see x-ci-lifecycle).', enum: ['initiation', 'planning', 'execution', 'monitoring', 'closing'] },
+        status: { type: 'string', title: 'Phase', description: 'Current PMBOK process group. Change only via a legal transition (see x-os-lifecycle).', enum: ['initiation', 'planning', 'execution', 'monitoring', 'closing'] },
       },
-      'x-ci-lifecycle': {
+      'x-os-lifecycle': {
         field: 'status',
         initial: 'initiation',
         final: ['closing'],
@@ -293,7 +293,7 @@ export const CI_BLUEPRINTS = [
           closing: [],
         },
       },
-      'x-ci-relations': {
+      'x-os-relations': {
         edges: [
           { field: 'initiative', target: 'ci_initiative', cardinality: 'one', role: 'belongs-to' },
         ],
@@ -326,13 +326,13 @@ export const CI_BLUEPRINTS = [
     schema: {
       '$schema': 'http://json-schema.org/draft-07/schema#',
       title: 'Product',
-      description: 'A product moving through its lifecycle. `status` is the current stage; change only along the legal transitions in x-ci-lifecycle (iterate can loop back to delivery; any active stage can sunset).',
+      description: 'A product moving through its lifecycle. `status` is the current stage; change only along the legal transitions in x-os-lifecycle (iterate can loop back to delivery; any active stage can sunset).',
       type: 'object',
       additionalProperties: true,
       properties: {
-        status: { type: 'string', title: 'Stage', description: 'Current product stage. Change only via a legal transition (see x-ci-lifecycle).', enum: ['idea', 'discovery', 'delivery', 'launch', 'iterate', 'sunset'] },
+        status: { type: 'string', title: 'Stage', description: 'Current product stage. Change only via a legal transition (see x-os-lifecycle).', enum: ['idea', 'discovery', 'delivery', 'launch', 'iterate', 'sunset'] },
       },
-      'x-ci-lifecycle': {
+      'x-os-lifecycle': {
         field: 'status',
         initial: 'idea',
         final: ['sunset'],
@@ -346,7 +346,7 @@ export const CI_BLUEPRINTS = [
           sunset: [],
         },
       },
-      'x-ci-relations': {
+      'x-os-relations': {
         edges: [
           { field: 'milestone', target: 'ci_milestone', cardinality: 'one', role: 'targets' },
           { field: 'related', target: 'ci_product', cardinality: 'many', role: 'relates-to' },
@@ -381,13 +381,13 @@ export const CI_BLUEPRINTS = [
     schema: {
       '$schema': 'http://json-schema.org/draft-07/schema#',
       title: 'SDLC item',
-      description: 'A unit of software delivery. `status` is the current SDLC phase; change only along the legal transitions in x-ci-lifecycle (test can bounce back to build; maintain re-enters design for the next cycle).',
+      description: 'A unit of software delivery. `status` is the current SDLC phase; change only along the legal transitions in x-os-lifecycle (test can bounce back to build; maintain re-enters design for the next cycle).',
       type: 'object',
       additionalProperties: true,
       properties: {
-        status: { type: 'string', title: 'Phase', description: 'Current SDLC phase. Change only via a legal transition (see x-ci-lifecycle).', enum: ['requirements', 'design', 'build', 'test', 'deploy', 'maintain'] },
+        status: { type: 'string', title: 'Phase', description: 'Current SDLC phase. Change only via a legal transition (see x-os-lifecycle).', enum: ['requirements', 'design', 'build', 'test', 'deploy', 'maintain'] },
       },
-      'x-ci-lifecycle': {
+      'x-os-lifecycle': {
         field: 'status',
         initial: 'requirements',
         final: ['maintain'],
@@ -401,7 +401,7 @@ export const CI_BLUEPRINTS = [
           maintain: ['design'],
         },
       },
-      'x-ci-relations': {
+      'x-os-relations': {
         edges: [
           { field: 'milestone', target: 'ci_milestone', cardinality: 'one', role: 'targets' },
           { field: 'blocks', target: 'ci_sdlc', cardinality: 'many', role: 'blocks', inverse: 'blocked_by' },
@@ -436,13 +436,13 @@ export const CI_BLUEPRINTS = [
     schema: {
       '$schema': 'http://json-schema.org/draft-07/schema#',
       title: 'Goal',
-      description: 'A personal goal or plan. `status` moves not_started → active → achieved/abandoned (an abandoned goal can be resumed). Milestones are dated checkpoints; habits are the recurring behaviors that serve the goal; journal entries can point at the goal and are read back via ci-backlinks.',
+      description: 'A personal goal or plan. `status` moves not_started → active → achieved/abandoned (an abandoned goal can be resumed). Milestones are dated checkpoints; habits are the recurring behaviors that serve the goal; journal entries can point at the goal and are read back via os-backlinks.',
       type: 'object',
       additionalProperties: true,
       properties: {
-        status: { type: 'string', title: 'Status', description: 'Current goal state. Change only via a legal transition (see x-ci-lifecycle).', enum: ['not_started', 'active', 'achieved', 'abandoned'] },
+        status: { type: 'string', title: 'Status', description: 'Current goal state. Change only via a legal transition (see x-os-lifecycle).', enum: ['not_started', 'active', 'achieved', 'abandoned'] },
       },
-      'x-ci-lifecycle': {
+      'x-os-lifecycle': {
         field: 'status',
         initial: 'not_started',
         final: ['achieved'],
@@ -454,7 +454,7 @@ export const CI_BLUEPRINTS = [
           abandoned: ['active'],
         },
       },
-      'x-ci-relations': {
+      'x-os-relations': {
         edges: [
           { field: 'milestones', target: 'ci_milestone', cardinality: 'many', role: 'targets' },
           { field: 'habits', target: 'ci_habit', cardinality: 'many', role: 'served-by' },
@@ -487,13 +487,13 @@ export const CI_BLUEPRINTS = [
     schema: {
       '$schema': 'http://json-schema.org/draft-07/schema#',
       title: 'Initiative',
-      description: 'A strategic theme grouping projects. Projects point AT this initiative via their `initiative` field — list them via ci-backlinks.',
+      description: 'A strategic theme grouping projects. Projects point AT this initiative via their `initiative` field — list them via os-backlinks.',
       type: 'object',
       additionalProperties: true,
       properties: {
-        status: { type: 'string', title: 'Status', description: 'Current initiative state. Change only via a legal transition (see x-ci-lifecycle).', enum: ['planned', 'active', 'done', 'abandoned'] },
+        status: { type: 'string', title: 'Status', description: 'Current initiative state. Change only via a legal transition (see x-os-lifecycle).', enum: ['planned', 'active', 'done', 'abandoned'] },
       },
-      'x-ci-lifecycle': {
+      'x-os-lifecycle': {
         field: 'status',
         initial: 'planned',
         final: ['done'],
@@ -525,13 +525,13 @@ export const CI_BLUEPRINTS = [
     schema: {
       '$schema': 'http://json-schema.org/draft-07/schema#',
       title: 'Module',
-      description: 'A feature grouping of work items within a project. Work items point AT this module via their `module` field — list them via ci-backlinks.',
+      description: 'A feature grouping of work items within a project. Work items point AT this module via their `module` field — list them via os-backlinks.',
       type: 'object',
       additionalProperties: true,
       properties: {
-        status: { type: 'string', title: 'Status', description: 'Current module state. Change only via a legal transition (see x-ci-lifecycle).', enum: ['planned', 'active', 'done'] },
+        status: { type: 'string', title: 'Status', description: 'Current module state. Change only via a legal transition (see x-os-lifecycle).', enum: ['planned', 'active', 'done'] },
       },
-      'x-ci-lifecycle': {
+      'x-os-lifecycle': {
         field: 'status',
         initial: 'planned',
         final: ['done'],
@@ -542,7 +542,7 @@ export const CI_BLUEPRINTS = [
           done: [],
         },
       },
-      'x-ci-relations': {
+      'x-os-relations': {
         edges: [
           { field: 'project', target: 'ci_project', cardinality: 'one', role: 'belongs-to' },
         ],
@@ -567,13 +567,13 @@ export const CI_BLUEPRINTS = [
     schema: {
       '$schema': 'http://json-schema.org/draft-07/schema#',
       title: 'Milestone',
-      description: 'A dated checkpoint. Work items, products, and goals point AT this milestone — completion is the share of backlinked items in a final state (computed via ci-backlinks, never stored here).',
+      description: 'A dated checkpoint. Work items, products, and goals point AT this milestone — completion is the share of backlinked items in a final state (computed via os-backlinks, never stored here).',
       type: 'object',
       additionalProperties: true,
       properties: {
-        status: { type: 'string', title: 'Status', description: 'Current milestone state. Change only via a legal transition (see x-ci-lifecycle).', enum: ['open', 'hit', 'missed'] },
+        status: { type: 'string', title: 'Status', description: 'Current milestone state. Change only via a legal transition (see x-os-lifecycle).', enum: ['open', 'hit', 'missed'] },
       },
-      'x-ci-lifecycle': {
+      'x-os-lifecycle': {
         field: 'status',
         initial: 'open',
         final: ['hit'],
@@ -584,7 +584,7 @@ export const CI_BLUEPRINTS = [
           missed: ['open'],
         },
       },
-      'x-ci-relations': {
+      'x-os-relations': {
         edges: [
           { field: 'project', target: 'ci_project', cardinality: 'one', role: 'belongs-to' },
         ],
@@ -610,13 +610,13 @@ export const CI_BLUEPRINTS = [
     schema: {
       '$schema': 'http://json-schema.org/draft-07/schema#',
       title: 'Cycle',
-      description: 'A time-box (sprint). Work items point AT this cycle via their `cycle` field — the burndown is backlinked work items grouped by `status` (computed via ci-backlinks, never stored here).',
+      description: 'A time-box (sprint). Work items point AT this cycle via their `cycle` field — the burndown is backlinked work items grouped by `status` (computed via os-backlinks, never stored here).',
       type: 'object',
       additionalProperties: true,
       properties: {
-        status: { type: 'string', title: 'Status', description: 'Current cycle state. Change only via a legal transition (see x-ci-lifecycle).', enum: ['upcoming', 'active', 'closed'] },
+        status: { type: 'string', title: 'Status', description: 'Current cycle state. Change only via a legal transition (see x-os-lifecycle).', enum: ['upcoming', 'active', 'closed'] },
       },
-      'x-ci-lifecycle': {
+      'x-os-lifecycle': {
         field: 'status',
         initial: 'upcoming',
         final: ['closed'],
@@ -627,7 +627,7 @@ export const CI_BLUEPRINTS = [
           closed: [],
         },
       },
-      'x-ci-relations': {
+      'x-os-relations': {
         edges: [
           { field: 'project', target: 'ci_project', cardinality: 'one', role: 'belongs-to' },
         ],

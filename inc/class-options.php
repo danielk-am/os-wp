@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class Core_Index_Options {
+class OS_Options {
 
 	/** Sentinel for "no row", so a stored false is not mistaken for absence. */
 	private const ABSENT = '__core_index_option_absent__';
@@ -94,8 +94,8 @@ class Core_Index_Options {
 		if ( ! str_starts_with( $name, 'os_' ) ) {
 			return null;
 		}
-		if ( class_exists( 'Core_Index_Option_Migration' ) ) {
-			$mapped = Core_Index_Option_Migration::legacy_name( $name );
+		if ( class_exists( 'OS_Option_Migration' ) ) {
+			$mapped = OS_Option_Migration::legacy_name( $name );
 			if ( null !== $mapped ) {
 				return $mapped;
 			}

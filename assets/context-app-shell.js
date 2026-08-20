@@ -1,6 +1,6 @@
 /**
  * Measure the WP admin sidebar + admin bar at runtime and expose them
- * as CSS custom properties (`--ci-adminbar-h`, `--ci-sidebar-w`) on
+ * as CSS custom properties (`--os-adminbar-h`, `--os-sidebar-w`) on
  * documentElement. The React root pins to these so it lines up
  * pixel-perfectly with the WordPress chrome regardless of WP version,
  * mobile breakpoint, or sidebar collapse state.
@@ -17,16 +17,16 @@
 	function sync() {
 		var bar = document.getElementById( 'wpadminbar' );
 		var bh = bar ? Math.round( bar.getBoundingClientRect().height ) : 32;
-		doc.style.setProperty( '--ci-adminbar-h', bh + 'px' );
+		doc.style.setProperty( '--os-adminbar-h', bh + 'px' );
 
 		if ( window.matchMedia( '(max-width: 782px)' ).matches ) {
-			doc.style.setProperty( '--ci-sidebar-w', '0px' );
+			doc.style.setProperty( '--os-sidebar-w', '0px' );
 			return;
 		}
 		var menu = document.getElementById( 'adminmenuwrap' )
 			|| document.getElementById( 'adminmenuback' );
 		var w = menu ? Math.round( menu.getBoundingClientRect().width ) : 160;
-		doc.style.setProperty( '--ci-sidebar-w', w + 'px' );
+		doc.style.setProperty( '--os-sidebar-w', w + 'px' );
 	}
 
 	sync();

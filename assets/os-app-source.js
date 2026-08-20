@@ -7,10 +7,10 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { h, rest, registerEditor, CIRegistry } from 'ci/core';
-import { Spinner } from 'ci/ui';
-import { useToast } from 'ci/shell';
-import { CodeEditor } from 'ci/editors';
+import { h, rest, registerEditor, CIRegistry } from 'os/core';
+import { Spinner } from 'os/ui';
+import { useToast } from 'os/shell';
+import { CodeEditor } from 'os/editors';
 
 function SourceEditor( { type, id, isNew, meta, mode } ) {
   const navigate = useNavigate();

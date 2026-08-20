@@ -1,40 +1,40 @@
-.ci-wiki-article,
-.ci-wiki-section,
-.ci-wiki-json,
-.ci-wiki-query {
+.os-wiki-article,
+.os-wiki-section,
+.os-wiki-json,
+.os-wiki-query {
 	font-size: 1rem;
 }
 
-.ci-wiki-table {
+.os-wiki-table {
 	width: 100%;
 	border-collapse: collapse;
 	margin: 1em 0;
 }
-.ci-wiki-table th,
-.ci-wiki-table td {
+.os-wiki-table th,
+.os-wiki-table td {
 	border: 1px solid #ddd;
 	padding: 6px 10px;
 	text-align: left;
 	vertical-align: top;
 }
-.ci-wiki-table thead {
+.os-wiki-table thead {
 	background: #f5f5f5;
 }
 
-.ci-wiki-json dl {
+.os-wiki-json dl {
 	display: grid;
 	grid-template-columns: max-content 1fr;
 	gap: 4px 12px;
 	margin: 0;
 }
-.ci-wiki-json dt {
+.os-wiki-json dt {
 	font-weight: 600;
 }
-.ci-wiki-json dd {
+.os-wiki-json dd {
 	margin: 0;
 }
 
-.ci-wiki-placeholder {
+.os-wiki-placeholder {
 	background: #fffbea;
 	border-left: 3px solid #f0c000;
 	padding: 6px 10px;

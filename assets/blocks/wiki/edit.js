@@ -32,7 +32,7 @@
 		const selected = options.find( ( option ) => option.value === value );
 		const selectedLabel = selected ? selected.label : placeholder;
 		const accessibleLabel = ariaLabel || label || placeholder;
-		return h( 'div', { className: 'components-base-control ci-block-popover-select' },
+		return h( 'div', { className: 'components-base-control os-block-popover-select' },
 			label ? h( 'div', {
 				className: hideLabelFromVision ? 'screen-reader-text' : 'components-base-control__label',
 				style: hideLabelFromVision ? undefined : { display: 'block', marginBottom: 8 },
@@ -266,7 +266,7 @@
 		return [];
 	}
 
-	registerBlockType( 'core-index/wiki', {
+	registerBlockType( 'os/wiki', {
 		edit: function Edit( { attributes, setAttributes, clientId } ) {
 			const { slug, mode, selector, separator, queryPath, queryType, queryLimit } = attributes;
 			const blockProps = useBlockProps();
@@ -410,10 +410,10 @@
 				),
 				h(
 					'div',
-					{ className: 'ci-wiki-block-preview', style: { border: '1px dashed #ddd', padding: '8px' } },
+					{ className: 'os-wiki-block-preview', style: { border: '1px dashed #ddd', padding: '8px' } },
 					h( 'div', { style: { fontSize: '12px', opacity: 0.7, marginBottom: '6px' } }, summary ),
 					( slug || mode === 'query' )
-						? h( ServerSideRender, { block: 'core-index/wiki', attributes } )
+						? h( ServerSideRender, { block: 'os/wiki', attributes } )
 						: h( Notice, { status: 'info', isDismissible: false }, 'Choose a wiki article in the sidebar.' )
 				)
 			);

@@ -7,31 +7,31 @@ import { createElement, cloneElement, Children, useState, useEffect, useReducer,
 import { createRoot, createPortal } from 'react-dom/client';
 import { HashRouter, Routes, Route, Link, useParams, useNavigate, useLocation, Navigate } from 'react-router-dom';
 // Context Core foundation (htm renderer, BOOT, REST client, entity decode,
-// app registry). Extracted to its own ES module — see assets/ci-core.js.
-import { h, BOOT, API_VERSION, rest, restWithHeaders, restAllPages, decodeEntities, CIRegistry, registerEditor, registerListView, registerRoute, registerNavRow, registerNewFile, registerCalendarSource, onRegistryChange, setNavBadge, editorChoices, buildParentTree, typeKeys, typeMeta, typeKind, isTermType, isNativeReplace, treeKind, applyTemplate, listUrl, normalizeItem } from 'ci/core';
-// Context UI kernel (icons + base presentational components) — see assets/ci-ui.js.
-import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, CI_ICONS, PICKABLE_ICONS, SelectCheckbox, SegmentedToggle, PageHeading, SelectMenu } from 'ci/ui';
-// Context Engine (field-group / taxonomy / validation layer) — see assets/ci-engine.js.
-import { FG_FIELD_TYPES, FG_PRESENTATIONAL, FG_WIDTHS, fgCols, fgWithId, fgStrip, FG_COND_OPS, evalConditional, fgCptOptions, RelationshipField, TaxonomyField } from 'ci/engine';
-// Context Shell (app-wide toast + dialog providers/hooks) — see assets/ci-shell.js.
-import { ToastProvider, useToast, DialogProvider, useDialog } from 'ci/shell';
-// Context Editors (shared CodeMirror + Gutenberg composer) — see assets/ci-editors.js.
-import { CodeEditor, monacoReady, GutenbergComposer, useEditorFullWidth, EditorFullWidthButton } from 'ci/editors';
+// app registry). Extracted to its own ES module — see assets/os-core.js.
+import { h, BOOT, API_VERSION, rest, restWithHeaders, restAllPages, decodeEntities, CIRegistry, registerEditor, registerListView, registerRoute, registerNavRow, registerNewFile, registerCalendarSource, onRegistryChange, setNavBadge, editorChoices, buildParentTree, typeKeys, typeMeta, typeKind, isTermType, isNativeReplace, treeKind, applyTemplate, listUrl, normalizeItem } from 'os/core';
+// Context UI kernel (icons + base presentational components) — see assets/os-ui.js.
+import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, OS_ICONS, PICKABLE_ICONS, SelectCheckbox, SegmentedToggle, PageHeading, SelectMenu } from 'os/ui';
+// Context Engine (field-group / taxonomy / validation layer) — see assets/os-engine.js.
+import { FG_FIELD_TYPES, FG_PRESENTATIONAL, FG_WIDTHS, fgCols, fgWithId, fgStrip, FG_COND_OPS, evalConditional, fgCptOptions, RelationshipField, TaxonomyField } from 'os/engine';
+// Context Shell (app-wide toast + dialog providers/hooks) — see assets/os-shell.js.
+import { ToastProvider, useToast, DialogProvider, useDialog } from 'os/shell';
+// Context Editors (shared CodeMirror + Gutenberg composer) — see assets/os-editors.js.
+import { CodeEditor, monacoReady, GutenbergComposer, useEditorFullWidth, EditorFullWidthButton } from 'os/editors';
 // Workspaces — the Reference companion drawer, mounted in the Shell below.
-import { ReferencePanel } from 'ci/app-workspace';
+import { ReferencePanel } from 'os/app-workspace';
 // Shared editor chrome — self-contained leaf; sets the shared EditorHeader /
 // MarkdownInsertPopover on the registry (read by every editor) and registers
 // the `block` Gutenberg-redirect editor.
-import 'ci/editor-chrome';
+import 'os/editor-chrome';
 // Skill structure → Mermaid outline. Self-registers CIRegistry.SkillOutline,
 // read by the cpt editor's Settings drawer. The 3 MB mermaid bundle is only
 // pulled in when that panel actually mounts (lazy dynamic import).
-import 'ci/skill-mermaid';
+import 'os/skill-mermaid';
 // Type layer — the nav/list/editor spine. Importing it self-registers the
 // meta/term/cpt editors + content-types/structure routes and sets the shared
 // chrome (TypeLayout/NewFileButton/MobileMenuButton/starterTemplateFor) on the
 // registry. ListView + EditorPage are used by the App router below.
-import { ListView, EditorPage } from 'ci/type';
+import { ListView, EditorPage } from 'os/type';
 // (Previously: BlockPreview + parse from @wordpress/{block-editor,blocks}.
 // Replaced with a server-side render endpoint — see
 // inc/admin/class-pattern-preview.php — because the core block types
@@ -39,7 +39,7 @@ import { ListView, EditorPage } from 'ci/type';
 // so BlockPreview rendered as an empty frame. Server-side rendering
 // uses WP's own do_blocks() pipeline, so previews are identical to
 // the front-end render.)
-// (FontAwesome language glyphs now live in ci-editor-chrome.js with FaIcon.)
+// (FontAwesome language glyphs now live in os-editor-chrome.js with FaIcon.)
 // WPDS — @wordpress/components, bridged from window.wp.components.
 import {
   Button as WPButton,
@@ -92,7 +92,7 @@ const iconGrid = h`<${Icon} name="grid" />`;
 const iconCheck = h`<${Icon} name="check" />`;
 marked.setOptions({ gfm: true, breaks: true });
 
-// h, BOOT, rest, restWithHeaders, restAllPages now imported from 'ci/core'.
+// h, BOOT, rest, restWithHeaders, restAllPages now imported from 'os/core'.
 
 function useMediaQuery(query) {
   const [match, setMatch] = useState(() => window.matchMedia(query).matches);
@@ -106,7 +106,7 @@ function useMediaQuery(query) {
 }
 
 // typeKeys/typeMeta/typeKind/isTermType/isNativeReplace/treeKind/applyTemplate/
-// listUrl/normalizeItem now imported from 'ci/core'.
+// listUrl/normalizeItem now imported from 'os/core'.
 
 /**
  * Build a tree from a flat list of items linked by `parent` (id of another
@@ -131,7 +131,7 @@ function useMediaQuery(query) {
 // Icons are imported from the curated Font Awesome Free bundle in `ci/ui`.
 // ---------------------------------------------------------------------------
 
-// ICONS / Icon / WPGlyph now imported from 'ci/ui'.
+// ICONS / Icon / WPGlyph now imported from 'os/ui'.
 
 // ---------------------------------------------------------------------------
 // Toast system
@@ -497,7 +497,7 @@ function CommandPalette({ onClose }) {
 
   // The palette covers the content area (right of the WP admin
   // sidebar), not the full viewport, with 10% padding on each side of
-  // that content area. `--ci-sidebar-w` is published by
+  // that content area. `--os-sidebar-w` is published by
   // context-app-shell.js and tracks the live WP menu width (collapsed
   // / expanded / folded); it falls back to 160px during initial paint.
   // The inner palette caps at max-w-4xl on ultrawide monitors so it
@@ -506,7 +506,7 @@ function CommandPalette({ onClose }) {
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
     <div
       className="fixed top-0 right-0 bottom-0 flex items-start justify-center pt-[10vh] pb-8 px-[10%]"
-      style=${{ left: 'var(--ci-sidebar-w, 160px)' }}
+      style=${{ left: 'var(--os-sidebar-w, 160px)' }}
     >
       <div className="relative w-full max-w-4xl bg-card rounded-xl shadow-2xl border border-border overflow-hidden pointer-events-auto" onClick=${(e) => e.stopPropagation()}>
       <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
@@ -559,7 +559,7 @@ function CommandPalette({ onClose }) {
 // UI primitives
 // ---------------------------------------------------------------------------
 
-// Card / PadCard / Button / Badge / Spinner now imported from 'ci/ui'.
+// Card / PadCard / Button / Badge / Spinner now imported from 'os/ui'.
 
 // ---------------------------------------------------------------------------
 // Linear-style sidebar
@@ -570,7 +570,7 @@ function CommandPalette({ onClose }) {
 // ---------------------------------------------------------------------------
 
 function Shell({ children }) {
-  // #ci-root is position:fixed with concrete inset values, so children that
+  // #os-app-root is position:fixed with concrete inset values, so children that
   // want to fill it use `absolute inset-0`. Shell is just a positioned
   // container that establishes the context + paints the page background.
   return h`<div className="absolute inset-0 text-foreground antialiased bg-sidebar overflow-hidden">
@@ -845,7 +845,7 @@ function HomePage() {
     return t;
   }, [wc.active, wc.extensions]);
 
-  // Inline-style tokens (Tailwind-free; resolve from ci-wpds-theme.css vars).
+  // Inline-style tokens (Tailwind-free; resolve from os-wpds-theme.css vars).
   const EYEBROW = { fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted-foreground)' };
   const SECTION_H = { ...EYEBROW, fontSize: '13px', letterSpacing: '0.04em', margin: 0 };
   const TILE_TITLE = { fontSize: '14px', fontWeight: 600, color: 'var(--foreground)' };
@@ -870,33 +870,33 @@ function HomePage() {
     // WooCommerce and extension tiles where one "click the whole tile"
     // doesn't capture the 2-3 real entry points the plugin exposes.
     if (tile.actions && tile.actions.length) {
-      return h`<${WPCard} size="small" isRounded=${true} className="ci-card-hover" style=${{ height: '100%' }}>
+      return h`<${WPCard} size="small" isRounded=${true} className="os-card-hover" style=${{ height: '100%' }}>
         <${WPCardBody}>
           <${WPVStack} spacing=${2}>
             <span style=${EYEBROW}>${tile.category || 'WordPress'}</span>
             <span style=${TILE_TITLE}>${tile.action}</span>
             <div style=${{ display: 'flex', flexWrap: 'wrap', columnGap: '12px', rowGap: '4px', fontSize: '12px', paddingTop: '2px' }}>
-              ${tile.actions.map((a, i) => h`<a key=${i} href=${a.href} className="ci-link-muted">→ ${a.label}</a>`)}
+              ${tile.actions.map((a, i) => h`<a key=${i} href=${a.href} className="os-link-muted">→ ${a.label}</a>`)}
             </div>
           </${WPVStack}>
         </${WPCardBody}>
       </${WPCard}>`;
     }
     const category = tile.category || (tile.kind === 'ci' ? 'Context' : 'WordPress');
-    return h`<a href=${tile.href || '#'} onClick=${onClick} className="ci-tile">
-      <${WPCard} size="small" isRounded=${true} className="ci-card-hover" style=${{ height: '100%' }}>
+    return h`<a href=${tile.href || '#'} onClick=${onClick} className="os-tile">
+      <${WPCard} size="small" isRounded=${true} className="os-card-hover" style=${{ height: '100%' }}>
         <${WPCardBody}>
           <${WPVStack} spacing=${1}>
             <span style=${EYEBROW}>${category}</span>
             <span style=${TILE_TITLE}>${tile.action}</span>
-            <span className="ci-tile-arrow" style=${{ fontSize: '12px', fontWeight: 500 }}>→ ${tile.label}</span>
+            <span className="os-tile-arrow" style=${{ fontSize: '12px', fontWeight: 500 }}>→ ${tile.label}</span>
           </${WPVStack}>
         </${WPCardBody}>
       </${WPCard}>
     </a>`;
   };
 
-  return h`<div className="ci-home-scroll" style=${{ position: 'absolute', inset: 0, overflowY: 'auto', overscrollBehavior: 'contain', background: 'var(--background)', touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' }}>
+  return h`<div className="os-home-scroll" style=${{ position: 'absolute', inset: 0, overflowY: 'auto', overscrollBehavior: 'contain', background: 'var(--background)', touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' }}>
     <div style=${{ padding: '48px 24px', maxWidth: '64rem', margin: '0 auto', width: '100%' }}>
       <${WPVStack} spacing=${10}>
         <header>
@@ -910,26 +910,26 @@ function HomePage() {
           </${WPVStack}>
         </header>
 
-        <button type="button" onClick=${() => palette?.open?.()} className="ci-search-trigger">
+        <button type="button" onClick=${() => palette?.open?.()} className="os-search-trigger">
           <span style=${{ color: 'var(--muted-foreground)' }}><i className="fa fa-search" /></span>
           <span style=${{ flex: 1, fontSize: '14px', color: 'var(--muted-foreground)' }}>Search everything, or jump to a page…</span>
           <span style=${{ fontSize: '11px', fontFamily: 'monospace', color: 'var(--muted-foreground)' }}>${'⌘`'} · ⌘⇧P · /</span>
         </button>
 
         <${Section} heading=${wpHeading}>
-          <div className="ci-home-grid">${wpTiles.map((t) => h`<${Tile} key=${t.key} tile=${t} />`)}</div>
+          <div className="os-home-grid">${wpTiles.map((t) => h`<${Tile} key=${t.key} tile=${t} />`)}</div>
         </${Section}>
 
         ${wcTiles.length ? h`<${Section} heading=${wcHeading} sub=${`WooCommerce ${wc.extensions && Object.values(wc.extensions).some(Boolean) ? '+ detected extensions' : ''}`}>
-          <div className="ci-home-grid">${wcTiles.map((t) => h`<${Tile} key=${t.key} tile=${t} />`)}</div>
+          <div className="os-home-grid">${wcTiles.map((t) => h`<${Tile} key=${t.key} tile=${t} />`)}</div>
         </${Section}>` : null}
 
         ${ciTiles.length ? h`<${Section} heading=${ciHeading} sub="private notes, skills, snippets — the context an AI agent reads when it works with you">
-          <div className="ci-home-grid">${ciTiles.map((t) => h`<${Tile} key=${t.key} tile=${t} />`)}</div>
+          <div className="os-home-grid">${ciTiles.map((t) => h`<${Tile} key=${t.key} tile=${t} />`)}</div>
         </${Section}>` : null}
 
         <${Section} heading="Workspace" sub="activity, notifications, apps & abilities — the OS surfaces for your Context">
-          <div className="ci-home-grid">${manageTiles.map((t) => h`<${Tile} key=${t.key} tile=${t} />`)}</div>
+          <div className="os-home-grid">${manageTiles.map((t) => h`<${Tile} key=${t.key} tile=${t} />`)}</div>
         </${Section}>
 
         <${Section} heading="More">
@@ -941,18 +941,18 @@ function HomePage() {
           </div>
         </${Section}>
 
-        ${designHomeVisible ? h`<${Section} heading="Design Setup" right=${h`<${Link} to="/design" className="ci-link-muted" style=${{ fontSize: '12px' }}>View all ${DESIGN_STEPS.length} steps →</${Link}>`}>
-          <div className="ci-home-grid">
+        ${designHomeVisible ? h`<${Section} heading="Design Setup" right=${h`<${Link} to="/design" className="os-link-muted" style=${{ fontSize: '12px' }}>View all ${DESIGN_STEPS.length} steps →</${Link}>`}>
+          <div className="os-home-grid">
             ${HOME_DESIGN_HIGHLIGHTS.map((key) => {
               const s = DESIGN_STEPS.find((x) => x.key === key);
               if (!s) return null;
-              return h`<${Link} key=${s.key} to=${`/design/${s.key}`} className="ci-tile">
-                <${WPCard} size="small" isRounded=${true} className="ci-card-hover" style=${{ height: '100%' }}>
+              return h`<${Link} key=${s.key} to=${`/design/${s.key}`} className="os-tile">
+                <${WPCard} size="small" isRounded=${true} className="os-card-hover" style=${{ height: '100%' }}>
                   <${WPCardBody}>
                     <${WPVStack} spacing=${1}>
                       <span style=${EYEBROW}>Design Setup</span>
                       <span style=${TILE_TITLE}>${s.label}</span>
-                      <span className="ci-tile-arrow" style=${{ fontSize: '12px', fontWeight: 500 }}>→ Set up</span>
+                      <span className="os-tile-arrow" style=${{ fontSize: '12px', fontWeight: 500 }}>→ Set up</span>
                     </${WPVStack}>
                   </${WPCardBody}>
                 </${WPCard}>
@@ -1039,23 +1039,23 @@ skill() {
   ${mcpUrl}`,
       mcpTools: [
         // Read / search — agent starts with ci/search.
-        [ 'ci/search',         'read',  '★ START HERE. Search across both skills and the wiki. Returns slugs to feed into ci/read.' ],
-        [ 'ci/read',           'read',  'Read one post by slug (either type). Use after ci/search has narrowed the target.' ],
-        [ 'ci/skill-read',     'read',  'Read one skill / memory by slug.' ],
-        [ 'ci/skill-list',     'read',  'List skills, optionally filtered by folder (os_path) or type.' ],
-        [ 'ci/skill-search',   'read',  'Keyword search across skills only.' ],
-        [ 'ci/wiki-read',      'read',  'Read one wiki article by slug.' ],
-        [ 'ci/wiki-list',      'read',  'List wiki articles (optionally by parent article).' ],
-        [ 'ci/wiki-search',    'read',  'Keyword search across the wiki only.' ],
+        [ 'os/search',         'read',  '★ START HERE. Search across both skills and the wiki. Returns slugs to feed into ci/read.' ],
+        [ 'os/read',           'read',  'Read one post by slug (either type). Use after ci/search has narrowed the target.' ],
+        [ 'os/skill-read',     'read',  'Read one skill / memory by slug.' ],
+        [ 'os/skill-list',     'read',  'List skills, optionally filtered by folder (os_path) or type.' ],
+        [ 'os/skill-search',   'read',  'Keyword search across skills only.' ],
+        [ 'os/wiki-read',      'read',  'Read one wiki article by slug.' ],
+        [ 'os/wiki-list',      'read',  'List wiki articles (optionally by parent article).' ],
+        [ 'os/wiki-search',    'read',  'Keyword search across the wiki only.' ],
         // Write — guarded by draft-by-default + trash-not-force-delete.
-        [ 'ci/skill-create',   'write', 'Create a os_skill. Defaults to draft — human publishes via wp-admin.' ],
-        [ 'ci/skill-update',   'write', 'Update an existing os_skill (only passed fields change).' ],
-        [ 'ci/skill-append',   'write', 'Append a markdown section to an existing skill. Marked with <!-- mcp-append --> for human review.' ],
-        [ 'ci/skill-delete',   'write', 'Trash a os_skill (recoverable from .trash; never force-deletes).' ],
-        [ 'ci/wiki-create',    'write', 'Create a os_wiki article. Defaults to draft.' ],
-        [ 'ci/wiki-update',    'write', 'Update an existing os_wiki article.' ],
-        [ 'ci/wiki-append',    'write', 'Append a section to an existing wiki article. Marked for human review.' ],
-        [ 'ci/wiki-delete',    'write', 'Trash a os_wiki article (recoverable from .trash).' ],
+        [ 'os/skill-create',   'write', 'Create a os_skill. Defaults to draft — human publishes via wp-admin.' ],
+        [ 'os/skill-update',   'write', 'Update an existing os_skill (only passed fields change).' ],
+        [ 'os/skill-append',   'write', 'Append a markdown section to an existing skill. Marked with <!-- mcp-append --> for human review.' ],
+        [ 'os/skill-delete',   'write', 'Trash a os_skill (recoverable from .trash; never force-deletes).' ],
+        [ 'os/wiki-create',    'write', 'Create a os_wiki article. Defaults to draft.' ],
+        [ 'os/wiki-update',    'write', 'Update an existing os_wiki article.' ],
+        [ 'os/wiki-append',    'write', 'Append a section to an existing wiki article. Marked for human review.' ],
+        [ 'os/wiki-delete',    'write', 'Trash a os_wiki article (recoverable from .trash).' ],
       ],
     };
   }, []);
@@ -1099,7 +1099,7 @@ function QuickStartMcpStep() {
         Auth: a WordPress <strong className="text-foreground">Application Password</strong> (Users → Profile → Application Passwords) sent as HTTP Basic. Any user with <code className="font-mono bg-muted px-1 rounded">edit_posts</code> can read; abilities enforce capability checks per call.
       </div>
       <${WPTabPanel}
-        className="ci-mcp-tabs"
+        className="os-mcp-tabs"
         activeClass="is-active"
         tabs=${[
           { name: 'claude',    title: 'Claude Desktop' },
@@ -1410,7 +1410,7 @@ function WizardShell({
     </div>
     <footer
       className="fixed bottom-0 right-0 z-20 bg-card border-t border-border py-3 flex items-center justify-between gap-3"
-      style=${{ left: 'var(--ci-sidebar-w, 0px)', paddingLeft: 'max(env(safe-area-inset-left), 2rem)', paddingRight: 'max(env(safe-area-inset-right), 2rem)' }}
+      style=${{ left: 'var(--os-sidebar-w, 0px)', paddingLeft: 'max(env(safe-area-inset-left), 2rem)', paddingRight: 'max(env(safe-area-inset-right), 2rem)' }}
     >
       <${WPButton}
         variant="secondary"
@@ -2004,7 +2004,7 @@ function SiteIdentityStep() {
     ${settings === null
       ? h`<div className="p-10 flex items-center justify-center"><${Spinner} /></div>`
       : h`<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <${Card} className="space-y-4 ci-wpds-fields">
+        <${Card} className="space-y-4 os-wpds-fields">
           <${WPTextControl}
             __nextHasNoMarginBottom
             __next40pxDefaultSize
@@ -2168,7 +2168,7 @@ function MyStepOne() {
 //    <Route path="/my-wizard/two"  element={<MyStepTwo />} />`;
 
   const WIZARD_COMPOSER_SNIPPET = `// Mount a Gutenberg block editor on any element. The app's assets must be
-// loaded on the page, and the target should sit inside a #ci-root-scoped
+// loaded on the page, and the target should sit inside a #os-app-root-scoped
 // container so the design tokens resolve.
 const editor = window.CI.mountComposer( '#my-editor', {
   value: '<!-- wp:paragraph --><p>Hello</p><!-- /wp:paragraph -->',
@@ -2217,7 +2217,7 @@ editor.unmount();`;
             <li><code className="font-mono bg-muted px-1 rounded">onChange(markup)</code> — fires on every edit with the serialized block markup (same shape as <code className="font-mono bg-muted px-1 rounded">value</code>; POST it straight to <code className="font-mono bg-muted px-1 rounded">wp/v2</code> <code className="font-mono bg-muted px-1 rounded">content</code>).</li>
             <li><code className="font-mono bg-muted px-1 rounded">placeholder</code>, <code className="font-mono bg-muted px-1 rounded">showInspector</code> (default true), <code className="font-mono bg-muted px-1 rounded">minHeight</code> (px), <code className="font-mono bg-muted px-1 rounded">className</code> — optional.</li>
           </ul>
-          <p>Exposed on <code className="font-mono bg-muted px-1 rounded">window.CI</code> for imperative mounting (target should sit inside a <code className="font-mono bg-muted px-1 rounded">#ci-root</code>-scoped container so the design tokens resolve):</p>
+          <p>Exposed on <code className="font-mono bg-muted px-1 rounded">window.CI</code> for imperative mounting (target should sit inside a <code className="font-mono bg-muted px-1 rounded">#os-app-root</code>-scoped container so the design tokens resolve):</p>
           <${Card} className="p-0 overflow-hidden">
             <${CodeBlock} copyValue=${WIZARD_COMPOSER_SNIPPET}>${WIZARD_COMPOSER_SNIPPET}</${CodeBlock}>
           </${Card}>
@@ -2439,7 +2439,7 @@ function SettingsHomePreferences() {
   };
   return h`<section className="space-y-3">
     <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Home page</h2>
-    <${Card} className="ci-wpds-fields">
+    <${Card} className="os-wpds-fields">
       <${WPCheckboxControl}
         __nextHasNoMarginBottom
         checked=${designVisible}
@@ -2708,7 +2708,7 @@ function SettingsAnthropicKey({ data, reload, toast }) {
     <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Anthropic API key</h2>
     <${Card} className="p-5 space-y-3">
       <p className="text-sm text-muted-foreground">Powers the <strong>Run agent → This site</strong> automation channel — agents run server-side via Claude. Stored write-only (never returned). ${isSet ? h`<span className="text-emerald-700 font-medium">A key is set.</span>` : 'No key set yet.'}</p>
-      <div className="ci-wpds-fields flex items-end gap-2">
+      <div className="os-wpds-fields flex items-end gap-2">
         <div className="flex-1">
           <${WPTextControl}
             __nextHasNoMarginBottom
@@ -2755,7 +2755,7 @@ function SettingsInstanceId({ data, reload, toast }) {
           ? h`<span> This site answers to <strong>${saved}</strong>.</span>`
           : h`<span> Not set — every scoped address resolves as another instance's.</span>`}
       </p>
-      <div className="ci-wpds-fields flex items-end gap-2">
+      <div className="os-wpds-fields flex items-end gap-2">
         <div className="flex-1">
           <${WPTextControl}
             __nextHasNoMarginBottom
@@ -2766,8 +2766,8 @@ function SettingsInstanceId({ data, reload, toast }) {
             disabled=${locked}
             placeholder="ci-a8c"
             help=${locked
-              ? 'Pinned in wp-config.php by the CI_INSTANCE_ID constant.'
-              : 'Lowercase letters, digits and hyphens, starting with "ci-". Keep it stable — changing it breaks every address pointing here.'}
+              ? 'Pinned in wp-config.php by the OS_INSTANCE_ID constant.'
+              : 'Lowercase letters, digits and hyphens, starting with "os-". Keep it stable — changing it breaks every address pointing here.'}
           />
         </div>
         <${WPButton} variant="primary" isBusy=${busy} disabled=${busy || locked || val.trim() === saved} onClick=${save}>Save</${WPButton}>
@@ -2785,11 +2785,11 @@ function SettingsMcpTools({ data, reload, toast }) {
   const allTools = (data.mcp_all_tools && data.mcp_all_tools.length)
     ? data.mcp_all_tools
     : [
-        'ci/skill-read','ci/skill-list','ci/skill-search',
-        'ci/wiki-read','ci/wiki-list','ci/wiki-search',
-        'ci/read','ci/search',
-        'ci/skill-create','ci/skill-update','ci/skill-append','ci/skill-delete',
-        'ci/wiki-create','ci/wiki-update','ci/wiki-append','ci/wiki-delete',
+        'os/skill-read','os/skill-list','os/skill-search',
+        'os/wiki-read','os/wiki-list','os/wiki-search',
+        'os/read','os/search',
+        'os/skill-create','os/skill-update','os/skill-append','os/skill-delete',
+        'os/wiki-create','os/wiki-update','os/wiki-append','os/wiki-delete',
       ];
 
   // Group by sub-type (skill / wiki / todo / etc.). ci/read + ci/search
@@ -2979,17 +2979,17 @@ function SettingsHealth({ data }) {
 // the module loads, its own registerNavRow call replaces the stub by key.
 const LAZY_APPS = [
   {
-    spec: 'ci/app-activity',
+    spec: 'os/app-activity',
     routes: ['/activity'],
     nav: { adminMenu: true, key: 'activity', label: 'Activity', icon: 'bolt', path: '/activity', order: 10, match: (p) => p === '/activity' || p.indexOf('/activity') === 0 },
   },
   {
-    spec: 'ci/app-notifications',
+    spec: 'os/app-notifications',
     routes: ['/notifications'],
     nav: { adminMenu: true, key: 'notifications', label: 'Notifications', icon: 'flag', path: '/notifications', order: 11, match: (p) => p === '/notifications' },
   },
   {
-    spec: 'ci/app-apps',
+    spec: 'os/app-apps',
     routes: ['/apps'],
     nav: { adminMenu: true, key: 'apps', label: 'Apps', icon: 'store', path: '/apps', order: 12, match: (p) => p === '/apps' },
   },
@@ -3000,12 +3000,12 @@ const LAZY_APPS = [
 // registrations replace the stubs by key when the import lands.
 LAZY_APPS.push(
   {
-    spec: 'ci/app-media',
+    spec: 'os/app-media',
     routes: [],
     editors: [ { key: 'media', listView: true, opts: {} } ],
   },
   {
-    spec: 'ci/app-wizards',
+    spec: 'os/app-wizards',
     routes: ['/w'],
     editors: [
       { key: 'wizard', opts: { selectable: true, title: 'Wizard (steps)', description: 'Multi-step guided flow with block-editor bodies.', newFile: { label: 'New wizard', desc: 'Composer with steps, body + tips block editors.' } } },
@@ -3094,10 +3094,10 @@ function App() {
 
 // Inject the toast slide-in keyframes once.
 (function injectKeyframes() {
-  if (document.getElementById('ci-keyframes')) return;
+  if (document.getElementById('os-keyframes')) return;
   const s = document.createElement('style');
-  s.id = 'ci-keyframes';
-  s.textContent = '@keyframes ci-toast { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }';
+  s.id = 'os-keyframes';
+  s.textContent = '@keyframes os-toast { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }';
   document.head.appendChild(s);
 })();
 
@@ -3107,9 +3107,9 @@ function App() {
 // Hand-rolled CSS rules keyed by the same media query give the same
 // breakpoint behaviour without forcing a Tailwind config change.
 (function injectSidebarCss() {
-  if (document.getElementById('ci-sidebar-css')) return;
+  if (document.getElementById('os-sidebar-css')) return;
   const s = document.createElement('style');
-  s.id = 'ci-sidebar-css';
+  s.id = 'os-sidebar-css';
   s.textContent = `
 /* Width/left are applied as INLINE styles by useSidebarWidth(); no
  * stylesheet rule needed for the CSS var. The resizer handle + the
@@ -3119,18 +3119,18 @@ function App() {
  * are 6+ of them. Wrap + space them out, and put a subtle bottom
  * border on the tablist so the active-state underline has something
  * to register against. */
-#ci-root .ci-mcp-tabs .components-tab-panel__tabs {
+#os-app-root .os-mcp-tabs .components-tab-panel__tabs {
   gap: 0.5rem;
   flex-wrap: wrap;
   border-bottom: 1px solid var(--border);
   margin-bottom: 0.25rem;
 }
-#ci-root .ci-mcp-tabs .components-tab-panel__tabs-item {
+#os-app-root .os-mcp-tabs .components-tab-panel__tabs-item {
   padding-left: 1rem !important;
   padding-right: 1rem !important;
 }
 
-.ci-sidebar-resizer {
+.os-sidebar-resizer {
   position: absolute;
   top: 0;
   right: -3px;
@@ -3145,12 +3145,12 @@ function App() {
   background: transparent;
   transition: background 120ms;
 }
-.ci-sidebar-resizer:hover, .ci-sidebar-resizer.dragging {
+.os-sidebar-resizer:hover, .os-sidebar-resizer.dragging {
   background: var(--ring);
 }
-.ci-sidebar-resizer.dragging { background: var(--ring); opacity: 0.55; }
+.os-sidebar-resizer.dragging { background: var(--ring); opacity: 0.55; }
 @media (max-width: 767px) {
-  .ci-sidebar-resizer { display: none; }
+  .os-sidebar-resizer { display: none; }
 }
 `;
   document.head.appendChild(s);
@@ -3158,7 +3158,7 @@ function App() {
 
 // Restore a previously-dragged tree-panel width on boot. Clamping mirrors
 // SidebarResizer's bounds so a stale localStorage value can't blow the
-// editor off-screen. Uses `--ci-tree-w` (NOT `--ci-sidebar-w` — that
+// editor off-screen. Uses `--os-tree-w` (NOT `--os-sidebar-w` — that
 // one is owned by context-app-shell for the WP admin menu offset and
 // must not be touched here).
 (function applyTreeWidth() {
@@ -3167,16 +3167,16 @@ function App() {
     if (stored) {
       const n = parseFloat(stored);
       if (Number.isFinite(n) && n >= 180 && n <= 640) {
-        document.documentElement.style.setProperty('--ci-tree-w', n + 'px');
+        document.documentElement.style.setProperty('--os-tree-w', n + 'px');
       }
     }
     // Also clean up any value the buggy previous version wrote to the
     // WP-admin shell's var so the layout doesn't stay shifted on
     // first load after upgrading. Drop only when it doesn't look like
     // a WP-admin menu width (160 / 36 mobile collapsed).
-    const stale = document.documentElement.style.getPropertyValue('--ci-sidebar-w');
+    const stale = document.documentElement.style.getPropertyValue('--os-sidebar-w');
     if (stale && parseFloat(stale) >= 180) {
-      document.documentElement.style.removeProperty('--ci-sidebar-w');
+      document.documentElement.style.removeProperty('--os-sidebar-w');
     }
     // Drop the misnamed legacy localStorage key from the first
     // resize implementation so it doesn't get re-applied on the next
@@ -3191,7 +3191,7 @@ function App() {
 // anywhere the CI app assets are loaded:
 //
 //   • inside the React app:  h`<${window.CI.GutenbergComposer} value=… onChange=… />`
-//   • imperatively on any node (ideally one inside a `#ci-root`-scoped
+//   • imperatively on any node (ideally one inside a `#os-app-root`-scoped
 //     container so the design tokens resolve):
 //       const editor = window.CI.mountComposer('#my-el', {
 //         value: '<!-- wp:paragraph --><p>Hi</p><!-- /wp:paragraph -->',
@@ -3210,7 +3210,7 @@ window.CI.apiVersion = API_VERSION;
 window.CI.GutenbergComposer = GutenbergComposer;
 // Public extension API — lets an external app module (or an inline script)
 // register a new editor without importing the ci/core module. ESM modules can
-// instead `import { registerEditor, h } from 'ci/core'`; this mirrors that for
+// instead `import { registerEditor, h } from 'os/core'`; this mirrors that for
 // non-module use. Example:
 //   CI.registerEditor('json', () => CI.h`<${MyJsonEditor} />`,
 //     { selectable: true, title: 'JSON', description: 'Raw JSON editor.' });
@@ -3227,7 +3227,7 @@ window.CI.CIRegistry = CIRegistry;
 window.CI.mountComposer = function mountComposer(target, props = {}) {
   const node = typeof target === 'string' ? document.querySelector(target) : target;
   if (!node) {
-    console.error('[core-index] mountComposer: target not found', target);
+    console.error('[os] mountComposer: target not found', target);
     return null;
   }
   const root = createRoot(node);
@@ -3238,30 +3238,30 @@ window.CI.mountComposer = function mountComposer(target, props = {}) {
 // ---------------------------------------------------------------------------
 // App registration — every built-in feature wires itself into the Core
 // registry here, grouped by target layer so the future module split is
-// mechanical (each block moves to its own ci-*.js and calls these same
+// mechanical (each block moves to its own os-*.js and calls these same
 // register fns at import time). Runs at module eval, before App mounts.
 // ---------------------------------------------------------------------------
 // layer: type — the nav/list/editor spine (TypeLayout, nav tree, DataViews,
 // ListView, NewFileButton, the meta/term/cpt editors, and the content-types/
-// structure routes) now lives in assets/ci-type.js, which self-registers them
+// structure routes) now lives in assets/os-type.js, which self-registers them
 // and sets the shared chrome on the registry on import (see the ci/type import
 // at the top of this file).
 
-// layer: app — Wizard editor + runner now live in assets/ci-app-wizards.js
+// layer: app — Wizard editor + runner now live in assets/os-app-wizards.js
 // (self-registers the 'wizard' editor + /w/:slug routes on import). The
 // /dev/wizards* developer docs stay here (they ride the onboarding shell).
 registerRoute('/dev/wizards', h`<${WizardsDocsPage} />`);
 registerRoute('/dev/wizards/demo', h`<${Navigate} to="/dev/wizards/demo/intro" replace />`);
 registerRoute('/dev/wizards/demo/:step', h`<${WizardsDemoStep} />`);
 
-// layer: app — Media now lives in its own leaf module (assets/ci-app-media.js)
+// layer: app — Media now lives in its own leaf module (assets/os-app-media.js)
 // and self-registers the 'media' editor + list view on import (top of file).
 
 // layer: app — Reminders + Calendar + Automations now live in their own leaf
-// module (assets/ci-app-reminders.js) and self-register on import (top of file).
+// module (assets/os-app-reminders.js) and self-register on import (top of file).
 
 // TypeLayout / NewFileButton / MobileMenuButton / starterTemplateFor are set on
-// the registry by ci-type.js (it owns them). EditorHeader / MarkdownInsertPopover
+// the registry by os-type.js (it owns them). EditorHeader / MarkdownInsertPopover
 // by the markdown leaf. Only the onboarding-owned chrome is published here:
 // WizardShell + SectionTipsPanel are shared with the onboarding/design wizard
 // (which stays here); the wizard editor/runner leaf reads them off the registry.
@@ -3290,22 +3290,22 @@ registerRoute('/design/homepage', h`<${Navigate} to="/design/body" replace />`);
 registerRoute('/design/footer', h`<${WizardFooterStep} />`);
 registerRoute('/design/styles', h`<${WizardStylesStep} />`);
 
-const rootEl = document.getElementById('ci-root');
+const rootEl = document.getElementById('os-app-root');
 if (rootEl) {
   // Load any external editor/app ES modules (BOOT.app_modules — dropped in
-  // uploads/ci-apps/ or added via the `core_index_app_modules`
+  // uploads/os-apps/ or added via the `core_index_app_modules`
   // filter) BEFORE the first render, so their registerEditor() calls land in
   // time to appear in the picker + dispatch. A module that fails to load is
   // logged, never fatal. This is the public "create your own editor" path:
-  // a module just does `import { registerEditor, h } from 'ci/core'` + registers.
+  // a module just does `import { registerEditor, h } from 'os/core'` + registers.
   (async () => {
     for (const url of (BOOT.app_modules || [])) {
       try { await import(url); }
-      catch (e) { console.error('[core-index] app module failed to load:', url, e); }
+      catch (e) { console.error('[os] app module failed to load:', url, e); }
     }
     createRoot(rootEl).render(h`<${App} />`);
     // Reveal the (otherwise opacity:0) root once React has painted at least
     // once. Two RAFs to ensure layout has settled past the first React commit.
-    requestAnimationFrame(() => requestAnimationFrame(() => rootEl.classList.add('ci-ready')));
+    requestAnimationFrame(() => requestAnimationFrame(() => rootEl.classList.add('os-ready')));
   })();
 }

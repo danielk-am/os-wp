@@ -4,7 +4,7 @@
  * Manage the Context app modules and, per app, the MCP abilities they expose:
  *   - toggle an individual ci/* ability on/off (writes the shared
  *     ci_mcp_disabled_tools deny-list the MCP server honours);
- *   - enable/disable a sideloaded app module (uploads/ci-apps/*.js).
+ *   - enable/disable a sideloaded app module (uploads/os-apps/*.js).
  * Built-in apps can't be unloaded (static imports) — their abilities are the
  * control surface. Self-registers the /apps route + nav row on import.
  *
@@ -12,10 +12,10 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { h, rest, registerRoute, registerNavRow, CIRegistry } from 'ci/core';
-import { Icon, Card, Badge, Spinner, PageHeading, SegmentedToggle } from 'ci/ui';
+import { h, rest, registerRoute, registerNavRow, CIRegistry } from 'os/core';
+import { Icon, Card, Badge, Spinner, PageHeading, SegmentedToggle } from 'os/ui';
 import { ToggleControl as WPToggleControl, ItemGroup as WPItemGroup, Item as WPItem } from '@wordpress/components';
-import { useToast } from 'ci/shell';
+import { useToast } from 'os/shell';
 
 const BASE = '/activity/v1/apps';
 
@@ -41,7 +41,7 @@ function Toggle({ on, onChange, disabled, label }) {
 function HowToCreatePanel({ dir }) {
   return h`<div className="text-sm text-muted-foreground space-y-3">
     <p>Drop a <code className="font-mono bg-muted px-1 rounded">.js</code> file in <code className="font-mono bg-muted px-1 rounded">${dir}</code>. It's a native ES module (no build step) that self-registers on import using the Context registry:</p>
-    <pre className="text-xs font-mono whitespace-pre-wrap bg-muted rounded-md p-3 text-foreground">${`import { h, rest, registerRoute, registerNavRow } from 'ci/core';
+    <pre className="text-xs font-mono whitespace-pre-wrap bg-muted rounded-md p-3 text-foreground">${`import { h, rest, registerRoute, registerNavRow } from 'os/core';
 
 function MyAppPage() {
   return h\`<div className="p-8">Hello from my app</div>\`;
@@ -65,7 +65,7 @@ function AppsPage() {
   const location = useLocation();
   const tab = location.pathname.replace(/\/+$/, '').endsWith('/create') ? 'create' : 'manage';
   const [apps, setApps] = useState(null);
-  const [dir, setDir] = useState('uploads/ci-apps/');
+  const [dir, setDir] = useState('uploads/os-apps/');
   const [expanded, setExpanded] = useState({});
 
   const load = useCallback(async () => {

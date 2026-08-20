@@ -2,13 +2,13 @@
 /**
  * Strict sanitizer for inline Content Types icons.
  *
- * @package Core_Index
+ * @package OS
  */
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Core_Index_Icon_SVG_Sanitizer' ) ) {
-	final class Core_Index_Icon_SVG_Sanitizer {
+if ( ! class_exists( 'OS_Icon_SVG_Sanitizer' ) ) {
+	final class OS_Icon_SVG_Sanitizer {
 
 		/**
 		 * Keep a small, inert SVG drawing subset.

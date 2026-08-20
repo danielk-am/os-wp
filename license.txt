@@ -1,15 +1,15 @@
-Core Index licence and third-party notices
+OS licence and third-party notices
 ===========================================
 
-Core Index
+OS
 ----------
 
-Files authored for Core Index are free software: you can redistribute them
+Files authored for OS are free software: you can redistribute them
 and/or modify them under the terms of the GNU General Public License as
 published by the Free Software Foundation, either version 2 of the License or
 (at your option) any later version.
 
-Core Index is distributed in the hope that it will be useful, but WITHOUT ANY
+OS is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
 A PARTICULAR PURPOSE. See the GNU General Public License for more details:
 https://www.gnu.org/licenses/gpl-2.0.html
@@ -346,7 +346,7 @@ Moment Timezone, and is-plain-object. It must not be removed.
 The standalone assistant additionally incorporates `@wordpress/icons`,
 `@wordpress/theme`, and `@wordpress/ui` from Gutenberg. Those portions are
 GPL-2.0-or-later and use the same Gutenberg copyright and source reference
-above. `@1dr0/ai-chat` and the Core Index host integration are also distributed
+above. `@1dr0/ai-chat` and the OS host integration are also distributed
 under GPL-2.0-or-later.
 
 htm, Apache License 2.0

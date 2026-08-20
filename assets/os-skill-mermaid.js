@@ -14,8 +14,8 @@
  * bundle the first time it mounts and publishes itself on CIRegistry.
  */
 
-import { h, CIRegistry, rest, registerRoute, registerNavRow } from 'ci/core';
-import { PageHeading, SelectMenu } from 'ci/ui';
+import { h, CIRegistry, rest, registerRoute, registerNavRow } from 'os/core';
+import { PageHeading, SelectMenu } from 'os/ui';
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 const MAX_NODES = 80; // keep generated diagrams readable; truncate beyond this.
@@ -329,7 +329,7 @@ export function SkillOutline( { content, title, slug } ) {
       loadMermaid().then( async ( mer ) => {
         if ( ! alive ) return;
         try {
-          const { svg } = await mer.render( 'ci-skill-outline-' + ( ++_renderSeq ), source );
+          const { svg } = await mer.render( 'os-skill-outline-' + ( ++_renderSeq ), source );
           if ( ! alive || ! ref.current ) return;
           ref.current.innerHTML = svg;
           // Reference nodes are clickable (handled by the viewport's delegated
@@ -425,7 +425,7 @@ export function SkillOutline( { content, title, slug } ) {
     onPointerDown=${ ( e ) => e.stopPropagation() }
     className="w-7 h-7 flex items-center justify-center rounded border border-border bg-card text-sm text-foreground hover:bg-muted shadow-sm">${ label }</button>`;
 
-  return h`<div className="ci-skill-outline">
+  return h`<div className="os-skill-outline">
     ${ backlinks.length ? h`<div className="mb-3">
       <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Referenced by</div>
       <ul className="space-y-1">
@@ -440,7 +440,7 @@ export function SkillOutline( { content, title, slug } ) {
     ${ status === 'empty' ? h`<p className="text-xs text-muted-foreground">Add headings, numbered steps, fenced blocks, markup tags, or [[references]] to the body to see a structure diagram.</p>` : null }
     ${ status === 'loading' ? h`<p className="text-xs text-muted-foreground">Rendering diagram…</p>` : null }
     ${ status === 'error' ? h`<p className="text-xs text-red-600">Could not render the diagram.<br/>${ err }</p>` : null }
-    <div ref=${ viewportRef } className="ci-skill-outline-viewport"
+    <div ref=${ viewportRef } className="os-skill-outline-viewport"
       style=${ { position: 'relative', overflow: 'hidden', height: '60vh', minHeight: '320px', display: status === 'ok' ? 'block' : 'none', cursor: dragging ? 'grabbing' : 'grab', touchAction: 'none', userSelect: 'none' } }
       onPointerDown=${ onPointerDown } onPointerMove=${ onPointerMove } onPointerUp=${ endDrag } onPointerLeave=${ endDrag } onClick=${ onViewportClick }>
       <div style=${ { position: 'absolute', top: '8px', right: '8px', zIndex: 2, display: 'flex', gap: '4px' } }>
@@ -448,7 +448,7 @@ export function SkillOutline( { content, title, slug } ) {
         ${ ctrl( '−', () => zoom( 1 / 1.2 ), 'Zoom out' ) }
         ${ ctrl( '⤢', reset, 'Reset view' ) }
       </div>
-      <div ref=${ ref } className="ci-skill-outline-svg"
+      <div ref=${ ref } className="os-skill-outline-svg"
         style=${ { transform: `translate(${ view.x }px, ${ view.y }px) scale(${ view.z })`, transformOrigin: '0 0' } } />
     </div>
   </div>`;
@@ -564,7 +564,7 @@ function buildGraphSvg( nodes, edges ) {
     const r = Math.min( 16, 6 + 2 * Math.sqrt( degree[ n.id ] || 0 ) );
     const label = ( n.broken ? n.ref : ( n.title || n.slug ) ) || '';
     const short = label.length > 24 ? label.slice( 0, 23 ) + '…' : label;
-    return `<g class="ci-graph-node" data-node="${ n.broken ? '' : 'n' + n.id }" style="cursor:${ n.broken ? 'default' : 'pointer' }">`
+    return `<g class="os-graph-node" data-node="${ n.broken ? '' : 'n' + n.id }" style="cursor:${ n.broken ? 'default' : 'pointer' }">`
       + `<title>${ escXml( label ) }</title>`
       + `<circle cx="${ X( p ) }" cy="${ Y( p ) }" r="${ r.toFixed( 1 ) }" fill="${ c.fill }" stroke="${ c.stroke }" stroke-width="1.5"${ n.broken ? ' stroke-dasharray="3 2"' : '' } />`
       + `<text x="${ X( p ) }" y="${ ( parseFloat( Y( p ) ) + r + 12 ).toFixed( 1 ) }" text-anchor="middle" font-size="10" font-family="inherit" fill="${ c.text }">${ escXml( short ) }</text>`
@@ -652,7 +652,7 @@ export function GraphOverview() {
   const endDrag = () => { dragRef.current = null; setDragging( false ); };
   const onClick = ( e ) => {
     if ( movedRef.current ) return;
-    const g = e.target.closest && e.target.closest( 'g.ci-graph-node' );
+    const g = e.target.closest && e.target.closest( 'g.os-graph-node' );
     if ( ! g ) return;
     const n = g.dataset.node && nodeMapRef.current[ g.dataset.node ];
     if ( n ) window.location.hash = `#/t/${ n.type }/${ n.id }`;

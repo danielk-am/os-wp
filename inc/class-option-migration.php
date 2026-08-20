@@ -41,7 +41,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class Core_Index_Option_Migration {
+class OS_Option_Migration {
 
 	/**
 	 * Exact renames, in migration order. The first two are ordered
@@ -136,7 +136,7 @@ class Core_Index_Option_Migration {
 
 	/**
 	 * The legacy name a canonical option came from, or null when the canonical
-	 * name is not one this class knows. `Core_Index_Options` reads the pairing
+	 * name is not one this class knows. `OS_Options` reads the pairing
 	 * from here so the map is declared exactly once.
 	 */
 	public static function legacy_name( string $canonical ): ?string {

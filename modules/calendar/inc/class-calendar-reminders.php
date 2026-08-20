@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-final class Core_Index_Calendar_Reminders {
+final class OS_Calendar_Reminders {
 
 	const CRON_HOOK               = 'core_index_calendar_dispatch_reminder';
 	const SYNC_HOOK               = 'core_index_calendar_sync_reminder';
@@ -869,12 +869,3 @@ final class Core_Index_Calendar_Reminders {
 	}
 }
 
-( static function (): void {
-	$active_plugins = (array) get_option( 'active_plugins', array() );
-	if (
-		! in_array( 'reminders-for-wordpress/reminders-for-wordpress.php', $active_plugins, true )
-		&& ! class_exists( 'Reminders_For_WordPress_Features' )
-	) {
-		class_alias( Core_Index_Calendar_Reminders::class, 'Reminders_For_WordPress_Features' );
-	}
-} )();

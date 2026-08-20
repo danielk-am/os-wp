@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-final class Core_Index_Content_Types_Dynamic_Types {
+final class OS_Content_Types_Dynamic_Types {
 
 	/** @var array<string,int> Post type keys registered from stored definitions. */
 	private static array $registered = array();

@@ -1,24 +1,24 @@
-/* Quick Add Reminder overlay — scoped to ci-qa-* */
+/* Quick Add Reminder overlay — scoped to os-qa-* */
 
-/* The popup mounts on document.body, outside #ci-root, so it can't inherit
+/* The popup mounts on document.body, outside #os-app-root, so it can't inherit
  * the app's shadcn tokens. Mirror them here (same oklch values as
  * assets/tailwind.css) on the shared root so the overlay matches the
  * in-app design language. */
-.ci-qa-root {
-	--ci-qa-primary: oklch( 0.5306 0.2210 268.0484 );
-	--ci-qa-primary-hover: oklch( 0.4359 0.2210 268.0103 );
-	--ci-qa-primary-foreground: oklch( 0.9549 0.0029 264.5418 );
-	--ci-qa-foreground: oklch( 0.2350 0 0 );
-	--ci-qa-muted-foreground: oklch( 0.5452 0 0 );
-	--ci-qa-muted: oklch( 0.9672 0 0 );
-	--ci-qa-card: oklch( 1 0 0 );
-	--ci-qa-border: oklch( 0.8914 0 0 );
-	--ci-qa-ring: oklch( 0.5306 0.2210 268.0484 / 0.30 );
-	--ci-qa-radius: 0.5rem;
-	--ci-qa-destructive: oklch( 0.5390 0.2095 28.0950 );
+.os-qa-root {
+	--os-qa-primary: oklch( 0.5306 0.2210 268.0484 );
+	--os-qa-primary-hover: oklch( 0.4359 0.2210 268.0103 );
+	--os-qa-primary-foreground: oklch( 0.9549 0.0029 264.5418 );
+	--os-qa-foreground: oklch( 0.2350 0 0 );
+	--os-qa-muted-foreground: oklch( 0.5452 0 0 );
+	--os-qa-muted: oklch( 0.9672 0 0 );
+	--os-qa-card: oklch( 1 0 0 );
+	--os-qa-border: oklch( 0.8914 0 0 );
+	--os-qa-ring: oklch( 0.5306 0.2210 268.0484 / 0.30 );
+	--os-qa-radius: 0.5rem;
+	--os-qa-destructive: oklch( 0.5390 0.2095 28.0950 );
 }
 
-.ci-qa-backdrop {
+.os-qa-backdrop {
 	position: fixed;
 	inset: 0;
 	background: rgba( 17, 24, 39, 0.45 );
@@ -27,72 +27,72 @@
 	align-items: flex-start;
 	justify-content: center;
 	padding-top: 14vh;
-	animation: ci-qa-fade 0.12s ease-out;
+	animation: os-qa-fade 0.12s ease-out;
 }
 
-@keyframes ci-qa-fade {
+@keyframes os-qa-fade {
 	from { opacity: 0; }
 	to   { opacity: 1; }
 }
 
-.ci-qa-panel {
+.os-qa-panel {
 	width: 560px;
 	max-width: 92vw;
-	background: var( --ci-qa-card );
-	border: 1px solid var( --ci-qa-border );
-	border-radius: calc( var( --ci-qa-radius ) + 2px );
+	background: var( --os-qa-card );
+	border: 1px solid var( --os-qa-border );
+	border-radius: calc( var( --os-qa-radius ) + 2px );
 	box-shadow: 0 16px 48px rgba( 16, 24, 40, 0.18 );
 	overflow: hidden;
 	font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-.ci-qa-header {
+.os-qa-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	padding: 12px 16px;
-	border-bottom: 1px solid var( --ci-qa-border );
+	border-bottom: 1px solid var( --os-qa-border );
 }
 
-.ci-qa-title {
+.os-qa-title {
 	font-weight: 600;
 	font-size: 13px;
-	color: var( --ci-qa-foreground );
+	color: var( --os-qa-foreground );
 }
 
-.ci-qa-hint {
+.os-qa-hint {
 	font-size: 11px;
-	color: var( --ci-qa-muted-foreground );
+	color: var( --os-qa-muted-foreground );
 }
 
 /* A proper bordered, rounded input — not the search-bar underline. */
-.ci-qa-input {
+.os-qa-input {
 	display: block;
 	width: calc( 100% - 32px );
 	margin: 16px;
-	border: 1px solid var( --ci-qa-border );
-	border-radius: var( --ci-qa-radius );
+	border: 1px solid var( --os-qa-border );
+	border-radius: var( --os-qa-radius );
 	padding: 11px 12px;
 	font-size: 15px;
 	line-height: 1.4;
 	font-family: inherit;
-	color: var( --ci-qa-foreground );
-	background: var( --ci-qa-card );
+	color: var( --os-qa-foreground );
+	background: var( --os-qa-card );
 	outline: none;
 	box-sizing: border-box;
 	transition: border-color 0.12s ease, box-shadow 0.12s ease;
 }
 
-.ci-qa-input::placeholder {
-	color: var( --ci-qa-muted-foreground );
+.os-qa-input::placeholder {
+	color: var( --os-qa-muted-foreground );
 }
 
-.ci-qa-input:focus {
-	border-color: var( --ci-qa-primary );
-	box-shadow: 0 0 0 3px var( --ci-qa-ring );
+.os-qa-input:focus {
+	border-color: var( --os-qa-primary );
+	box-shadow: 0 0 0 3px var( --os-qa-ring );
 }
 
-.ci-qa-preview {
+.os-qa-preview {
 	padding: 12px 16px;
 	margin: 0 16px 12px;
 	display: grid;
@@ -100,17 +100,17 @@
 	row-gap: 4px;
 	column-gap: 12px;
 	font-size: 13px;
-	background: var( --ci-qa-muted );
-	border: 1px solid var( --ci-qa-border );
-	border-radius: var( --ci-qa-radius );
+	background: var( --os-qa-muted );
+	border: 1px solid var( --os-qa-border );
+	border-radius: var( --os-qa-radius );
 }
 
-.ci-qa-row {
+.os-qa-row {
 	display: contents;
 }
 
-.ci-qa-k {
-	color: var( --ci-qa-muted-foreground );
+.os-qa-k {
+	color: var( --os-qa-muted-foreground );
 	font-weight: 500;
 	text-transform: uppercase;
 	font-size: 10px;
@@ -118,28 +118,28 @@
 	padding-top: 3px;
 }
 
-.ci-qa-v {
-	color: var( --ci-qa-foreground );
+.os-qa-v {
+	color: var( --os-qa-foreground );
 	font-variant-numeric: tabular-nums;
 }
 
-.ci-qa-pri-high   { color: #991b1b; font-weight: 600; }
-.ci-qa-pri-medium { color: #92400e; font-weight: 600; }
-.ci-qa-pri-low    { color: #1e40af; font-weight: 600; }
-.ci-qa-pri-none   { color: var( --ci-qa-muted-foreground ); }
+.os-qa-pri-high   { color: #991b1b; font-weight: 600; }
+.os-qa-pri-medium { color: #92400e; font-weight: 600; }
+.os-qa-pri-low    { color: #1e40af; font-weight: 600; }
+.os-qa-pri-none   { color: var( --os-qa-muted-foreground ); }
 
-.ci-qa-footer {
+.os-qa-footer {
 	display: flex;
 	justify-content: flex-end;
 	gap: 8px;
 	padding: 0 16px 16px;
 }
 
-.ci-qa-btn-primary,
-.ci-qa-btn-secondary {
+.os-qa-btn-primary,
+.os-qa-btn-secondary {
 	font-size: 13px;
 	padding: 8px 14px;
-	border-radius: var( --ci-qa-radius );
+	border-radius: var( --os-qa-radius );
 	font-weight: 500;
 	cursor: pointer;
 	font-family: inherit;
@@ -147,58 +147,58 @@
 	transition: background-color 0.12s ease, border-color 0.12s ease, opacity 0.12s ease;
 }
 
-.ci-qa-btn-secondary {
-	background: var( --ci-qa-card );
-	color: var( --ci-qa-foreground );
-	border-color: var( --ci-qa-border );
+.os-qa-btn-secondary {
+	background: var( --os-qa-card );
+	color: var( --os-qa-foreground );
+	border-color: var( --os-qa-border );
 }
 
-.ci-qa-btn-secondary:hover {
-	background: var( --ci-qa-muted );
+.os-qa-btn-secondary:hover {
+	background: var( --os-qa-muted );
 }
 
-.ci-qa-btn-primary {
-	background: var( --ci-qa-primary );
-	color: var( --ci-qa-primary-foreground );
+.os-qa-btn-primary {
+	background: var( --os-qa-primary );
+	color: var( --os-qa-primary-foreground );
 }
 
-.ci-qa-btn-primary:hover {
-	background: var( --ci-qa-primary-hover );
+.os-qa-btn-primary:hover {
+	background: var( --os-qa-primary-hover );
 }
 
-.ci-qa-btn-primary[disabled] {
+.os-qa-btn-primary[disabled] {
 	opacity: 0.5;
 	cursor: not-allowed;
 }
 
-.ci-qa-btn-primary[disabled]:hover {
-	background: var( --ci-qa-primary );
+.os-qa-btn-primary[disabled]:hover {
+	background: var( --os-qa-primary );
 }
 
-.ci-qa-toast {
+.os-qa-toast {
 	position: fixed;
 	bottom: 24px;
 	right: 24px;
-	background: var( --ci-qa-foreground );
-	color: var( --ci-qa-card );
+	background: var( --os-qa-foreground );
+	color: var( --os-qa-card );
 	padding: 10px 16px;
-	border-radius: var( --ci-qa-radius );
+	border-radius: var( --os-qa-radius );
 	box-shadow: 0 6px 16px rgba( 16, 24, 40, 0.22 );
 	font-size: 13px;
 	z-index: 100001;
-	animation: ci-qa-slide 0.18s ease-out;
+	animation: os-qa-slide 0.18s ease-out;
 }
 
-.ci-qa-toast.is-error {
-	background: var( --ci-qa-destructive );
+.os-qa-toast.is-error {
+	background: var( --os-qa-destructive );
 }
 
-.ci-qa-toast a {
-	color: var( --ci-qa-primary-foreground );
+.os-qa-toast a {
+	color: var( --os-qa-primary-foreground );
 	text-decoration: underline;
 }
 
-@keyframes ci-qa-slide {
+@keyframes os-qa-slide {
 	from { opacity: 0; transform: translateY( 6px ); }
 	to   { opacity: 1; transform: translateY( 0 ); }
 }

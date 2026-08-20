@@ -21,7 +21,7 @@ Today a type is assembled from two unrelated places, neither of which is a file.
 
 | Where | Holds | Read by |
 |---|---|---|
-| `os_content_type` posts | `type_key`, `singular`, `plural`, `config` | `Core_Index_Content_Types_Dynamic_Types::register_stored_types()` at `init:30` |
+| `os_content_type` posts | `type_key`, `singular`, `plural`, `config` | `OS_Content_Types_Dynamic_Types::register_stored_types()` at `init:30` |
 | `ci_field_groups_<slug>` option | Nested field tree plus `display` | `OS_Standalone_Admin::register_dynamic_meta()` |
 
 Four things follow from that split, and all four are the reason this document

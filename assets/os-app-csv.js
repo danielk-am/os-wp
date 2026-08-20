@@ -11,9 +11,9 @@
  */
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { h, rest, registerEditor, registerNewFile, typeMeta, CIRegistry } from 'ci/core';
-import { Icon, Spinner, SelectMenu } from 'ci/ui';
-import { useToast } from 'ci/shell';
+import { h, rest, registerEditor, registerNewFile, typeMeta, CIRegistry } from 'os/core';
+import { Icon, Spinner, SelectMenu } from 'os/ui';
+import { useToast } from 'os/shell';
 import { DataViews, filterSortAndPaginate } from '@wordpress/dataviews';
 import { Modal, Button as WPButton, TextControl, TextareaControl, Dropdown as WPDropdown, MenuGroup as WPMenuGroup, MenuItem as WPMenuItem, ToolbarGroup as WPToolbarGroup, ToolbarButton as WPToolbarButton } from '@wordpress/components';
 
@@ -26,7 +26,7 @@ const CHIP_RX = /\s*[,|]\s*/;
 const splitChips = ( v ) => String( v ?? '' ).split( CHIP_RX ).filter( ( p ) => p !== '' );
 
 // The app's canonical chip/label (matches the DataViews list chips elsewhere in
-// Core Index) so tags read the same wherever they appear.
+// OS) so tags read the same wherever they appear.
 const CHIPS_WRAP = { display: 'flex', flexWrap: 'wrap', gap: '4px' };
 const CHIP = {
   fontSize: '11px',
@@ -452,7 +452,7 @@ function CsvEditorPage() {
         ${ hasActiveFilters ? h`<${ WPButton } variant="link" onClick=${ () => setColFilters( {} ) }>Reset filters</${ WPButton }>` : null }
       </div>` : null }
 
-      <div className="flex-1 min-h-0 overflow-auto p-4 md:p-6 ci-dataviews">
+      <div className="flex-1 min-h-0 overflow-auto p-4 md:p-6 os-dataviews">
         <${ DataViews }
           data=${ shown }
           fields=${ fields }

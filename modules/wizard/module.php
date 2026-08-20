@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/inc/class-wizard-runner.php';
 
-final class Core_Index_Wizard_Builder {
+final class OS_Wizard_Builder {
 
 	const VERSION   = '1.0.2';
 	const NAMESPACE = 'wizard-builder';
@@ -405,24 +405,16 @@ final class Core_Index_Wizard_Builder {
 	}
 }
 
-( static function (): void {
-	if ( ! class_exists( 'Wizard_Builder_For_WordPress' ) ) {
-		class_alias( Core_Index_Wizard_Builder::class, 'Wizard_Builder_For_WordPress' );
-	}
-	if ( ! class_exists( 'Wizard_Builder_For_WordPress_Runner' ) ) {
-		class_alias( Core_Index_Wizard_Builder_Runner::class, 'Wizard_Builder_For_WordPress_Runner' );
-	}
-} )();
 
-Core_Index_Wizard_Builder::register();
-Core_Index_Wizard_Builder_Runner::register();
+OS_Wizard_Builder::register();
+OS_Wizard_Builder_Runner::register();
 OS_Standalone_Admin::boot(
 	array(
 		'slug' => 'os-wizard', 'name' => 'OS Wizard',
-		'mode' => 'wizard', 'rest_ns' => Core_Index_Wizard_Builder::REST_NS,
+		'mode' => 'wizard', 'rest_ns' => OS_Wizard_Builder::REST_NS,
 		'compat_field_options' => array( 'ci_field_groups_wizard_builder_for_wordpress' ),
 		'parent_slug' => 'tools.php', 'menu_priority' => 63,
-		'types' => Core_Index_Wizard_Builder::TYPES,
+		'types' => OS_Wizard_Builder::TYPES,
 		'description' => 'Build guided, multi-step WordPress workflows.',
 		'ai_chat_instructions' => 'Help administrators design and review these wizards. Ground answers in the visible steps and settings, preserve authored order and conditions, and distinguish previews from published behavior.',
 	),

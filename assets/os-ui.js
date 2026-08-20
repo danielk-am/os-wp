@@ -19,7 +19,7 @@ import {
 } from '@wordpress/components';
 // Already on the boot path via ci/type's static import, so this adds no fetch.
 import { DataViews as WPDataViews, filterSortAndPaginate } from '@wordpress/dataviews';
-import { h, CIRegistry } from 'ci/core';
+import { h, CIRegistry } from 'os/core';
 import {
   faPlus, faRotateLeft, faRotateRight, faGear, faTerminal, faTableColumns, faList, faTrash,
   faChevronUp, faChevronDown, faChevronLeft, faChevronRight, faXmark, faFile,
@@ -35,7 +35,7 @@ import {
 // name → Font Awesome Free icon object. Covers the old custom-SVG names, the
 // former @wordpress/icons chrome glyphs, and the CPT-icon palette. The shipped
 // UI deliberately uses only the GPL-compatible Free set.
-export const CI_ICONS = {
+export const OS_ICONS = {
   // chrome glyphs (former @wordpress/icons + custom set)
   'plus': faPlus, 'undo': faRotateLeft, 'redo': faRotateRight, 'refresh': faRotateRight, 'cog': faGear,
   'terminal': faTerminal,
@@ -102,7 +102,7 @@ function faSvg(fa, className, rest) {
 // Icon — FontAwesome-backed, name-based. Same API as before; unknown names
 // render nothing. (`viewBox`-pair string entries from the old set are gone.)
 export function Icon({ name, className = 'w-4 h-4', ...rest }) {
-  return faSvg(CI_ICONS[name], className, rest);
+  return faSvg(OS_ICONS[name], className, rest);
 }
 
 // WPGlyph — kept for back-compat. Now its `icon` prop is an `<Icon/>` element
@@ -120,12 +120,12 @@ export function WPGlyph({ icon, size = 20, className = '' }) {
 // CptIcon — render a content-type's icon: a custom inline SVG when one is set
 // (icon picker "Custom SVG" mode), otherwise the named FontAwesome glyph.
 // `iconSvg` passes through the strict server-side icon allowlist before it
-// reaches the client. The `.ci-cpt-svg` CSS sizes the inner <svg> to fill.
+// reaches the client. The `.os-cpt-svg` CSS sizes the inner <svg> to fill.
 export function CptIcon({ icon, iconSvg, fallback = 'folder', className = 'w-4 h-4' }) {
   if (iconSvg) {
-    return h`<span className=${'ci-cpt-svg ' + className} aria-hidden="true" dangerouslySetInnerHTML=${{ __html: iconSvg }} />`;
+    return h`<span className=${'os-cpt-svg ' + className} aria-hidden="true" dangerouslySetInnerHTML=${{ __html: iconSvg }} />`;
   }
-  return h`<${Icon} name=${icon && CI_ICONS[icon] ? icon : fallback} className=${className} />`;
+  return h`<${Icon} name=${icon && OS_ICONS[icon] ? icon : fallback} className=${className} />`;
 }
 
 // In-content page heading: the prominent title (with the page/type icon) plus an
@@ -143,7 +143,7 @@ export function PageHeading({ icon, iconSvg, title, description, fallback, class
   </header>`;
 }
 
-// SelectMenu is the one shared single- or multi-select contract for Core Index.
+// SelectMenu is the one shared single- or multi-select contract for OS.
 // It deliberately uses WPDS Dropdown + MenuItem rather than SelectControl or a
 // native <select>, so every authored selector opens the same custom popover.
 // Options accept either { value, label } or { key, title, description }.
@@ -184,16 +184,16 @@ export function SelectMenu({
     onChange?.(next.length ? next : selectedKeys);
   };
 
-  return h`<div className=${`ci-select-control ${className}`.trim()}>
+  return h`<div className=${`os-select-control ${className}`.trim()}>
     ${label && !hideLabelFromVision
-      ? h`<div className="components-base-control__label ci-select-label">${label}</div>`
+      ? h`<div className="components-base-control__label os-select-label">${label}</div>`
       : null}
     <${WPDropdown}
-      className="ci-filter-dd ci-select-dd"
+      className="os-filter-dd os-select-dd"
       popoverProps=${{ placement: 'bottom-start' }}
       renderToggle=${({ isOpen, onToggle }) => h`<button
           type="button"
-          className=${`ci-filter-toggle ci-select-toggle${isOpen ? ' is-open' : ''}`}
+          className=${`os-filter-toggle os-select-toggle${isOpen ? ' is-open' : ''}`}
           disabled=${disabled}
           aria-haspopup="listbox"
           aria-expanded=${isOpen}
@@ -205,11 +205,11 @@ export function SelectMenu({
             onToggle();
           }}
         >
-          <span className=${`ci-select-value${hasValue ? '' : ' ci-filter-placeholder'}`}>${toggleText}</span>
-          <${Icon} name="chevron-down" className="ci-filter-caret" />
+          <span className=${`os-select-value${hasValue ? '' : ' os-filter-placeholder'}`}>${toggleText}</span>
+          <${Icon} name="chevron-down" className="os-filter-caret" />
         </button>`}
-      renderContent=${({ onClose }) => h`<div className="ci-filter-menu">
-        <div className="ci-filter-menu-list" role="listbox" aria-label=${accessibleLabel} aria-multiselectable=${multiple || undefined}>
+      renderContent=${({ onClose }) => h`<div className="os-filter-menu">
+        <div className="os-filter-menu-list" role="listbox" aria-label=${accessibleLabel} aria-multiselectable=${multiple || undefined}>
           ${rows.map((option) => h`<${WPMenuItem}
             key=${keyOf(option)}
             role="option"
@@ -230,7 +230,7 @@ export function SelectMenu({
         </div>
       </div>`}
     />
-    ${help ? h`<p className="components-base-control__help ci-select-help">${help}</p>` : null}
+    ${help ? h`<p className="components-base-control__help os-select-help">${help}</p>` : null}
   </div>`;
 }
 
@@ -256,7 +256,7 @@ export function useViewMode(key, initial = 'grid') {
 }
 
 // Grid/list toggle. Renders a bare <ToolbarGroup> so it drops into an existing
-// `.ci-editor-toolbar` strip next to the other action groups.
+// `.os-editor-toolbar` strip next to the other action groups.
 export function ViewToggle({ view, onChange }) {
   return h`<${WPToolbarGroup}>
     <${WPToolbarButton} icon=${h`<${Icon} name="grid" />`} label="Grid view" showTooltip=${true} isActive=${view === 'grid'} onClick=${() => onChange('grid')} />
@@ -338,9 +338,9 @@ export function ResizablePane({ children, className = '', side = 'right', storag
       return next;
     });
   }, [clamp, maxWidth, minWidth, persist, side]);
-  return h`<aside className=${'ci-resizable-pane relative ' + className} style=${{ width: width + 'px', ...style }}>
+  return h`<aside className=${'os-resizable-pane relative ' + className} style=${{ width: width + 'px', ...style }}>
     <span
-      className=${'ci-pane-resizer ' + (side === 'right' ? 'is-left-edge' : 'is-right-edge')}
+      className=${'os-pane-resizer ' + (side === 'right' ? 'is-left-edge' : 'is-right-edge')}
       onPointerDown=${onPointerDown}
       onPointerMove=${onPointerMove}
       onPointerUp=${finishPointer}
@@ -397,7 +397,7 @@ export const Button = ({ children, variant = 'primary', size = 'md', className =
 };
 
 // Input → WPDS TextControl. Kept as a ci/ui export because companion plugins
-// import it (e.g. ci-reminders) even where they don't render it; dropping the
+// import it (e.g. os-reminders) even where they don't render it; dropping the
 // export breaks their module load. NOTE the contract differs from a native
 // input: WPDS onChange receives the VALUE string, not a DOM event.
 export const Input = ({ className = '', ...rest }) =>
@@ -434,7 +434,7 @@ export const Spinner = ({ className = '' }) =>
 // carry a synthetic `_id` (log feeds have no natural ids); callers supply the
 // field defs plus the initial view (title column, visible columns, default
 // sort). Used by the log-style lists (Activity, Notifications) so they read
-// like the CPT indexes (ci-type's DataViewsIndexReal owns those).
+// like the CPT indexes (os-type's DataViewsIndexReal owns those).
 export function LogTable({ rows, fields, initialView, searchLabel, onClickItem, isItemClickable }) {
   const [view, setView] = useState({
     type: 'table', search: '', page: 1, perPage: 24, filters: [], layout: {},
@@ -444,7 +444,7 @@ export function LogTable({ rows, fields, initialView, searchLabel, onClickItem, 
     try { return filterSortAndPaginate(rows, view, fields); }
     catch (e) { return { data: rows, paginationInfo: { totalItems: rows.length, totalPages: 1 } }; }
   }, [rows, view, fields]);
-  return h`<div className="ci-dataviews">
+  return h`<div className="os-dataviews">
     <${WPDataViews}
       data=${shown}
       fields=${fields}
@@ -464,7 +464,7 @@ export function LogTable({ rows, fields, initialView, searchLabel, onClickItem, 
 
 // Live-status pill for an app top bar: a solid dot with an expanding ping
 // ring inside a quiet bordered pill. The ring animation is the hand-owned
-// `ci-ping` keyframes in ci-utils.css (and sits still under
+// `os-ping` keyframes in os-utils.css (and sits still under
 // prefers-reduced-motion).
 export function LiveBadge({ label = 'Live', title }) {
   return h`<span title=${title}
@@ -480,8 +480,8 @@ export function LiveBadge({ label = 'Live', title }) {
 // ---------------------------------------------------------------------------
 // Toolbar — the one CI toolbar used everywhere (editor headers, the block
 // composer, app chrome). It is a thin wrapper over the WPDS `Toolbar` that
-// stamps the shared `ci-editor-toolbar` class. ALL of the look lives in CSS
-// (context-app-shell.css, keyed on `.ci-editor-toolbar`): a borderless
+// stamps the shared `os-editor-toolbar` class. ALL of the look lives in CSS
+// (context-app-shell.css, keyed on `.os-editor-toolbar`): a borderless
 // Gutenberg-style strip, blue admin-colour primary inserter, dark-filled
 // active toggles, compact 32px buttons, 20px square icons. Build new CI
 // toolbars from these three so they stay consistent without re-styling.
@@ -493,7 +493,7 @@ export function LiveBadge({ label = 'Live', title }) {
 // `ToolbarGroup`/`ToolbarButton` are re-exported verbatim — the styling is
 // class-driven, so no behavioural wrapper is needed.
 export function Toolbar({ label = 'Tools', className = '', children, ...rest }) {
-  return h`<${WPToolbar} label=${label} className=${`ci-editor-toolbar shrink-0 ${className}`.trim()} ...${rest}>${children}</${WPToolbar}>`;
+  return h`<${WPToolbar} label=${label} className=${`os-editor-toolbar shrink-0 ${className}`.trim()} ...${rest}>${children}</${WPToolbar}>`;
 }
 export const ToolbarGroup = WPToolbarGroup;
 export const ToolbarButton = WPToolbarButton;
@@ -516,7 +516,7 @@ export function SegmentedToggle({ value, onChange, options, className = '', aria
       isBlock=${false}
       __nextHasNoMarginBottom=${true}
       __next40pxDefaultSize=${true}
-      className=${`ci-segmented ${className}`.trim()}>
+      className=${`os-segmented ${className}`.trim()}>
       ${opts.map((o) => h`<${WPToggleGroupControlOption} key=${o.key} value=${o.key} label=${o.label} />`)}
     </${WPToggleGroupControl}>`;
   }

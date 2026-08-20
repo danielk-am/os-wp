@@ -7,14 +7,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-final class Core_Index_AI_Library_Memory_Capture {
+final class OS_AI_Library_Memory_Capture {
 
 	public static function register(): void {
 		add_action( 'llm_wiki_for_wordpress_remember', array( __CLASS__, 'remember' ), 10, 3 );
 	}
 
 	public static function remember( string $title, string $content, int $importance = 0 ): int {
-		if ( Core_Index_AI_Library::is_read_only() ) {
+		if ( OS_AI_Library::is_read_only() ) {
 			return 0;
 		}
 

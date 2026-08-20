@@ -7,7 +7,7 @@
  */
 const be = window.wp && window.wp.blockEditor;
 if (!be) {
-  console.error('[core-index] window.wp.blockEditor not available — wp-block-editor script not enqueued?');
+  console.error('[os] window.wp.blockEditor not available — wp-block-editor script not enqueued?');
 }
 
 export const BlockEditorProvider     = be?.BlockEditorProvider;

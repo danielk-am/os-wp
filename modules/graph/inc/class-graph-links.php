@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-final class Core_Index_Graph_Links {
+final class OS_Graph_Links {
 
 	public static function register(): void {
 		add_action( 'knowledge_graph_for_wordpress_link', array( __CLASS__, 'link' ), 10, 3 );

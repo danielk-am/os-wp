@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       OS
  * Description:       Skills, wiki, memory, work items, calendar, code, and the rest of the OS, as WordPress modules an agent can read and write.
- * Version:           3.4.1
+ * Version:           3.5.0
  * Requires at least: 6.9
  * Requires PHP:      8.1
  * Author:            Daniel Kam
@@ -36,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'OS_PLUGIN_FILE', __FILE__ );
 define( 'OS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'OS_URL', plugin_dir_url( __FILE__ ) );
-define( 'OS_VERSION', '3.4.1' );
+define( 'OS_VERSION', '3.5.0' );
 
 // Option access and the namespace migrations load before anything else and
 // outside the module system: they are how a site that ran the pre-rename code
@@ -47,9 +47,11 @@ OS_Updates::register();
 
 require_once OS_DIR . 'inc/class-options.php';
 require_once OS_DIR . 'inc/class-option-migration.php';
-Core_Index_Option_Migration::register();
+OS_Option_Migration::register();
 require_once OS_DIR . 'inc/class-type-migration.php';
-Core_Index_Type_Migration::register();
+OS_Type_Migration::register();
+require_once OS_DIR . 'inc/class-block-migration.php';
+OS_Block_Migration::register();
 
 // The shared runtime every module's admin app is built on. One copy now; there
 // were ten, kept in step by a sync script that no longer needs to exist.

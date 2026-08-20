@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * remote server. The provider owns transport only; model runtimes and their
  * credentials stay in the configured service.
  */
-final class Core_Index_AI_Library_LLM_Provider {
+final class OS_AI_Library_LLM_Provider {
 	private const OPTION        = 'core_index_llm_provider';
 	private const SECRET_OPTION = 'core_index_llm_api_key';
 	private const MAX_BODY      = 2097152;
@@ -30,7 +30,7 @@ final class Core_Index_AI_Library_LLM_Provider {
 	 */
 	public static function register_routes(): void {
 		register_rest_route(
-			Core_Index_AI_Library::REST_NS,
+			OS_AI_Library::REST_NS,
 			'/settings/llm-provider',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -39,7 +39,7 @@ final class Core_Index_AI_Library_LLM_Provider {
 			)
 		);
 		register_rest_route(
-			Core_Index_AI_Library::REST_NS,
+			OS_AI_Library::REST_NS,
 			'/llm/provider/test',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -48,7 +48,7 @@ final class Core_Index_AI_Library_LLM_Provider {
 			)
 		);
 		register_rest_route(
-			Core_Index_AI_Library::REST_NS,
+			OS_AI_Library::REST_NS,
 			'/llm/models',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -57,7 +57,7 @@ final class Core_Index_AI_Library_LLM_Provider {
 			)
 		);
 		register_rest_route(
-			Core_Index_AI_Library::REST_NS,
+			OS_AI_Library::REST_NS,
 			'/llm/chat/completions',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -286,7 +286,7 @@ final class Core_Index_AI_Library_LLM_Provider {
 		$url     = $settings['base_url'] . $path;
 		$headers = array(
 			'Accept'     => 'application/json',
-			'User-Agent' => 'Core-Index-AI-Library/' . Core_Index_AI_Library::VERSION,
+			'User-Agent' => 'Core-Index-AI-Library/' . OS_AI_Library::VERSION,
 		);
 		$key = self::api_key();
 		if ( '' !== $key ) {
@@ -453,5 +453,5 @@ final class Core_Index_AI_Library_LLM_Provider {
  * @return array<string,mixed>|WP_Error
  */
 function core_index_ai_library_llm_complete( array $messages, array $args = array() ): array|WP_Error {
-	return Core_Index_AI_Library_LLM_Provider::complete( $messages, $args );
+	return OS_AI_Library_LLM_Provider::complete( $messages, $args );
 }

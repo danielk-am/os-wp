@@ -27,19 +27,19 @@ import {
   ItemGroup as WPItemGroup, Item as WPItem, MenuItem as WPMenuItem,
   TabPanel as WPTabPanel, SlotFillProvider as WPSlotFillProvider,
 } from '@wordpress/components';
-import { h, BOOT, REST_BASE, rest, restWithHeaders, restAllPages, decodeEntities, CIRegistry, registerEditor, registerRoute, editorChoices, typeKeys, typeMeta, typeKind, isTermType, isNativeReplace, treeKind, applyTemplate, listUrl, normalizeItem, buildParentTree, buildPathTree, rankSearch, dataViewsSearchFields } from 'ci/core';
-import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, CI_ICONS, PICKABLE_ICONS, SelectCheckbox, CptIcon, SegmentedToggle, PageHeading, Toolbar as CIToolbar, SelectMenu } from 'ci/ui';
-import { useToast, useDialog } from 'ci/shell';
-import { GutenbergComposer, CodeEditor, useEditorFullWidth, fullWidthIcon, convertMarkdownToBlocks, looksConvertibleToBlocks, collectCanvasStyles, EDITOR_ICONS } from 'ci/editors';
+import { h, BOOT, REST_BASE, rest, restWithHeaders, restAllPages, decodeEntities, CIRegistry, registerEditor, registerRoute, editorChoices, typeKeys, typeMeta, typeKind, isTermType, isNativeReplace, treeKind, applyTemplate, listUrl, normalizeItem, buildParentTree, buildPathTree, rankSearch, dataViewsSearchFields } from 'os/core';
+import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, OS_ICONS, PICKABLE_ICONS, SelectCheckbox, CptIcon, SegmentedToggle, PageHeading, Toolbar as CIToolbar, SelectMenu } from 'os/ui';
+import { useToast, useDialog } from 'os/shell';
+import { GutenbergComposer, CodeEditor, useEditorFullWidth, fullWidthIcon, convertMarkdownToBlocks, looksConvertibleToBlocks, collectCanvasStyles, EDITOR_ICONS } from 'os/editors';
 import { BlockEditorProvider, BlockTools, BlockCanvas, BlockInspector, InspectorControls, useBlockProps, BlockToolbar as WPBlockToolbar, InnerBlocks, ListView as WPListView, BlockLibrary } from '@wordpress/block-editor';
 import { registerBlockType, createBlock, registerBlockVariation, unregisterBlockVariation } from '@wordpress/blocks';
 import { useDispatch as useWPDispatch } from '@wordpress/data';
-import { CI_BLUEPRINTS } from 'ci/blueprints';
-import { FG_FIELD_TYPES, FG_PRESENTATIONAL, FG_WIDTHS, fgCols, fgWithId, fgStrip, FG_COND_OPS, evalConditional, fgCptOptions, RelationshipField, TaxonomyField } from 'ci/engine';
+import { OS_BLUEPRINTS } from 'os/blueprints';
+import { FG_FIELD_TYPES, FG_PRESENTATIONAL, FG_WIDTHS, fgCols, fgWithId, fgStrip, FG_COND_OPS, evalConditional, fgCptOptions, RelationshipField, TaxonomyField } from 'os/engine';
 import { DataViews as WPDataViews, filterSortAndPaginate } from '@wordpress/dataviews';
 
 // Editors a CUSTOM content type may use (mirrors the server whitelist in
-// Core_Index_Settings::rest_add_cpt). The full editor registry also
+// OS_Settings::rest_add_cpt). The full editor registry also
 // includes built-in-only editors (code, reminder, …) that the
 // server drops for custom CPTs, so the picker only offers these generic ones.
 const CPT_EDITOR_KEYS = ['markdown', 'block', 'cpt', 'wizard'];
@@ -121,7 +121,7 @@ function SettingsCustomCpts({ data, reload, toast, dialog }) {
     <${Card} className="p-5 space-y-4">
       <p className="text-sm text-muted-foreground">
         Built-in: <code className="font-mono bg-muted px-1 rounded">os_skill</code>, <code className="font-mono bg-muted px-1 rounded">os_wiki</code>.
-        Add more for journals, recipes, meetings, etc. Each gets its own list view, editor, REST endpoints, and the same <code className="font-mono bg-muted px-1 rounded">${'ci/<type>-*'}</code> MCP tools.
+        Add more for journals, recipes, meetings, etc. Each gets its own list view, editor, REST endpoints, and the same <code className="font-mono bg-muted px-1 rounded">${'os/<type>-*'}</code> MCP tools.
       </p>
       ${cpts.length === 0
         ? h`<div className="text-sm text-muted-foreground italic">No custom CPTs registered yet.</div>`
@@ -254,10 +254,10 @@ function iconFuzzy(name, query) {
 // modes clears the other (render prefers iconSvg). iconSvg is sanitised
 // server-side before storage.
 function IconPicker({ value, valueSvg, onChange, disabled }) {
-  const current = value && CI_ICONS[value] ? value : 'folder';
+  const current = value && OS_ICONS[value] ? value : 'folder';
   // Only show names that actually resolve to a glyph (guards against drift
   // between PICKABLE_ICONS and the loaded FA set).
-  const allIcons = useMemo(() => PICKABLE_ICONS.filter((n) => CI_ICONS[n]), []);
+  const allIcons = useMemo(() => PICKABLE_ICONS.filter((n) => OS_ICONS[n]), []);
   const [q, setQ] = useState('');
   const [mode, setMode] = useState(valueSvg ? 'svg' : 'fa');
   const [svgDraft, setSvgDraft] = useState(valueSvg || '');
@@ -333,7 +333,7 @@ function IconPicker({ value, valueSvg, onChange, disabled }) {
             />
             <div className="flex items-center gap-2">
               ${svgDraft.trim()
-                ? h`<span className="ci-cpt-svg rounded border border-border text-foreground" style=${{ width: '2rem', height: '2rem' }} aria-hidden="true" dangerouslySetInnerHTML=${{ __html: svgDraft }} />`
+                ? h`<span className="os-cpt-svg rounded border border-border text-foreground" style=${{ width: '2rem', height: '2rem' }} aria-hidden="true" dangerouslySetInnerHTML=${{ __html: svgDraft }} />`
                 : h`<span className="inline-flex items-center justify-center rounded border border-border" style=${{ width: '2rem', height: '2rem' }}><span className="text-[9px] text-muted-foreground">prev</span></span>`}
               <input ref=${fileRef} type="file" accept=".svg,image/svg+xml" style=${{ display: 'none' }} onChange=${onFile} />
               <${Button} variant="secondary" size="sm" onClick=${() => fileRef.current && fileRef.current.click()}>Upload .svg</${Button}>
@@ -385,11 +385,11 @@ function FieldImage({ field, value, onChange }) {
       const sizes = (created && created.media_details && created.media_details.sizes) || {};
       setUrl((sizes.thumbnail && sizes.thumbnail.source_url) || created.source_url || '');
       onChange(created.id);
-    } catch (e) { console.error('[core-index] image upload failed:', e); }
+    } catch (e) { console.error('[os] image upload failed:', e); }
     finally { setBusy(false); }
   };
 
-  return h`<div className="ci-wpds-fields space-y-2">
+  return h`<div className="os-wpds-fields space-y-2">
     ${field.label ? h`<label className="block text-[11px] font-medium text-muted-foreground">${field.label}</label>` : null}
     <div className="flex items-center gap-3">
       ${id && url
@@ -585,7 +585,7 @@ function SettingsAdoptedCpts({ data, reload, toast, dialog }) {
       </p>
       ${candidates.length === 0 && orphans.length === 0
         ? h`<div className="text-sm text-muted-foreground italic">No third-party post types detected.</div>`
-        : h`<${WPTabPanel} tabs=${tabs} className="ci-cpt-tabs">
+        : h`<${WPTabPanel} tabs=${tabs} className="os-cpt-tabs">
             ${(tab) => (tab.name === 'managed' ? renderManaged() : tab.name === 'orphaned' ? renderOrphaned() : renderAvailable())}
           </${WPTabPanel}>`}
     </${Card}>
@@ -794,7 +794,7 @@ function IndentGuides({ depth }) {
 // to move it. Move = rewrite the `<!-- ci:path=... -->` content
 // marker. Folders themselves aren't draggable in v1 (would mass-rename all
 // children — non-trivial UX).
-const DRAG_MIME = 'application/x-ci-tree-item';
+const DRAG_MIME = 'application/x-os-tree-item';
 
 function parseDragData(e) {
   try { return JSON.parse(e.dataTransfer.getData(DRAG_MIME) || e.dataTransfer.getData('text/plain') || '{}'); }
@@ -1260,7 +1260,7 @@ function BulkActionBar({ meta, items, selectedIds, onClear, onMove, onTrash, onS
     </div>
     ${showMove ? h`<div className="space-y-2">
       <${WPTextControl}
-        list=${`ci-folders-${meta.cpt || meta.rest_base}`}
+        list=${`os-folders-${meta.cpt || meta.rest_base}`}
         value=${movePath}
         onChange=${setMovePath}
         placeholder="Target folder (empty = root)"
@@ -1272,7 +1272,7 @@ function BulkActionBar({ meta, items, selectedIds, onClear, onMove, onTrash, onS
           else if (e.key === 'Escape') { setShowMove(false); setMovePath(''); }
         }}
       />
-      <datalist id=${`ci-folders-${meta.cpt || meta.rest_base}`}>
+      <datalist id=${`os-folders-${meta.cpt || meta.rest_base}`}>
         ${folderPaths.map((p) => h`<option key=${p} value=${p} />`)}
       </datalist>
       <div className="flex gap-2 justify-end">
@@ -1672,7 +1672,7 @@ function PathTreeGrid({ tree, type, activeId, movingId, onDrop, onSelect, select
   const onExpandRow = (rowEl) => { const p = pathOfRow(rowEl); if (p) setOpen(p, true); };
   const onCollapseRow = (rowEl) => { const p = pathOfRow(rowEl); if (p) setOpen(p, false); };
 
-  return h`<${WPTreeGrid} className="ci-treegrid px-1" onExpandRow=${onExpandRow} onCollapseRow=${onCollapseRow}>
+  return h`<${WPTreeGrid} className="os-treegrid px-1" onExpandRow=${onExpandRow} onCollapseRow=${onCollapseRow}>
     ${rows.map((r) => h`<${WPTreeGridRow}
       key=${r.key}
       level=${r.level}
@@ -1725,10 +1725,10 @@ function TreePanel({ type, activeId, mobileOpen, onMobileClose }) {
   // in the tree even when no files live inside, so the user can drop files
   // into them. Once a file exists at that path, the folder is "real" from the
   // server's perspective too.
-  const extraFoldersKey = `ci-folders-${type}`;
+  const extraFoldersKey = `os-folders-${type}`;
   const [extraFolders, setExtraFolders] = useState([]);
   useEffect(() => {
-    try { setExtraFolders(JSON.parse(localStorage.getItem(`ci-folders-${type}`) || '[]')); }
+    try { setExtraFolders(JSON.parse(localStorage.getItem(`os-folders-${type}`) || '[]')); }
     catch { setExtraFolders([]); }
   }, [type]);
   useEffect(() => {
@@ -2161,7 +2161,7 @@ function TreePanel({ type, activeId, mobileOpen, onMobileClose }) {
         })()}
         ${mobileOpen ? h`<button onClick=${onMobileClose} className="md:hidden ml-1 text-muted-foreground text-xl leading-none w-7 h-7 flex items-center justify-center hover:text-foreground" aria-label="Close menu">×</button>` : null}
       </div>
-      <div className="px-2 py-2 border-b border-border shrink-0 ci-wpds-fields ci-sidebar-search">
+      <div className="px-2 py-2 border-b border-border shrink-0 os-wpds-fields os-sidebar-search">
         <${WPSearchControl}
           __nextHasNoMarginBottom
           size="compact"
@@ -2261,7 +2261,7 @@ const UNIFIED_TYPES = (() => {
     .map(([key]) => key);
   return [...UNIFIED_TYPES_BUILTIN, ...customs];
 })();
-const TYPE_ORDER_KEY = 'ci-type-order';
+const TYPE_ORDER_KEY = 'os-type-order';
 
 function TypeFolder({ type, q, collapsed, onToggle, activeType, activeId, onMobileClose, onMoveTypeFolder }) {
   const meta = typeMeta(type);
@@ -2279,7 +2279,7 @@ function TypeFolder({ type, q, collapsed, onToggle, activeType, activeId, onMobi
   const [lastClickedId, setLastClickedId] = useState(null);
   const [bulkBusy, setBulkBusy] = useState(false);
 
-  const extraFoldersKey = `ci-folders-${type}`;
+  const extraFoldersKey = `os-folders-${type}`;
   const [extraFolders, setExtraFolders] = useState([]);
   useEffect(() => {
     try { setExtraFolders(JSON.parse(localStorage.getItem(extraFoldersKey) || '[]')); }
@@ -2640,7 +2640,7 @@ function TreeGroupHeader({ label, hint }) {
 // short-circuit cross-domain drags. The payload is a JSON string
 // `{ kind: 'wp-leaf', tkey, id }` so the drop handler knows what to
 // update server-side.
-const WP_DRAG_MIME = 'application/x-ci-wp-leaf';
+const WP_DRAG_MIME = 'application/x-os-wp-leaf';
 
 // Reparent / categorise a WP post by hitting the typed REST endpoint
 // directly. Returns the updated item on success, throws on failure.
@@ -3084,7 +3084,7 @@ function UnifiedTreePanel({ activeType, activeId, mobileOpen, onMobileClose }) {
   // just the current type). Bumping the key lets the new default take effect
   // once even where an old 'unified' choice was persisted; the toggle still
   // saves the user's preference to the v2 key thereafter.
-  const TREE_MODE_KEY = 'ci-tree-mode-v2';
+  const TREE_MODE_KEY = 'os-tree-mode-v2';
   const [treeMode, setTreeMode] = useState(() => {
     try { return localStorage.getItem(TREE_MODE_KEY) || 'focused'; } catch { return 'focused'; }
   });
@@ -3112,7 +3112,7 @@ function UnifiedTreePanel({ activeType, activeId, mobileOpen, onMobileClose }) {
         </div>
         ${mobileOpen ? h`<button onClick=${onMobileClose} className="md:hidden ml-1 text-muted-foreground text-xl leading-none w-7 h-7 flex items-center justify-center hover:text-foreground" aria-label="Close menu">×</button>` : null}
       </div>
-      <div className="px-2 py-2 border-b border-border shrink-0 ci-wpds-fields ci-sidebar-search">
+      <div className="px-2 py-2 border-b border-border shrink-0 os-wpds-fields os-sidebar-search">
         <${WPSearchControl}
           __nextHasNoMarginBottom
           size="compact"
@@ -3206,7 +3206,7 @@ function UnifiedTreePanel({ activeType, activeId, mobileOpen, onMobileClose }) {
 /**
  * Layout used by all typed routes (/t/:type and /t/:type/:id).
  * TreePanel on the left for navigation; main content on the right.
- * Locks the document scroll via the ci-typed-route body class.
+ * Locks the document scroll via the os-typed-route body class.
  */
 // Context that exposes the mobile drawer's open action to descendants —
 // lets the EditorPage title bar host the menu button as a flex sibling
@@ -3233,14 +3233,14 @@ function MobileMenuButton({ className = '' }) {
   </button>`;
 }
 
-// Drag handle on the CI tree panel's right edge — sets `--ci-tree-w`
+// Drag handle on the CI tree panel's right edge — sets `--os-tree-w`
 // on :root while the user drags, persists the final value to
 // localStorage. Hidden under the md breakpoint (mobile drawer has
 // its own w-72 / max-md:w-64 sizing). Clamped to [180px, 640px] to
 // keep both panes usable.
 //
-// IMPORTANT: this is `--ci-tree-w`, NOT `--ci-sidebar-w`. The latter
-// is already used by context-app-shell.{js,css} to offset #ci-root by
+// IMPORTANT: this is `--os-tree-w`, NOT `--os-sidebar-w`. The latter
+// is already used by context-app-shell.{js,css} to offset #os-app-root by
 // the WP admin menu width. Reusing the same name would drag the
 // entire app mount-point around alongside the tree.
 function SidebarResizer() {
@@ -3259,10 +3259,10 @@ function SidebarResizer() {
     const onMove = (ev) => {
       const dx = ev.clientX - startX;
       const next = Math.max(180, Math.min(640, startW + dx));
-      root.style.setProperty('--ci-tree-w', next + 'px');
+      root.style.setProperty('--os-tree-w', next + 'px');
       // Inline styles read this on every render via useSidebarWidth;
       // dispatch a custom event so the consumer re-renders mid-drag.
-      window.dispatchEvent(new CustomEvent('ci-tree-w-change'));
+      window.dispatchEvent(new CustomEvent('os-tree-w-change'));
     };
     const onUp = () => {
       node.classList.remove('dragging');
@@ -3270,7 +3270,7 @@ function SidebarResizer() {
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', onUp);
       try {
-        const val = root.style.getPropertyValue('--ci-tree-w');
+        const val = root.style.getPropertyValue('--os-tree-w');
         if (val) localStorage.setItem('ci:tree-w', val);
       } catch {}
     };
@@ -3283,14 +3283,14 @@ function SidebarResizer() {
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
     e.preventDefault();
     const root = document.documentElement;
-    const cur = parseFloat(getComputedStyle(root).getPropertyValue('--ci-tree-w')) || 256;
+    const cur = parseFloat(getComputedStyle(root).getPropertyValue('--os-tree-w')) || 256;
     const next = Math.max(180, Math.min(640, cur + (e.key === 'ArrowRight' ? 16 : -16)));
-    root.style.setProperty('--ci-tree-w', next + 'px');
-    window.dispatchEvent(new CustomEvent('ci-tree-w-change'));
+    root.style.setProperty('--os-tree-w', next + 'px');
+    window.dispatchEvent(new CustomEvent('os-tree-w-change'));
     try { localStorage.setItem('ci:tree-w', next + 'px'); } catch {}
   };
   return h`<div
-    className="ci-sidebar-resizer"
+    className="os-sidebar-resizer"
     onMouseDown=${onPointerDown}
     onKeyDown=${onKeyDown}
     role="separator"
@@ -3301,7 +3301,7 @@ function SidebarResizer() {
 }
 
 // Live-tracked sidebar width. The CSS var on :root is the canonical
-// source, but a stylesheet rule like `.ci-main-md { left: var(...) }`
+// source, but a stylesheet rule like `.os-main-md { left: var(...) }`
 // ties on specificity with Tailwind's `left-0` and the winner depends
 // on stylesheet load order — which proved non-deterministic in
 // practice. Inline styles win unconditionally, so we read the var on
@@ -3309,7 +3309,7 @@ function SidebarResizer() {
 function useSidebarWidth() {
   const read = () => {
     if (typeof window === 'undefined') return '16rem';
-    const v = getComputedStyle(document.documentElement).getPropertyValue('--ci-tree-w').trim();
+    const v = getComputedStyle(document.documentElement).getPropertyValue('--os-tree-w').trim();
     return v || '16rem';
   };
   const isMd = () => typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches;
@@ -3324,10 +3324,10 @@ function useSidebarWidth() {
     // without burning a setInterval forever (only runs while
     // SidebarResizer dispatches drag events).
     const onResize = () => setWidth(read());
-    window.addEventListener('ci-tree-w-change', onResize);
+    window.addEventListener('os-tree-w-change', onResize);
     return () => {
       mq.removeEventListener('change', onMq);
-      window.removeEventListener('ci-tree-w-change', onResize);
+      window.removeEventListener('os-tree-w-change', onResize);
     };
   }, []);
   return { width, isMd: md };
@@ -3439,40 +3439,40 @@ function FilterDropdown({ label, options, value, onChange, open, onOpenChange })
   // Closing externally (a sibling opening) skips WPDropdown's onClose, so clear
   // the search box here whenever the menu is not open.
   useEffect(() => { if (!open) setQ(''); }, [open]);
-  return h`<div className="ci-filter">
-    <div className="ci-filter-label">${label}</div>
+  return h`<div className="os-filter">
+    <div className="os-filter-label">${label}</div>
     <${WPDropdown}
-      className="ci-filter-dd"
+      className="os-filter-dd"
       popoverProps=${{ placement: 'bottom-start' }}
       open=${open}
       onToggle=${(next) => onOpenChange && onOpenChange(next)}
       onClose=${() => setQ('')}
       renderToggle=${({ isOpen, onToggle }) => h`<div
-          className=${`ci-filter-toggle${isOpen ? ' is-open' : ''}`}
+          className=${`os-filter-toggle${isOpen ? ' is-open' : ''}`}
           role="button" tabIndex=${0} aria-haspopup="listbox" aria-expanded=${isOpen}
           onClick=${onToggle}
           onKeyDown=${(e) => { if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') { e.preventDefault(); onToggle(); } }}
         >
-          <div className="ci-filter-chips">
+          <div className="os-filter-chips">
             ${selected.length === 0
-              ? h`<span className="ci-filter-placeholder">All ${label.toLowerCase()}</span>`
-              : selected.map((v) => h`<span key=${v} className="ci-filter-chip">
-                  <span className="ci-filter-chip-label">${v}</span>
-                  <button type="button" className="ci-filter-chip-x" aria-label=${`Remove ${v}`}
+              ? h`<span className="os-filter-placeholder">All ${label.toLowerCase()}</span>`
+              : selected.map((v) => h`<span key=${v} className="os-filter-chip">
+                  <span className="os-filter-chip-label">${v}</span>
+                  <button type="button" className="os-filter-chip-x" aria-label=${`Remove ${v}`}
                     onClick=${(e) => { e.stopPropagation(); toggle(v); }}>
                     <${WPGlyph} icon=${iconClose} size=${8} />
                   </button>
                 </span>`)}
           </div>
-          <${WPGlyph} icon=${iconChevronDown} size=${12} className="ci-filter-caret" />
+          <${WPGlyph} icon=${iconChevronDown} size=${12} className="os-filter-caret" />
         </div>`}
-      renderContent=${() => h`<div className="ci-filter-menu">
-        ${showSearch ? h`<div className="ci-filter-menu-search">
+      renderContent=${() => h`<div className="os-filter-menu">
+        ${showSearch ? h`<div className="os-filter-menu-search">
           <${WPSearchControl} __nextHasNoMarginBottom value=${q} onChange=${setQ} placeholder=${`Filter ${label.toLowerCase()}…`} />
         </div>` : null}
-        <div className="ci-filter-menu-list">
+        <div className="os-filter-menu-list">
           ${visible.length === 0
-            ? h`<div className="ci-filter-menu-empty">No matches</div>`
+            ? h`<div className="os-filter-menu-empty">No matches</div>`
             : visible.map((o) => h`<${WPMenuItem}
                 key=${o}
                 role="menuitemcheckbox"
@@ -3481,21 +3481,21 @@ function FilterDropdown({ label, options, value, onChange, open, onOpenChange })
                 onClick=${() => toggle(o)}
               >${o}</${WPMenuItem}>`)}
         </div>
-        ${selected.length ? h`<div className="ci-filter-menu-foot">
+        ${selected.length ? h`<div className="os-filter-menu-foot">
           <${WPButton} variant="link" onClick=${() => onChange([])}>Clear</${WPButton}>
         </div>` : null}
       </div>`}
     />
     ${/* Per-column clear, in a reserved-height slot so toggling it never shifts
         the row (replaces the row-level "Clear filters" link that did). */''}
-    <div className="ci-filter-clear" style=${{ minHeight: '1.125rem', marginTop: '0.375rem' }}>
+    <div className="os-filter-clear" style=${{ minHeight: '1.125rem', marginTop: '0.375rem' }}>
       ${selected.length ? h`<button type="button" className="text-xs text-muted-foreground hover:text-foreground hover:underline" onClick=${() => onChange([])}>Clear</button>` : null}
     </div>
   </div>`;
 }
 
 function DataViewsIndex({ type, meta, items, loading, native, isTerm, descriptor }) {
-  const layoutKey = `ci-index-layout-${type}`;
+  const layoutKey = `os-index-layout-${type}`;
   const [layout, setLayout] = useState(() => {
     try { return localStorage.getItem(layoutKey) || 'list'; } catch { return 'list'; }
   });
@@ -3612,7 +3612,7 @@ function DataViewsIndex({ type, meta, items, loading, native, isTerm, descriptor
     </div>`;
   };
 
-  const card = (it) => linkWrap(it, 'no-underline text-foreground', h`<${WPCard} size="small" isRounded=${true} className="h-full ci-card-hover">
+  const card = (it) => linkWrap(it, 'no-underline text-foreground', h`<${WPCard} size="small" isRounded=${true} className="h-full os-card-hover">
     <${WPCardBody}>
       <div className="flex items-start gap-2">
         <${WPGlyph} icon=${iconPage} size=${24} className="shrink-0 text-muted-foreground mt-px" />
@@ -3649,7 +3649,7 @@ function DataViewsIndex({ type, meta, items, loading, native, isTerm, descriptor
 
   return h`<div>
     <div className="flex flex-wrap items-center gap-2 mb-4">
-      <div className="flex-1 min-w-[180px] ci-wpds-fields ci-index-search">
+      <div className="flex-1 min-w-[180px] os-wpds-fields os-index-search">
         <${WPSearchControl}
           __nextHasNoMarginBottom
           value=${search}
@@ -3657,7 +3657,7 @@ function DataViewsIndex({ type, meta, items, loading, native, isTerm, descriptor
           placeholder=${`Search ${meta.label.toLowerCase()}…`}
         />
       </div>
-      <div className="ci-wpds-fields">
+      <div className="os-wpds-fields">
         <${SelectMenu}
           __nextHasNoMarginBottom
           __next40pxDefaultSize
@@ -3673,7 +3673,7 @@ function DataViewsIndex({ type, meta, items, loading, native, isTerm, descriptor
       </div>
     </div>
 
-    ${hasFilters ? h`<div className="flex flex-wrap items-start gap-2 mb-4 ci-wpds-fields">
+    ${hasFilters ? h`<div className="flex flex-wrap items-start gap-2 mb-4 os-wpds-fields">
       ${dTaxes.filter((t) => showFilter(`tax:${t.slug}`)).map((t) => {
         const all = (taxTerms[t.slug] && taxTerms[t.slug].length)
           ? taxTerms[t.slug]
@@ -3701,8 +3701,8 @@ function DataViewsIndex({ type, meta, items, loading, native, isTerm, descriptor
           onOpenChange=${(o) => setOpenFilter(o ? fk : null)}
         />`;
       })}
-      ${boolFields.filter((f) => showFilter(`meta:${f.key}`)).map((f) => h`<div key=${'bl-' + f.key} className="ci-filter">
-          <div className="ci-filter-label">${f.label}</div>
+      ${boolFields.filter((f) => showFilter(`meta:${f.key}`)).map((f) => h`<div key=${'bl-' + f.key} className="os-filter">
+          <div className="os-filter-label">${f.label}</div>
           <${SelectMenu}
             __nextHasNoMarginBottom __next40pxDefaultSize
             value=${filters[`meta:${f.key}`] || ''}
@@ -3754,23 +3754,23 @@ function CellPencil({ onActivate, label = 'Edit' }) {
   return h`<button type="button" tabIndex=${-1} title=${label}
     onMouseDown=${(e) => e.stopPropagation()}
     onClick=${(e) => { e.stopPropagation(); onActivate(e.currentTarget.getBoundingClientRect()); }}
-    className="ci-cell-pencil shrink-0 ml-1 p-0.5 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground"
+    className="os-cell-pencil shrink-0 ml-1 p-0.5 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground"
   ><${Icon} name="file-pen" className="w-4 h-4" /></button>`;
 }
 
 // Shared overlay for every in-table editor (field popovers + the content
-// editor): a dimmed backdrop confined to the #ci-root app region (so the WP
-// chrome stays clear) with the card centred inside it. Portaled into #ci-root
-// so the theme vars + #ci-root-scoped utilities apply and the card escapes the
+// editor): a dimmed backdrop confined to the #os-app-root app region (so the WP
+// chrome stays clear) with the card centred inside it. Portaled into #os-app-root
+// so the theme vars + #os-app-root-scoped utilities apply and the card escapes the
 // table cell's overflow. `children` is the card; it should stopPropagation.
 function CiCenteredOverlay({ onClose, children }) {
   const overlayStyle = {
-    top: 'var(--ci-adminbar-h, 32px)',
-    left: 'var(--ci-sidebar-w, 160px)',
+    top: 'var(--os-adminbar-h, 32px)',
+    left: 'var(--os-sidebar-w, 160px)',
     right: 0,
     bottom: 0,
   };
-  const host = (typeof document !== 'undefined' && document.getElementById('ci-root')) || (typeof document !== 'undefined' ? document.body : null);
+  const host = (typeof document !== 'undefined' && document.getElementById('os-app-root')) || (typeof document !== 'undefined' ? document.body : null);
   const tree = h`<div className="fixed z-[100000] flex items-center justify-center p-4" style=${overlayStyle} onClick=${onClose}>
     <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
     ${children}
@@ -3798,7 +3798,7 @@ function EditableCell({ display, onActivate, cursor = 'pointer', children }) {
 }
 
 // Shared pop-out card for every in-table cell editor: a centred overlay over the
-// #ci-root app region with a titled card, the control as `children`, and a
+// #os-app-root app region with a titled card, the control as `children`, and a
 // Cancel / Save footer. Esc closes; each control wires its own Enter-to-save.
 // This is the single edit surface so text, enum, boolean, and list all edit the
 // same way (it generalises the former TextPopover).
@@ -3866,7 +3866,7 @@ function EditCellText({ value, onCommit, type = 'text', multi = false, roomy = f
   const [open, setOpen] = useState(false);
   const display = multi
     ? ((Array.isArray(value) && value.length) ? chipRow(value) : h`<span>${' '}</span>`)
-    : h`<span className="ci-cell-text">${String(value ?? '') || ' '}</span>`;
+    : h`<span className="os-cell-text">${String(value ?? '') || ' '}</span>`;
   return h`<${EditableCell} display=${display} cursor=${multi ? 'pointer' : 'text'} onActivate=${() => setOpen(true)}>
     ${open ? h`<${CellTextEditor} title=${label} value=${value} type=${type} multi=${multi} roomy=${roomy}
         onClose=${() => setOpen(false)} onCommit=${onCommit} />` : null}
@@ -3880,7 +3880,7 @@ function EditCellSelect({ value, options, onCommit, label = 'Edit' }) {
   const base = (Array.isArray(options) ? options : []).filter(Boolean);
   const cur = value == null ? '' : String(value);
   const opts = (cur && !base.includes(cur)) ? [cur, ...base] : base;
-  const display = h`<span className="ci-cell-text">${value ? decodeEntities(String(value)) : ' '}</span>`;
+  const display = h`<span className="os-cell-text">${value ? decodeEntities(String(value)) : ' '}</span>`;
   return h`<${EditableCell} display=${display} onActivate=${() => setOpen(true)}>
     ${open ? h`<${CellSelectEditor} title=${label} value=${cur} options=${opts}
         onClose=${() => setOpen(false)} onCommit=${onCommit} />` : null}
@@ -3976,13 +3976,13 @@ function PathTreeIndex({ type, tree, searching, loading }) {
         type="button"
         key=${'d:' + c.fullPath}
         onClick=${() => toggle(c.fullPath)}
-        className="ci-tree-row w-full flex items-center gap-2 pr-3 text-sm hover:bg-muted/50 text-left"
+        className="os-tree-row w-full flex items-center gap-2 pr-3 text-sm hover:bg-muted/50 text-left"
         style=${{ paddingLeft: `${12 + depth * 22}px`, height: '44px' }}
       >
-        <${Icon} name=${isOpen ? 'chevron-down' : 'chevron-right'} className="w-3 h-3 ci-tree-muted shrink-0" />
-        <${Icon} name=${isOpen ? 'folder-open' : 'folder'} className="w-4 h-4 ci-tree-muted shrink-0" />
+        <${Icon} name=${isOpen ? 'chevron-down' : 'chevron-right'} className="w-3 h-3 os-tree-muted shrink-0" />
+        <${Icon} name=${isOpen ? 'folder-open' : 'folder'} className="w-4 h-4 os-tree-muted shrink-0" />
         <span className="font-medium truncate">${c.name}</span>
-        <span className="text-xs ci-tree-muted shrink-0">${n}</span>
+        <span className="text-xs os-tree-muted shrink-0">${n}</span>
       </button>`);
       if (isOpen) walk(c, depth + 1);
     }
@@ -3990,10 +3990,10 @@ function PathTreeIndex({ type, tree, searching, loading }) {
       rows.push(h`<a
         key=${'f:' + it.id}
         href=${`#/t/${type}/${it.id}`}
-        className="ci-tree-row flex items-center gap-2 pr-3 text-sm hover:bg-muted/50 no-underline"
+        className="os-tree-row flex items-center gap-2 pr-3 text-sm hover:bg-muted/50 no-underline"
         style=${{ paddingLeft: `${12 + depth * 22 + 22}px`, height: '44px', color: 'inherit' }}
       >
-        <${Icon} name="file" className="w-3.5 h-3.5 ci-tree-muted shrink-0" />
+        <${Icon} name="file" className="w-3.5 h-3.5 os-tree-muted shrink-0" />
         <span className="truncate" style=${{ fontWeight: 500 }}>${decodeEntities(it.title?.rendered || it.slug || '(untitled)')}</span>
         ${it.status && it.status !== 'publish' ? h`<${Badge} variant="secondary">${it.status}</${Badge}>` : null}
         <span className="ml-auto text-xs shrink-0" style=${{ color: 'var(--wp-components-color-gray-700,#757575)' }}>${it.modified ? new Date(it.modified).toLocaleDateString() : ''}</span>
@@ -4007,8 +4007,8 @@ function PathTreeIndex({ type, tree, searching, loading }) {
       ? h`<div className="py-10 flex justify-center"><${Spinner} /></div>`
       : !rows.length
       ? h`<div className="py-10 text-center text-sm text-muted-foreground">${searching ? 'No matches.' : 'Nothing here yet.'}</div>`
-      : h`<div className="ci-tree">
-          <div className="ci-tree-head flex items-center pr-3 h-9 text-[11px] font-medium uppercase tracking-wide ci-tree-muted" style=${{ paddingLeft: '12px' }}>
+      : h`<div className="os-tree">
+          <div className="os-tree-head flex items-center pr-3 h-9 text-[11px] font-medium uppercase tracking-wide os-tree-muted" style=${{ paddingLeft: '12px' }}>
             <span>Title</span>
             <span className="ml-auto">Updated</span>
           </div>
@@ -4029,7 +4029,7 @@ function DataViewsIndexReal({ type, meta, items, loading, native, isTerm, descri
   // the row open in the lighter inline quick-edit card.
   const [contentItem, setContentItem] = useState(null);
   const [inlineItem, setInlineItem] = useState(null);
-  const layoutKey = `ci-index-layout-${type}`;
+  const layoutKey = `os-index-layout-${type}`;
   // Built-in types have no cpt-schema descriptor; fall back to the taxonomy
   // filters published on the type's BOOT meta (e.g. the universal os_tag).
   const dTaxes = descriptor?.taxonomies || meta?.taxonomies || [];
@@ -4107,7 +4107,7 @@ function DataViewsIndexReal({ type, meta, items, loading, native, isTerm, descri
         id: `meta:${f.key}`, label: f.label, getValue: ({ item }) => String(item.meta?.[f.key] ?? ''),
         render: ({ item }) => {
           if (editMode === 'edit') return h`<${EditCellSelect} value=${item.meta?.[f.key] ?? ''} options=${f.enum || []} label=${f.label} onCommit=${(v) => onSaveField && onSaveField(item, 'meta', f.key, v)} />`;
-          const v = item.meta?.[f.key]; return (v === '' || v == null) ? '' : h`<span className="ci-cell-text">${decodeEntities(String(v))}</span>`;
+          const v = item.meta?.[f.key]; return (v === '' || v == null) ? '' : h`<span className="os-cell-text">${decodeEntities(String(v))}</span>`;
         },
       });
     }
@@ -4137,7 +4137,7 @@ function DataViewsIndexReal({ type, meta, items, loading, native, isTerm, descri
             const onCommit = (v) => onSaveField && onSaveField(item, 'meta', f.key, v);
             return h`<${EditCellText} type=${editInputType(f.type)} roomy=${wantsTextPopover(f.type, val)} value=${val} label=${f.label} onCommit=${onCommit} />`;
           }
-          const v = item.meta?.[f.key]; return (v === '' || v == null) ? '' : h`<span className="ci-cell-text">${decodeEntities(String(v))}</span>`;
+          const v = item.meta?.[f.key]; return (v === '' || v == null) ? '' : h`<span className="os-cell-text">${decodeEntities(String(v))}</span>`;
         },
       });
     }
@@ -4170,7 +4170,7 @@ function DataViewsIndexReal({ type, meta, items, loading, native, isTerm, descri
           // other read cells.
           if (editMode !== 'edit') {
             if (!preview) return '';
-            const cls = 'ci-cell-text no-underline text-sm text-muted-foreground hover:text-foreground';
+            const cls = 'os-cell-text no-underline text-sm text-muted-foreground hover:text-foreground';
             return (native && item.edit_url)
               ? h`<a href=${item.edit_url} className=${cls} title=${preview}>${preview}</a>`
               : h`<${Link} to=${`/t/${type}/${item.id}`} className=${cls} title=${preview}>${preview}</${Link}>`;
@@ -4180,7 +4180,7 @@ function DataViewsIndexReal({ type, meta, items, loading, native, isTerm, descri
           // modal. Clicking the text opens the modal too.
           return h`<div className="group flex items-center gap-1">
             <button type="button" onClick=${(e) => { e.stopPropagation(); setContentItem(item); }}
-              className="ci-cell-text min-w-0 flex-1 text-left text-sm text-muted-foreground hover:text-foreground"
+              className="os-cell-text min-w-0 flex-1 text-left text-sm text-muted-foreground hover:text-foreground"
               title=${preview || 'Edit content'}>${preview || h`<span className="italic opacity-70">Add content…</span>`}</button>
             <button type="button" title="Quick edit (inline)"
               onClick=${(e) => { e.stopPropagation(); setInlineItem(item); }}
@@ -4355,8 +4355,8 @@ function DataViewsIndexReal({ type, meta, items, loading, native, isTerm, descri
     return buildPathTree(found);
   }, [isPathTree, prefiltered, treeQ]);
 
-  return h`<div className="ci-dataviews">
-    ${hasFilters ? h`<div className="flex flex-wrap items-start gap-2 mb-3 ci-wpds-fields">
+  return h`<div className="os-dataviews">
+    ${hasFilters ? h`<div className="flex flex-wrap items-start gap-2 mb-3 os-wpds-fields">
       ${dTaxes.filter((t) => showFilter(`tax:${t.slug}`)).map((t) => {
         const all = (taxTerms[t.slug] && taxTerms[t.slug].length) ? taxTerms[t.slug] : [...new Set(items.flatMap((it) => termsOf(it, t)))].sort();
         const fk = `tax:${t.slug}`;
@@ -4370,8 +4370,8 @@ function DataViewsIndexReal({ type, meta, items, loading, native, isTerm, descri
           value=${filters[fk] || []} onChange=${(n) => setFilter(fk, n)}
           open=${openFilter === fk} onOpenChange=${(o) => setOpenFilter(o ? fk : null)} />`;
       })}
-      ${boolFields.filter((f) => showFilter(`meta:${f.key}`)).map((f) => h`<div key=${'bl-' + f.key} className="ci-filter">
-        <div className="ci-filter-label">${f.label}</div>
+      ${boolFields.filter((f) => showFilter(`meta:${f.key}`)).map((f) => h`<div key=${'bl-' + f.key} className="os-filter">
+        <div className="os-filter-label">${f.label}</div>
         <${SelectMenu} __nextHasNoMarginBottom __next40pxDefaultSize value=${filters[`meta:${f.key}`] || ''}
           onChange=${(v) => setFilter(`meta:${f.key}`, v)}
           options=${[{ label: 'Any', value: '' }, { label: 'Yes', value: 'yes' }, { label: 'No', value: 'no' }]} />
@@ -4385,22 +4385,22 @@ function DataViewsIndexReal({ type, meta, items, loading, native, isTerm, descri
               query is live). The bridge's SearchControl is a different
               component generation — white fill, icon in a LEFT prefix, other
               paddings, mirrored glyph — and CSS could not close all of that.
-              Styles: .ci-tree-search in ci-dataviews-skin.css. */''}
+              Styles: .os-tree-search in os-dataviews-skin.css. */''}
           <div className="dataviews__view-actions"><div className="dataviews__search">
-            <div className="ci-tree-search" role="search">
+            <div className="os-tree-search" role="search">
               <input
                 type="search"
-                className="ci-tree-search__input"
+                className="os-tree-search__input"
                 value=${treeQ}
                 onChange=${(e) => setTreeQ(e.target.value)}
                 placeholder=${`Search ${meta.label.toLowerCase()}…`}
                 aria-label=${`Search ${meta.label.toLowerCase()}`}
               />
               ${treeQ
-                ? h`<button type="button" className="ci-tree-search__btn" aria-label="Clear search" onClick=${() => setTreeQ('')}>
+                ? h`<button type="button" className="os-tree-search__btn" aria-label="Clear search" onClick=${() => setTreeQ('')}>
                     <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M12 13.06l3.712 3.713 1.061-1.06L13.061 12l3.712-3.712-1.06-1.06L12 10.938 8.288 7.227l-1.061 1.06L10.939 12l-3.712 3.712 1.06 1.061L12 13.061z" /></svg>
                   </button>`
-                : h`<span className="ci-tree-search__btn" aria-hidden="true">
+                : h`<span className="os-tree-search__btn" aria-hidden="true">
                     <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M13 5c-3.3 0-6 2.7-6 6 0 1.4.5 2.7 1.3 3.7l-3.8 3.8 1.1 1.1 3.8-3.8c1 .8 2.3 1.3 3.7 1.3 3.3 0 6-2.7 6-6S16.3 5 13 5zm0 10.5c-2.5 0-4.5-2-4.5-4.5s2-4.5 4.5-4.5 4.5 2 4.5 4.5-2 4.5-4.5 4.5z" /></svg>
                   </span>`}
             </div>
@@ -4731,7 +4731,7 @@ function ListView() {
 
 // "+ New" button. Every type creates its item directly in its default editor.
 // The old new-file picker (per-language for code, shape for skills) is gone: it
-// had no consumer left once code snippets moved to the ci-code companion and
+// had no consumer left once code snippets moved to the os-code companion and
 // skills moved to the Fields editor, and nothing read the language or shape it
 // stashed in sessionStorage.
 function NewFileButton({ type, label, className, onMobileClose, size, variant, iconOnly }) {
@@ -5078,7 +5078,7 @@ function MetaEditorPage() {
               : h`<${Icon} name="check" className="w-3.5 h-3.5" />`}
             ${saving ? 'Saving…' : ((dirty || isNew) ? 'Unsaved' : 'Saved')}
           </span>
-          <div className="ci-editor-toolbar flex items-center">
+          <div className="os-editor-toolbar flex items-center">
             <${WPToolbarGroup}>
               <${WPToolbarButton} isActive=${fullWidth} onClick=${toggleFullWidth} label=${fullWidth ? 'Use readable width' : 'Expand to full width'} showTooltip=${true}>
                 ${fullWidthIcon(fullWidth)}
@@ -5193,7 +5193,7 @@ function TermEditorPage() {
       </header>
 
       <div className="flex-1 p-6 md:p-8 mx-auto w-full max-w-2xl space-y-5">
-        <${Card} className="space-y-4 ci-wpds-fields">
+        <${Card} className="space-y-4 os-wpds-fields">
           <${WPTextControl}
             __nextHasNoMarginBottom
             __next40pxDefaultSize
@@ -5261,7 +5261,7 @@ function FgTermManager({ slug }) {
 // the field group when the CPT is created (see rest_add_cpt). Editors that need
 // bespoke runtime (Automation/Reminders' cron/channels) still ship as code leaf
 // apps — these cover the "structured-data editor" cases no-code.
-// CI_BLUEPRINTS now lives in the ci/blueprints data module (the ci-type split);
+// OS_BLUEPRINTS now lives in the ci/blueprints data module (the os-type split);
 // imported at the top of this file.
 
 // Cross-tab progress bus: one shared BroadcastChannel for all editor instances,
@@ -5270,7 +5270,7 @@ function FgTermManager({ slug }) {
 let _ciProgressBus;
 function ciProgressBus() {
   if (_ciProgressBus !== undefined) return _ciProgressBus;
-  try { _ciProgressBus = ('BroadcastChannel' in window) ? new BroadcastChannel('ci-progress') : null; }
+  try { _ciProgressBus = ('BroadcastChannel' in window) ? new BroadcastChannel('os-progress') : null; }
   catch { _ciProgressBus = null; }
   return _ciProgressBus;
 }
@@ -5299,7 +5299,7 @@ function ManageSection({ title, description, children }) {
       <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">${title}</h2>
       ${description ? h`<p className="text-xs text-muted-foreground mt-0.5">${description}</p>` : null}
     </div>
-    <${Card} className="p-5 space-y-4 ci-wpds-fields">${children}</${Card}>
+    <${Card} className="p-5 space-y-4 os-wpds-fields">${children}</${Card}>
   </section>`;
 }
 
@@ -5315,7 +5315,7 @@ function CreateTypePage() {
   const navigate = useNavigate();
   const toast = useToast();
   const AppHeader = CIRegistry.AppHeader;
-  const bp = CI_BLUEPRINTS.find((b) => b.id === params.get('bp')) || {};
+  const bp = OS_BLUEPRINTS.find((b) => b.id === params.get('bp')) || {};
 
   const [label, setLabel] = useState(bp.label || '');
   const [plural, setPlural] = useState(bp.plural || '');
@@ -5362,9 +5362,9 @@ function CreateTypePage() {
           field_display: bp.display || {},
         }),
       });
-      // Seed the type's JSON Schema (status enum + x-ci-lifecycle state
-      // machine + x-ci-relations edge map) as a schema override, so
-      // ci-schema-get orients agents to the legal transitions and the type
+      // Seed the type's JSON Schema (status enum + x-os-lifecycle state
+      // machine + x-os-relations edge map) as a schema override, so
+      // os-schema-get orients agents to the legal transitions and the type
       // graph. Best-effort — a schema failure must not block the create.
       if (bp.schema && typeof bp.schema === 'object') {
         try {
@@ -5390,7 +5390,7 @@ function CreateTypePage() {
     <${AppHeader} title=${bp.label ? `New ${bp.label}` : 'New content type'} icon="cube" onBack=${() => navigate('/content-types')} backLabel="Content Types" actions=${headerActions} />
     <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain" style=${{ touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' }}>
       <form onSubmit=${submit} className="p-6 md:p-10 mx-auto w-full max-w-3xl space-y-8 pb-32">
-        <${PageHeading} icon=${CI_ICONS[icon] ? icon : 'cube'} title=${bp.label ? `New ${bp.label}` : 'New content type'} description=${bp.description || 'Register a custom post type. Define its fields and taxonomies after creating it.'} />
+        <${PageHeading} icon=${OS_ICONS[icon] ? icon : 'cube'} title=${bp.label ? `New ${bp.label}` : 'New content type'} description=${bp.description || 'Register a custom post type. Define its fields and taxonomies after creating it.'} />
 
         <${ManageSection} title="Identity" description="Names and the slug used for storage and URLs.">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -5563,14 +5563,14 @@ function ContentTypesPage() {
           <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Start from a blueprint</h2>
           <p className="text-sm text-muted-foreground">One-click scaffold a new type with a ready-made field set + editor. You can rename it and tweak fields afterward in its Structure tab.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            ${CI_BLUEPRINTS.map((bp) => h`<button
+            ${OS_BLUEPRINTS.map((bp) => h`<button
               key=${bp.id}
               type="button"
               onClick=${() => navigate(`/structure/new?bp=${bp.id}`)}
               className="text-left border border-border rounded-lg bg-card p-4 transition-colors hover:border-primary hover:shadow-sm"
             >
               <div className="flex items-center gap-2.5">
-                <${Icon} name=${CI_ICONS[bp.icon] ? bp.icon : 'cube'} className="w-5 h-5 shrink-0 text-muted-foreground" />
+                <${Icon} name=${OS_ICONS[bp.icon] ? bp.icon : 'cube'} className="w-5 h-5 shrink-0 text-muted-foreground" />
                 <span className="flex-1 min-w-0 truncate font-semibold">${bp.label}</span>
               </div>
               <p className="mt-2 text-xs text-muted-foreground leading-snug">${bp.description}</p>
@@ -5586,7 +5586,7 @@ function ContentTypesPage() {
                   key=${key}
                   type="button"
                   onClick=${() => navigate(`/structure/${key}`)}
-                  className="text-left ci-ct-card border border-border rounded-lg bg-card p-4 hover:border-primary hover:shadow-sm transition-colors"
+                  className="text-left os-ct-card border border-border rounded-lg bg-card p-4 hover:border-primary hover:shadow-sm transition-colors"
                 >
                   <div className="flex items-center gap-2.5">
                     <${CptIcon} icon=${meta.icon} iconSvg=${meta.icon_svg} fallback="cube" className="w-5 h-5 shrink-0 text-muted-foreground" />
@@ -5837,7 +5837,7 @@ function StructureEditorPage() {
   const renderFields = () => h`<div className="space-y-4">
     <div className="flex items-center justify-between gap-2 flex-wrap">
       <p className="text-xs text-muted-foreground flex-1 min-w-[200px]">Add fields with the + inserter; click a block to edit its settings (incl. width) in the side panel; reorder with the block toolbar. Group | Stack | Row lay fields out.</p>
-      <div className="ci-wpds-fields w-40">
+      <div className="os-wpds-fields w-40">
         <${SelectMenu}
           __nextHasNoMarginBottom __next40pxDefaultSize
           label="Default sort"
@@ -5850,7 +5850,7 @@ function StructureEditorPage() {
       </div>
       ${/* List layout is a TYPE setting, not a per-visit toggle: the list
           renders as a plain table or as the os_path folder tree. */''}
-      <div className="ci-wpds-fields w-40">
+      <div className="os-wpds-fields w-40">
         <${SelectMenu}
           __nextHasNoMarginBottom __next40pxDefaultSize
           label="List layout"
@@ -5968,7 +5968,7 @@ function StructureEditorPage() {
         <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-accent text-accent-foreground">${kindBadge}</span>
       </div>
       ${reg.kind === 'adopted' ? h`<${Fragment}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ci-wpds-fields">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 os-wpds-fields">
           <${WPTextControl} __nextHasNoMarginBottom __next40pxDefaultSize label="Label (plural)" value=${reg.label || ''} onChange=${(v) => setReg2({ label: v })} />
           <${WPTextControl} __nextHasNoMarginBottom __next40pxDefaultSize label="Singular" value=${reg.singular || ''} onChange=${(v) => setReg2({ singular: v })} />
         </div>
@@ -6030,11 +6030,11 @@ function StructureEditorPage() {
   // global Content Types → Schemas tab, scoped to this type. For blueprint
   // types the override IS the schema (seeded on create).
   const renderSchema = () => h`<div className="space-y-3">
-    <p className="text-sm text-muted-foreground">JSON Schema drives frontmatter validation on save and orients agents via <code className="font-mono bg-muted px-1 rounded">ci-schema-get</code> (including the <code className="font-mono bg-muted px-1 rounded">x-ci-lifecycle</code> state machine and <code className="font-mono bg-muted px-1 rounded">x-ci-relations</code> edges). Edit the override to customise per site; clear it to fall back to the plugin's file schema.</p>
+    <p className="text-sm text-muted-foreground">JSON Schema drives frontmatter validation on save and orients agents via <code className="font-mono bg-muted px-1 rounded">os-schema-get</code> (including the <code className="font-mono bg-muted px-1 rounded">x-os-lifecycle</code> state machine and <code className="font-mono bg-muted px-1 rounded">x-os-relations</code> edges). Edit the override to customise per site; clear it to fall back to the plugin's file schema.</p>
     <${SettingsSchemaOne} cpt=${cpt} fileSchema=${settingsData?.schemas?.[cpt]?.file ?? null} effectiveSchema=${settingsData?.schemas?.[cpt]?.effective ?? null} override=${settingsData?.schema_overrides?.[cpt] || ''} reload=${load} toast=${toast} dialog=${dialog} />
   </div>`;
   // Per-type AGENTS.md tab — the agent orientation doc served over MCP via
-  // ci/type-orient and folded into ci-schema-get output. File docs ship with
+  // ci/type-orient and folded into os-schema-get output. File docs ship with
   // the type (inc/schemas/<cpt>.agents.md); the override is site-authored.
   const renderAgents = () => h`<div className="space-y-3">
     <p className="text-sm text-muted-foreground">The AGENTS.md for this type: what it's for, when to create vs update, field conventions, and lifecycle rules. Agents read it over MCP (<code className="font-mono bg-muted px-1 rounded">ci/type-orient</code>) before working with ${meta.label}.</p>
@@ -6072,8 +6072,8 @@ function StructureEditorPage() {
         breathes like the Site Editor; the other tabs honour the footer's
         Comfortable / Full width preference. */''}
     <div className=${'p-6 md:p-10 mx-auto w-full space-y-6 pb-32 ' + ((fullWidth || activeTab === 'fields') ? 'max-w-none' : 'max-w-4xl')}>
-      <${PageHeading} icon=${meta.icon && CI_ICONS[meta.icon] ? meta.icon : 'cube'} title=${`Manage ${meta.label}`} description=${h`<span>Register, then define fields and taxonomies for ${meta.label}. Fields become real post meta (REST + <code className="font-mono text-xs bg-muted px-1 rounded">get_post_meta</code>); taxonomies are queryable terms. Changes apply on the next page load.</span>`} />
-      <${WPTabPanel} key=${activeTab} className="ci-settings-tabs" initialTabName=${activeTab} tabs=${structTabs}
+      <${PageHeading} icon=${meta.icon && OS_ICONS[meta.icon] ? meta.icon : 'cube'} title=${`Manage ${meta.label}`} description=${h`<span>Register, then define fields and taxonomies for ${meta.label}. Fields become real post meta (REST + <code className="font-mono text-xs bg-muted px-1 rounded">get_post_meta</code>); taxonomies are queryable terms. Changes apply on the next page load.</span>`} />
+      <${WPTabPanel} key=${activeTab} className="os-settings-tabs" initialTabName=${activeTab} tabs=${structTabs}
         onSelect=${(name) => { if (name !== activeTab) navigate(`/structure/${type}/${name}`); }}>
         ${(t) => h`<div className="pt-6">${
           t.name === 'general' ? renderGeneral()
@@ -6089,7 +6089,7 @@ function StructureEditorPage() {
           <${WPDropdown}
             popoverProps=${{ placement: 'bottom-start' }}
             renderToggle=${({ isOpen, onToggle }) => h`<button type="button" className="text-muted-foreground hover:text-foreground hover:underline" onClick=${onToggle} aria-expanded=${isOpen}>Sections</button>`}
-            renderContent=${() => h`<div className="p-3 space-y-3 ci-wpds-fields" style=${{ minWidth: '200px' }}>
+            renderContent=${() => h`<div className="p-3 space-y-3 os-wpds-fields" style=${{ minWidth: '200px' }}>
               <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Show tabs</div>
               ${allStructTabs.map((t) => h`<${WPToggleControl} key=${t.name} __nextHasNoMarginBottom label=${t.title} checked=${structTabVisible(t.name)} onChange=${(on) => setStructTabVisible(t.name, on)} />`)}
               <p className="text-xs text-muted-foreground pt-1">Hidden tabs reappear here. Save fields to persist.</p>
@@ -6276,7 +6276,7 @@ function FieldConfigBody({ f, patch, remove, fields, disp }) {
       // + toggleable, but not deletable (it's the core editor, not a meta field).
       // Body format: what an EMPTY body opens as. A non-empty body always locks
       // to what it actually contains; this only decides the starting editor for
-      // new posts of the type. The .llm option exists only while the ci-llm
+      // new posts of the type. The .llm option exists only while the os-llm
       // companion is active (the registry key is its presence signal).
       const llmAvailable = !!CIRegistry.LlmBodyEditor;
       return h`<div className="space-y-4">
@@ -6405,16 +6405,16 @@ function FieldConfigBody({ f, patch, remove, fields, disp }) {
 // the Group | Stack | Row layout containers, and one variation per attached
 // taxonomy. Blocks are built from the field-group JSON at runtime and mapped
 // straight back on change — they are never serialized to post_content, and
-// the content editors' inserters exclude ci-designer/* explicitly.
+// the content editors' inserters exclude os-designer/* explicitly.
 const FieldsDesignerCtx = createContext(null);
 
-const DESIGNER_BLOCKS = ['ci-designer/field', 'ci-designer/group'];
+const DESIGNER_BLOCKS = ['os-designer/field', 'os-designer/group'];
 
 let __designerBlockRegistered = false;
 function ensureDesignerBlockRegistered() {
   if (__designerBlockRegistered || !registerBlockType) return;
   __designerBlockRegistered = true;
-  registerBlockType('ci-designer/field', {
+  registerBlockType('os-designer/field', {
     // apiVersion 3 marks the block iframe-ready; anything lower flips the
     // editor into non-iframe compat mode and BlockCanvas never fades the
     // iframe body in (it stays opacity:0).
@@ -6440,7 +6440,7 @@ function ensureDesignerBlockRegistered() {
     edit: DesignerFieldEdit,
     save: () => null,
   });
-  registerBlockType('ci-designer/group', {
+  registerBlockType('os-designer/group', {
     apiVersion: 3,
     title: 'Group',
     category: 'design',
@@ -6472,16 +6472,16 @@ function DesignerFieldEdit({ attributes, setAttributes, clientId }) {
   const { removeBlock } = useWPDispatch('core/block-editor');
   const remove = () => { try { removeBlock(clientId); } catch {} };
   return h`<div ...${blockProps}>
-    <div className=${'ci-fieldblock border rounded-md bg-card p-3 border-border' + (f.enabled === false ? ' opacity-50 border-dashed' : '')}>
+    <div className=${'os-fieldblock border rounded-md bg-card p-3 border-border' + (f.enabled === false ? ' opacity-50 border-dashed' : '')}>
       <div className="flex items-center gap-2 mb-2">
         <span className="flex-1 min-w-0 truncate font-mono text-[11px] text-muted-foreground">${!FG_PRESENTATIONAL.has(f.type) && f.type !== 'content' ? (f.key || '(no key)') : ''}</span>
         <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-accent text-accent-foreground">${f.type === 'taxonomy' ? `tax: ${f.taxonomy}` : f.type}</span>
         ${f.enabled === false ? h`<span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-muted text-muted-foreground" title="Hidden in the editor">off</span>` : null}
       </div>
-      <div className="ci-fieldpreview" aria-hidden="true" ref=${(el) => { if (el) el.setAttribute('inert', ''); }}>${fieldPreview(f)}</div>
+      <div className="os-fieldpreview" aria-hidden="true" ref=${(el) => { if (el) el.setAttribute('inert', ''); }}>${fieldPreview(f)}</div>
     </div>
     ${InspectorControls ? h`<${InspectorControls}>
-      <div className="p-4 ci-wpds-fields">
+      <div className="p-4 os-wpds-fields">
         <${FieldConfigBody} f=${f} patch=${patch} remove=${remove} fields=${ctx.fields || []} disp=${disp} />
       </div>
     </${InspectorControls}>` : null}
@@ -6496,15 +6496,15 @@ function DesignerGroupEdit({ attributes, setAttributes }) {
   const layout = f.layout || 'group';
   const gap = Number(f.gap) || 16;
   const blockProps = useBlockProps({
-    className: 'ci-designer-' + layout + (layout === 'group' ? ' border border-border rounded-md p-3' : ''),
-    style: { '--ci-designer-gap': gap + 'px' },
+    className: 'os-designer-' + layout + (layout === 'group' ? ' border border-border rounded-md p-3' : ''),
+    style: { '--os-designer-gap': gap + 'px' },
   });
   const patch = (p) => setAttributes({ field: { ...f, ...p } });
   return h`<div ...${blockProps}>
     ${layout === 'group' ? h`<div className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-2">${f.label || 'Group'}</div>` : null}
     <${InnerBlocks} allowedBlocks=${DESIGNER_BLOCKS} />
     ${InspectorControls ? h`<${InspectorControls}>
-      <div className="p-4 ci-wpds-fields space-y-4">
+      <div className="p-4 os-wpds-fields space-y-4">
         <${SelectMenu}
           __nextHasNoMarginBottom __next40pxDefaultSize
           label="Layout"
@@ -6527,7 +6527,7 @@ function DesignerGroupEdit({ attributes, setAttributes }) {
   </div>`;
 }
 
-// BlockCanvas iframes the blocks; the app's utility CSS is scoped to #ci-root,
+// BlockCanvas iframes the blocks; the app's utility CSS is scoped to #os-app-root,
 // which doesn't exist inside the iframe, so re-emit those rules against the
 // iframe body. Plus the 12-column layout grid (root + Row containers) and an
 // explicit scroll unlock — several snapshotted admin sheets pin overflow.
@@ -6539,7 +6539,7 @@ function designerCanvasStyles() {
     try {
       for (const rule of Array.from(sheet.cssRules)) {
         const t = rule.cssText;
-        if (t.includes('#ci-root')) { css += t.split('#ci-root').join('body.editor-styles-wrapper') + '\n'; continue; }
+        if (t.includes('#os-app-root')) { css += t.split('#os-app-root').join('body.editor-styles-wrapper') + '\n'; continue; }
         // Skip wp-admin's bare html/body globals: `body, html { height: 100% }`
         // pins the iframe document at the viewport height (cascade layers make
         // it unbeatable, even by inline !important), which kills scrolling.
@@ -6550,7 +6550,7 @@ function designerCanvasStyles() {
       }
     } catch {}
   }
-  // The app shell pins #ci-root as a fixed-position viewport; re-scoped onto
+  // The app shell pins #os-app-root as a fixed-position viewport; re-scoped onto
   // the iframe body that would freeze the document at the iframe height and
   // kill scrolling — force normal flow back, same sheet so the cascade is ours.
   // The iframe never inherits wp-admin's theme-color custom properties, so
@@ -6567,13 +6567,13 @@ function designerCanvasStyles() {
     'body.editor-styles-wrapper .is-root-container{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:1rem;align-items:start;padding:16px;}' +
     'body.editor-styles-wrapper .is-root-container>*{min-width:0;grid-column:span 12;}' +
     'body.editor-styles-wrapper .block-list-appender{grid-column:1 / -1;}' +
-    '.ci-designer-row > .block-editor-inner-blocks > .block-editor-block-list__layout{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--ci-designer-gap,1rem);align-items:start;}' +
-    '.ci-designer-group > .block-editor-inner-blocks > .block-editor-block-list__layout>*+*,.ci-designer-stack > .block-editor-inner-blocks > .block-editor-block-list__layout>*+*{margin-top:var(--ci-designer-gap,1rem);}' +
-    '.ci-designer-row .block-list-appender{grid-column:1 / -1;}' +
+    '.os-designer-row > .block-editor-inner-blocks > .block-editor-block-list__layout{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--os-designer-gap,1rem);align-items:start;}' +
+    '.os-designer-group > .block-editor-inner-blocks > .block-editor-block-list__layout>*+*,.os-designer-stack > .block-editor-inner-blocks > .block-editor-block-list__layout>*+*{margin-top:var(--os-designer-gap,1rem);}' +
+    '.os-designer-row .block-list-appender{grid-column:1 / -1;}' +
     /* WordPress.com Blueberry on the type badges (keys and field labels keep
        their stock colors). */
-    '.ci-fieldblock .bg-accent{color:#3858e9 !important;}' +
-    '@media (max-width:640px){body.editor-styles-wrapper .is-root-container>*,.ci-designer-row > .block-editor-inner-blocks > .block-editor-block-list__layout>*{grid-column:1 / -1 !important;}}';
+    '.os-fieldblock .bg-accent{color:#3858e9 !important;}' +
+    '@media (max-width:640px){body.editor-styles-wrapper .is-root-container>*,.os-designer-row > .block-editor-inner-blocks > .block-editor-block-list__layout>*{grid-column:1 / -1 !important;}}';
   // Own snapshot only — collectCanvasStyles() would re-add the html/body pins.
   _designerCanvasStyles = [{ css }];
   return _designerCanvasStyles;
@@ -6585,9 +6585,9 @@ function FieldsCanvas({ fields, onFieldsChange, disp, attachedTaxes }) {
   const mkBlock = (f) => {
     if (f.type === 'group') {
       const { fields: kids, ...rest } = f;
-      return createBlock('ci-designer/group', { field: rest }, (kids || []).map(mkBlock));
+      return createBlock('os-designer/group', { field: rest }, (kids || []).map(mkBlock));
     }
-    return createBlock('ci-designer/field', f.type === 'content'
+    return createBlock('os-designer/field', f.type === 'content'
       ? { field: f, lock: { remove: true, move: false } }
       : { field: f });
   };
@@ -6615,7 +6615,7 @@ function FieldsCanvas({ fields, onFieldsChange, disp, attachedTaxes }) {
         if (fld.__id && seen.has(fld.__id)) fld = fgStrip(fld);
         const out = fgWithId(fld);
         seen.add(out.__id);
-        if (b.name === 'ci-designer/group') {
+        if (b.name === 'os-designer/group') {
           return { ...out, type: 'group', fields: walk(b.innerBlocks) };
         }
         return out;
@@ -6638,7 +6638,7 @@ function FieldsCanvas({ fields, onFieldsChange, disp, attachedTaxes }) {
     for (const t of attachedTaxes || []) {
       const name = 'tax-' + t.slug;
       try {
-        registerBlockVariation('ci-designer/field', {
+        registerBlockVariation('os-designer/field', {
           name,
           title: `Taxonomy: ${t.label}`,
           description: 'Places this taxonomy\u2019s term picker in the layout.',
@@ -6649,7 +6649,7 @@ function FieldsCanvas({ fields, onFieldsChange, disp, attachedTaxes }) {
         names.push(name);
       } catch {}
     }
-    return () => { for (const n of names) { try { unregisterBlockVariation('ci-designer/field', n); } catch {} } };
+    return () => { for (const n of names) { try { unregisterBlockVariation('os-designer/field', n); } catch {} } };
   }, [attachedTaxes]);
   // Full-height canvas: fill the viewport below the toolbar (the Site Editor
   // feel), remeasured on resize. The iframe document scrolls internally.
@@ -6732,13 +6732,13 @@ function FieldsCanvas({ fields, onFieldsChange, disp, attachedTaxes }) {
           ${/* Same chrome classes as the composer toolbar so the two editors
               share one look (and its polish CSS). Constant height: document
               tools left, contextual block toolbar centre, settings right. */''}
-          <div className="ci-block-editor-chrome ci-fields-chrome flex items-center gap-1 border-b border-border bg-card">
-            <${CIToolbar} label="Document tools" className="ci-composer-toolbar shrink-0">
+          <div className="os-block-editor-chrome os-fields-chrome flex items-center gap-1 border-b border-border bg-card">
+            <${CIToolbar} label="Document tools" className="os-composer-toolbar shrink-0">
               <${WPToolbarGroup}>
                 <${WPToolbarButton}
                   icon=${EDITOR_ICONS.plus}
                   label="Block library"
-                  className="ci-fields-inserter-toggle ci-inserter-toggle"
+                  className="os-fields-inserter-toggle os-inserter-toggle"
                   isActive=${leftPanel === 'library'}
                   onClick=${() => setLeftPanel((v) => (v === 'library' ? null : 'library'))}
                 />
@@ -6752,11 +6752,11 @@ function FieldsCanvas({ fields, onFieldsChange, disp, attachedTaxes }) {
                 />` : null}
               </${WPToolbarGroup}>
             </${CIToolbar}>
-            ${WPBlockToolbar ? h`<div className="ci-composer-blocktoolbar flex-1 min-w-0">
+            ${WPBlockToolbar ? h`<div className="os-composer-blocktoolbar flex-1 min-w-0">
               <${WPBlockToolbar} hideDragHandle=${true} />
             </div>` : null}
             <div className="ml-auto shrink-0">
-              <${CIToolbar} label="Settings" className="ci-composer-toolbar">
+              <${CIToolbar} label="Settings" className="os-composer-toolbar">
                 <${WPToolbarGroup}>
                   <${WPToolbarButton}
                     icon=${EDITOR_ICONS.drawerRight}
@@ -6769,7 +6769,7 @@ function FieldsCanvas({ fields, onFieldsChange, disp, attachedTaxes }) {
             </div>
           </div>
           <div className="flex items-stretch" ref=${wrapRef}>
-            ${leftPanel ? h`<div className="ci-fields-leftrail shrink-0 border-r border-border bg-card flex flex-col" style=${{ height: canvasH + 'px' }}>
+            ${leftPanel ? h`<div className="os-fields-leftrail shrink-0 border-r border-border bg-card flex flex-col" style=${{ height: canvasH + 'px' }}>
               <div className="flex items-center justify-between gap-2 pl-4 pr-2 py-2 border-b border-border shrink-0">
                 <span className="text-sm font-semibold">${leftPanel === 'library' ? 'Block library' : 'List view'}</span>
                 <${WPButton} size="small" icon=${EDITOR_ICONS.close} label="Close panel" onClick=${() => setLeftPanel(null)} />
@@ -6787,7 +6787,7 @@ function FieldsCanvas({ fields, onFieldsChange, disp, attachedTaxes }) {
                 </div>
               </${BlockTools}>
             </div>
-            ${(BlockInspector && showInspector) ? h`<div className="w-72 shrink-0 border-l border-border overflow-y-auto ci-wpds-fields" style=${{ maxHeight: canvasH + 'px' }}>
+            ${(BlockInspector && showInspector) ? h`<div className="w-72 shrink-0 border-l border-border overflow-y-auto os-wpds-fields" style=${{ maxHeight: canvasH + 'px' }}>
               <${BlockInspector} />
             </div>` : null}
           </div>
@@ -6848,7 +6848,7 @@ function RepeaterField({ field, value, onChange }) {
     }
     return h`<${WPTextControl} __nextHasNoMarginBottom type=${sf.type === 'date' ? 'date' : 'text'} label=${sf.label} hideLabelFromVision=${true} value=${v ?? ''} onChange=${(nv) => patchRow(ri, sf.key, nv)} />`;
   };
-  return h`<div className="ci-wpds-fields">
+  return h`<div className="os-wpds-fields">
     ${field.label ? h`<div className="text-sm font-medium text-muted-foreground mb-1">${field.label}</div>` : null}
     ${subs.length === 0
       ? h`<div className="text-xs text-muted-foreground italic">No row fields defined yet — add them in the content type's structure.</div>`
@@ -6875,7 +6875,7 @@ function RepeaterField({ field, value, onChange }) {
 }
 
 function ContentBodyEditor({ value, onChange, placeholder, defaultMode, formatDefault, codeLanguage, title, slug }) {
-  // With the ci-llm companion present, PROSE bodies collapse to two modes:
+  // With the os-llm companion present, PROSE bodies collapse to two modes:
   // Blocks | .llm — the .llm surface carries its own source pane and live
   // graph, so the separate Code and Diagram tabs are redundant (Daniel,
   // 2026-07-15). Real code bodies (php/js/css snippets, csv) keep CodeMirror:
@@ -6939,7 +6939,7 @@ function ContentBodyEditor({ value, onChange, placeholder, defaultMode, formatDe
       onChange(convertMarkdownToBlocks(value));
       setModeManual('block');
     } catch (e) {
-      console.error('[core-index] convert to blocks failed:', e);
+      console.error('[os] convert to blocks failed:', e);
     }
   };
   return h`<div>
@@ -6963,7 +6963,7 @@ function ContentBodyEditor({ value, onChange, placeholder, defaultMode, formatDe
           <${CIRegistry.SkillOutline} content=${value} title=${title} slug=${slug} />
         </div>`
       : effMode === 'code'
-      ? h`<div className="ci-cm-body border border-border rounded-md overflow-hidden" style=${{ minHeight: '240px' }}>
+      ? h`<div className="os-cm-body border border-border rounded-md overflow-hidden" style=${{ minHeight: '240px' }}>
           <${CodeEditor} value=${value} language=${codeLanguage} onChange=${onChange} wikilinks=${!codeLanguage || codeLanguage === 'markdown' || codeLanguage === 'html'} />
         </div>`
       : h`<${GutenbergComposer} value=${value} onChange=${onChange} placeholder=${placeholder} />`}
@@ -7014,12 +7014,12 @@ function ContentEditModal({ meta, item, onClose, onSave }) {
     if (ok) onClose();
   };
 
-  // Card is a flex column capped to the #ci-root region height so the header
+  // Card is a flex column capped to the #os-app-root region height so the header
   // (top) and footer (bottom) stay on screen and the body scrolls. Full width
   // drops the readable max and widens within the region.
   const cardStyle = {
     display: 'flex', flexDirection: 'column',
-    maxHeight: 'calc(100vh - var(--ci-adminbar-h, 32px) - 2rem)',
+    maxHeight: 'calc(100vh - var(--os-adminbar-h, 32px) - 2rem)',
   };
   if (fullWidth) { cardStyle.maxWidth = '1400px'; }
 
@@ -7448,7 +7448,7 @@ function CptEditorPage() {
       const gap = (Number(f.gap) || 16) + 'px';
       const inner = f.layout === 'stack'
         ? h`<div style=${{ display: 'flex', flexDirection: 'column', gap }}>${kids.map((k) => h`<div key=${k.key}>${renderField(k)}</div>`)}</div>`
-        : h`<div style=${{ '--ci-fieldgrid-gap': gap }}>${fieldGrid(kids)}</div>`;
+        : h`<div style=${{ '--os-fieldgrid-gap': gap }}>${fieldGrid(kids)}</div>`;
       if (f.layout === 'group') {
         return h`<div className="border border-border rounded-md p-4 space-y-3">
           ${f.label ? h`<div className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">${f.label}</div>` : null}
@@ -7472,7 +7472,7 @@ function CptEditorPage() {
     if (f.type === 'content') {
       // The auto-registered post body (post_content) — bound to content/setContent,
       // rendered at this block's position in the structure (not force-appended).
-      return h`<div className="ci-wpds-fields">
+      return h`<div className="os-wpds-fields">
         <div className="text-sm font-medium text-muted-foreground mb-2">${f.label || 'Content'}</div>
         <${ContentBodyEditor}
           value=${content}
@@ -7487,7 +7487,7 @@ function CptEditorPage() {
       </div>`;
     }
     if (f.type === 'richtext') {
-      return h`<div className="ci-wpds-fields">
+      return h`<div className="os-wpds-fields">
         ${f.label ? h`<div className="text-sm font-medium text-muted-foreground mb-1">${f.label}</div>` : null}
         <${GutenbergComposer}
           value=${fields[f.key] ?? ''}
@@ -7569,7 +7569,7 @@ function CptEditorPage() {
   // Layout: presentational + richtext blocks span full width; everything
   // else honours its configured column width.
   const spanOf = (f) => (['heading', 'tab', 'notice', 'richtext', 'content', 'progress', 'group'].includes(f.type) ? 12 : fgCols(f.width));
-  const fieldGrid = (fs) => h`<div className="ci-fieldgrid ci-wpds-fields">
+  const fieldGrid = (fs) => h`<div className="os-fieldgrid os-wpds-fields">
     ${fs.filter((f) => f.type !== 'tab' && f.type !== 'heading').map((f) => h`<div key=${f.key} style=${{ gridColumn: 'span ' + spanOf(f) }}>${renderField(f)}</div>`)}
   </div>`;
   // Group a tab's fields into collapsible sections delimited by `heading`
@@ -7664,7 +7664,7 @@ function CptEditorPage() {
         setTitle=${(v) => { setTitle(v); setDirty(true); }}
         placeholder=${`${meta.singular} title…`}
       />` : null}
-      ${isHier ? h`<div className="ci-wpds-fields max-w-sm">
+      ${isHier ? h`<div className="os-wpds-fields max-w-sm">
         <${SelectMenu}
           label="Parent"
           value=${String(parent || 0)}
@@ -7678,7 +7678,7 @@ function CptEditorPage() {
           in the layout. When the type adds a `progress` field, it owns placement. */''}
       ${(!hasProgressField && progress && progress.total > 0) ? renderProgressBar({}) : null}
       ${hasFields ? (hasTabs
-        ? h`<div className="ci-wpds-fields ci-cpt-tabs"><${WPTabPanel}
+        ? h`<div className="os-wpds-fields os-cpt-tabs"><${WPTabPanel}
             tabs=${segments.map((s, i) => ({ name: `seg-${i}`, title: s.label }))}
           >
             ${(tab) => { const i = Number((tab.name || 'seg-0').split('-')[1]) || 0; return h`<div className="pt-4">${renderSectioned(segments[i] ? segments[i].fields : [])}</div>`; }}
@@ -7686,7 +7686,7 @@ function CptEditorPage() {
         : renderSectioned(visibleFields)
       ) : null}
 
-      ${(descriptor.supports_editor && !descriptor.fields.some((f) => f.type === 'content')) ? h`<div className="ci-wpds-fields">
+      ${(descriptor.supports_editor && !descriptor.fields.some((f) => f.type === 'content')) ? h`<div className="os-wpds-fields">
         <div className="text-sm font-medium text-muted-foreground mb-2">Content</div>
         <${ContentBodyEditor}
           value=${content}

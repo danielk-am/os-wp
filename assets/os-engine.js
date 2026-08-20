@@ -14,7 +14,7 @@
  */
 import { useState, useEffect, useRef } from 'react';
 import { FormTokenField as WPFormTokenField } from '@wordpress/components';
-import { h, BOOT, rest, decodeEntities } from 'ci/core';
+import { h, BOOT, rest, decodeEntities } from 'os/core';
 
 export const FG_FIELD_TYPES = [
   ['text', 'Text'], ['textarea', 'Text area'], ['richtext', 'Rich text (Gutenberg)'],

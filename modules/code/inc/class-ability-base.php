@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-abstract class CI_Code_Ability_Base {
+abstract class OS_Code_Ability_Base {
 
 	const NS       = 'code';
 	const CATEGORY = 'os-code';

@@ -4,7 +4,7 @@
  *
  * The disk-backed sibling of the Media Library: where Media is a virtual
  * filesystem over WP attachments, this manages real files on disk. The
- * React `filesystem` app (assets/ci-app-filesystem.js) renders a lazy
+ * React `filesystem` app (assets/os-app-filesystem.js) renders a lazy
  * directory tree + preview pane against the REST routes here.
  *
  * Security model — this is the sharp edge, so it's worth stating plainly:
@@ -30,7 +30,7 @@
  *   GET /fs/read?root=&path=            → file content (text) or binary flag
  *   GET /fs/download?root=&path=        → raw file stream (Content-Disposition)
  *
- * @package Core_Index
+ * @package OS
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -144,7 +144,7 @@ class WP_Filesystem {
 	/**
 	 * The first-run seed for `ci_fs_roots`. Each site gets its own CI-vault
 	 * jurisdiction slice(s) as ready-made roots when CI core's vault mode is on
-	 * — so "each site pulls from its own ci-vault" needs no manual config —
+	 * — so "each site pulls from its own os-vault" needs no manual config —
 	 * followed by a general-purpose `wp-content` root. Reuses core's
 	 * jurisdiction jail (`vault_roots()` only returns the slices this site may
 	 * serve), so the seed can never expose a jurisdiction the site isn't scoped

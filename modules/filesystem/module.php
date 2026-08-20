@@ -12,27 +12,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CI_FILESYSTEM_DIR', plugin_dir_path( __FILE__ ) );
-define( 'CI_FILESYSTEM_URL', plugin_dir_url( __FILE__ ) );
+define( 'OS_FILESYSTEM_DIR', plugin_dir_path( __FILE__ ) );
+define( 'OS_FILESYSTEM_URL', plugin_dir_url( __FILE__ ) );
 
 /**
  * Asset URL with an mtime cache-buster, so a redeploy busts the CDN + browser
  * cache (CI core versions its own module URLs the same way; without this the
  * importmap specifier resolves to a stale module).
  */
-function ci_filesystem_asset_url( string $rel ): string {
-	$path = CI_FILESYSTEM_DIR . $rel;
+function os_filesystem_asset_url( string $rel ): string {
+	$path = OS_FILESYSTEM_DIR . $rel;
 	$ver  = file_exists( $path ) ? (string) filemtime( $path ) : '0';
-	return CI_FILESYSTEM_URL . $rel . '?v=' . $ver;
+	return OS_FILESYSTEM_URL . $rel . '?v=' . $ver;
 }
 
 add_action(
 	'plugins_loaded',
 	static function () {
-		require_once CI_FILESYSTEM_DIR . 'inc/class-filesystem-options.php';
-		require_once CI_FILESYSTEM_DIR . 'inc/class-filesystem.php';
-		require_once CI_FILESYSTEM_DIR . 'inc/class-ability-base.php';
-		require_once CI_FILESYSTEM_DIR . 'inc/class-filesystem-abilities.php';
+		require_once OS_FILESYSTEM_DIR . 'inc/class-filesystem-options.php';
+		require_once OS_FILESYSTEM_DIR . 'inc/class-filesystem.php';
+		require_once OS_FILESYSTEM_DIR . 'inc/class-ability-base.php';
+		require_once OS_FILESYSTEM_DIR . 'inc/class-filesystem-abilities.php';
 		WP_Filesystem::register();
 		WP_Filesystem_Abilities::register();
 		OS_Standalone_Admin::boot(

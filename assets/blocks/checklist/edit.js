@@ -4,22 +4,22 @@
 	const { createElement: h } = wp.element;
 	const { InnerBlocks, RichText, useBlockProps } = wp.blockEditor;
 
-	const ALLOWED   = [ 'core-index/task' ];
+	const ALLOWED   = [ 'os/task' ];
 	const TEMPLATE  = [
-		[ 'core-index/task', { text: '' } ],
-		[ 'core-index/task', { text: '' } ],
+		[ 'os/task', { text: '' } ],
+		[ 'os/task', { text: '' } ],
 	];
 
-	registerBlockType( 'core-index/checklist', {
+	registerBlockType( 'os/checklist', {
 		edit: function Edit( { attributes, setAttributes } ) {
 			const { title } = attributes;
-			const blockProps = useBlockProps( { className: 'ci-checklist' } );
+			const blockProps = useBlockProps( { className: 'os-checklist' } );
 			return h(
 				'div',
 				blockProps,
 				h( RichText, {
 					tagName: 'h4',
-					className: 'ci-checklist__title',
+					className: 'os-checklist__title',
 					value: title || '',
 					onChange: ( v ) => setAttributes( { title: v } ),
 					placeholder: 'Checklist title (optional)…',
@@ -36,15 +36,15 @@
 		save: function Save( { attributes } ) {
 			const { title } = attributes;
 			const blockProps = ( wp.blockEditor.useBlockProps && wp.blockEditor.useBlockProps.save )
-				? wp.blockEditor.useBlockProps.save( { className: 'ci-checklist' } )
-				: { className: 'ci-checklist' };
+				? wp.blockEditor.useBlockProps.save( { className: 'os-checklist' } )
+				: { className: 'os-checklist' };
 			return h(
 				'div',
 				blockProps,
 				title
 					? h( RichText.Content, {
 						tagName: 'h4',
-						className: 'ci-checklist__title',
+						className: 'os-checklist__title',
 						value: title,
 					} )
 					: null,
