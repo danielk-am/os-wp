@@ -16,6 +16,7 @@ require_once __DIR__ . '/inc/class-icon-svg-sanitizer.php';
 require_once __DIR__ . '/inc/class-type-menus-screen.php';
 OS_Type_Menus_Screen::register();
 require_once __DIR__ . '/inc/class-dynamic-types.php';
+require_once __DIR__ . '/inc/class-type-runtime.php';
 
 final class Core_Index_Content_Types {
 
@@ -495,6 +496,10 @@ final class Core_Index_Content_Types {
 } )();
 
 Core_Index_Content_Types::register();
+// Declared types register at init:25, ahead of the stored-definition path at
+// init:30, so types.json wins. The stored path already yields on
+// post_type_exists(), so nothing else needs coordinating.
+OS_Type_Runtime::register();
 Core_Index_Content_Types_Dynamic_Types::register();
 OS_Standalone_Admin::boot(
 	array(
