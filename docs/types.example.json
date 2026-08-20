@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "types": [
+    {
+      "key": "recipe",
+      "singular": "Recipe",
+      "plural": "Recipes",
+      "icon": "dashicons-food",
+      "supports": ["title", "editor", "revisions", "author"],
+      "fields": [
+        { "key": "servings", "type": "integer", "minimum": 1, "required": true, "index": true },
+        { "key": "cook_minutes", "type": "integer", "minimum": 0, "index": true },
+        { "key": "course", "type": "string", "enum": ["starter", "main", "dessert"], "index": true },
+        { "key": "published_on", "type": "string", "format": "date" },
+        { "key": "source_url", "type": "string", "format": "uri" },
+        { "key": "tags", "type": "array", "items": { "type": "string" } },
+        { "key": "base_recipe", "type": "relation", "to": "recipe", "cardinality": "one" }
+      ],
+      "rules": {
+        "list": "author = :user OR status = 'publish'",
+        "update": "author = :user"
+      },
+      "display": {
+        "columns": ["title", "course", "cook_minutes"],
+        "form": [
+          { "section": "Timing", "fields": ["servings", "cook_minutes"] },
+          { "section": "Meta", "fields": ["course", "published_on", "source_url"] }
+        ]
+      }
+    }
+  ]
+}
