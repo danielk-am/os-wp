@@ -1,7 +1,7 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "core-index/task",
+	"name": "os/task",
 	"title": "Task",
 	"category": "widgets",
 	"icon": "yes",

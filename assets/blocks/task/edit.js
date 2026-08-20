@@ -91,7 +91,7 @@
 		return 't_' + Math.random().toString( 36 ).slice( 2, 14 );
 	}
 
-	registerBlockType( 'core-index/task', {
+	registerBlockType( 'os/task', {
 		edit: function Edit( { attributes, setAttributes } ) {
 			const { taskId, text, checked, dueDate, priority } = attributes;
 			const blockProps = useBlockProps( {

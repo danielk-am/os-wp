@@ -290,6 +290,51 @@ They move when that registration moves.
 The copies inside the frozen `os-reminders` shell stay put. A rollback package
 keeps its identifiers by design.
 
+## Block names: done, 2026-08-20
+
+Block names belong on the data side of the rule, and it is worth saying why,
+because they do not look like data. A registered block name is written into
+`post_content` as an HTML comment:
+
+```html
+<!-- wp:core-index/task {"id":7} --><p>Ship it</p><!-- /wp:core-index/task -->
+```
+
+Rename the registration without moving the stored delimiter and every post
+holding that block renders as a recovery notice. That is the same failure mode as
+renaming a post type out from under its rows, so it costs a migration on every
+install, exactly like one.
+
+Five blocks moved during the rebrand:
+
+| From | To |
+|---|---|
+| `core-index/task` | `os/task` |
+| `core-index/wiki` | `os/wiki` |
+| `core-index/csv` | `os/csv` |
+| `core-index/checklist` | `os/checklist` |
+| `core-index/site-editor-embed` | `os/site-editor-embed` |
+
+`OS_Block_Migration` rewrites stored content at `init` priority 1, ahead of block
+registration at 10, so no request serves content whose delimiters disagree with
+what is registered. It is guarded by `os_block_migration`, pages by ascending ID
+rather than by offset, and reads each row back after writing.
+
+Three properties keep it safe to run against a real database:
+
+- **It anchors on the delimiter, never the name.** The pattern requires
+  `<!-- wp:` or `<!-- /wp:` before the name and a space, slash, or brace after it.
+  Prose mentioning `core-index/task`, and the external URL
+  `github.a8c.com/1dr0/core-index/blob/...`, are both left alone.
+- **It writes through `$wpdb`, not `wp_update_post`.** No save hooks, no
+  revisions, no modified date bump. A delimiter rename is lossless and should not
+  look like an edit.
+- **It is idempotent.** A second pass matches nothing, because rewritten rows no
+  longer satisfy the `LIKE '%wp:core-index/%'` filter.
+
+Covered by `tests/verify-block-migration.php`, 19 checks, plus an end-to-end run
+against a seeded post on WordPress 7.1.
+
 ## Outstanding: cron hooks and filters
 
 Cron hooks reschedule rather than migrate: clear the old hook, schedule the new

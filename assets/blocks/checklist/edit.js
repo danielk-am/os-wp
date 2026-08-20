@@ -4,13 +4,13 @@
 	const { createElement: h } = wp.element;
 	const { InnerBlocks, RichText, useBlockProps } = wp.blockEditor;
 
-	const ALLOWED   = [ 'core-index/task' ];
+	const ALLOWED   = [ 'os/task' ];
 	const TEMPLATE  = [
-		[ 'core-index/task', { text: '' } ],
-		[ 'core-index/task', { text: '' } ],
+		[ 'os/task', { text: '' } ],
+		[ 'os/task', { text: '' } ],
 	];
 
-	registerBlockType( 'core-index/checklist', {
+	registerBlockType( 'os/checklist', {
 		edit: function Edit( { attributes, setAttributes } ) {
 			const { title } = attributes;
 			const blockProps = useBlockProps( { className: 'os-checklist' } );

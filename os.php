@@ -50,6 +50,8 @@ require_once OS_DIR . 'inc/class-option-migration.php';
 OS_Option_Migration::register();
 require_once OS_DIR . 'inc/class-type-migration.php';
 OS_Type_Migration::register();
+require_once OS_DIR . 'inc/class-block-migration.php';
+OS_Block_Migration::register();
 
 // The shared runtime every module's admin app is built on. One copy now; there
 // were ten, kept in step by a sync script that no longer needs to exist.

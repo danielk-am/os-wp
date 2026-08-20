@@ -162,7 +162,7 @@
 		} );
 	}
 
-	registerBlockType( 'core-index/site-editor-embed', {
+	registerBlockType( 'os/site-editor-embed', {
 		edit: function Edit( { attributes, setAttributes } ) {
 			const { path, height, wide, label } = attributes;
 			const blockProps = useBlockProps( { className: 'os-site-editor-embed' + ( wide ? ' is-wide' : '' ) } );

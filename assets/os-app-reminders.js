@@ -129,7 +129,7 @@ function readReminderTaskAttrs(body) {
     const blocks = parseBlocks(body || '') || [];
     const find = (list) => {
       for (const b of list) {
-        if (b?.name === 'core-index/task') return b;
+        if (b?.name === 'os/task') return b;
         if (b?.innerBlocks?.length) {
           const inner = find(b.innerBlocks);
           if (inner) return inner;
@@ -156,13 +156,13 @@ function patchReminderTaskAttrs(body, patch) {
     let found = false;
     const walk = (list) => {
       for (const b of list) {
-        if (!found && b?.name === 'core-index/task') { apply(b); found = true; return; }
+        if (!found && b?.name === 'os/task') { apply(b); found = true; return; }
         if (b?.innerBlocks?.length) walk(b.innerBlocks);
       }
     };
     walk(blocks);
     if (!found) {
-      const seed = parseBlocks('<!-- wp:core-index/task /-->') || [];
+      const seed = parseBlocks('<!-- wp:os/task /-->') || [];
       if (seed[0]) { apply(seed[0]); blocks = seed.concat(blocks); }
     }
     return serializeBlocks(blocks) || '';
@@ -827,10 +827,10 @@ function ReminderEditorPage() {
   useEffect(() => {
     if (isNew) {
       setTitle('');
-      // Empty seed; the CPT's `template => [['core-index/task']]`
+      // Empty seed; the CPT's `template => [['os/task']]`
       // is the wp-admin/post.php default — for our in-app editor we
       // seed the same single block so the user sees a Task immediately.
-      setBody('<!-- wp:core-index/task /-->');
+      setBody('<!-- wp:os/task /-->');
       setTags([]);
       setNotes('');
       setDirty(true);

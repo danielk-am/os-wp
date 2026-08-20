@@ -56,7 +56,7 @@
 		} );
 	}
 
-	registerBlockType( 'core-index/csv', {
+	registerBlockType( 'os/csv', {
 		edit: function Edit( { attributes, setAttributes } ) {
 			const { slug, showFilters, showColumnFilters, caption } = attributes;
 			const blockProps = useBlockProps();
@@ -100,7 +100,7 @@
 							'div',
 							{ className: 'os-csv-block-preview' },
 							h( ServerSideRender, {
-								block: 'core-index/csv',
+								block: 'os/csv',
 								attributes,
 							} )
 					  )
