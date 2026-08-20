@@ -3,6 +3,34 @@
 What changed in each release, from a user's point of view. Started at 3.4.0.
 Earlier releases are on the [releases page](https://github.com/danielk-am/os-wp/releases).
 
+## 3.5.0
+
+### One name, everywhere
+
+OS used to be called Core Index, and half the code still said so. Menus,
+stylesheets, log messages, and the licence file now all say OS. Nothing you
+click changes, but the plugin finally has one name instead of two.
+
+### Your blocks moved, and moved themselves
+
+Five blocks changed name: task, wiki, csv, checklist, and the site editor
+embed. A block name is stored inside every post that uses it, so renaming
+one usually breaks those posts and shows a "this block contains unexpected
+content" notice.
+
+OS updates them for you on the first load after updating. Your posts keep
+their content, their attributes, and their last-modified dates, and no
+revisions are created. If a post merely mentions an old block name in its
+text, that text is left exactly as written.
+
+There is nothing to do and nothing to click.
+
+### Still broken, and honest about it
+
+The Ask AI panel still does not load on WordPress 7.1, unchanged from 3.4.1.
+It was built for an older way of loading code and needs rebuilding rather
+than patching. Every other screen works.
+
 ## 3.4.1
 
 ### The admin screens work again on WordPress 7.1
