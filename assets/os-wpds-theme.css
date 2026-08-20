@@ -12,7 +12,7 @@
  * source order (equal specificity). Non-destructive: tailwind.css is untouched
  * and can be rebuilt freely; this layer just re-tints it.
  *
- * @package Core_Index
+ * @package OS
  */
 
 #os-app-root {

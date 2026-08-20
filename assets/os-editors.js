@@ -234,7 +234,7 @@ function ensureCoreBlocksRegistered() {
       __coreBlocksRegistered = true;
     }
   } catch (e) {
-    console.error('[core-index] registerCoreBlocks failed:', e);
+    console.error('[os] registerCoreBlocks failed:', e);
   }
 }
 

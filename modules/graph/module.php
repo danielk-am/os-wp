@@ -405,14 +405,6 @@ final class OS_Graph {
 	}
 }
 
-( static function (): void {
-	if ( ! class_exists( 'Knowledge_Graph_For_WordPress' ) ) {
-		class_alias( OS_Graph::class, 'Knowledge_Graph_For_WordPress' );
-	}
-	if ( ! class_exists( 'Knowledge_Graph_For_WordPress_Links' ) ) {
-		class_alias( OS_Graph_Links::class, 'Knowledge_Graph_For_WordPress_Links' );
-	}
-} )();
 
 OS_Graph::register();
 OS_Graph_Links::register();

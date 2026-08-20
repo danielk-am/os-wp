@@ -13,7 +13,7 @@ import { createElement } from 'react';
 import htm from 'htm';
 
 export const h = htm.bind(createElement);
-export const BOOT = window.CI_BOOTSTRAP;
+export const BOOT = window.OS_BOOTSTRAP;
 
 // Public API major for the ci/* modules (ci/core, ci/ui, ci/shell, ci/editors,
 // ci/type). Companion plugins in other repos import these, so removing or
@@ -285,7 +285,7 @@ export function registerCalendarSource(source) {
 // the extension point that lets a leaf module (os-app-*.js) add an OS-style
 // "place" without the type layer hard-coding it. A row is:
 //   { key, label, icon, path, order?, match?(pathname)=>bool }
-// `icon` is a CI_ICONS name; `path` is the hash route (without '#'); `match`
+// `icon` is a OS_ICONS name; `path` is the hash route (without '#'); `match`
 // decides the active state (defaults to exact-path or path-prefix). Higher
 // `order` sinks lower (default 0). Re-registering the same key replaces it.
 export function registerNavRow(row) {

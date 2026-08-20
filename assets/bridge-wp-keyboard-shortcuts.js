@@ -4,7 +4,7 @@
  */
 const ks = window.wp && window.wp.keyboardShortcuts;
 if ( ! ks ) {
-  console.error( '[core-index] window.wp.keyboardShortcuts not available — wp-keyboard-shortcuts not enqueued?' );
+  console.error( '[os] window.wp.keyboardShortcuts not available — wp-keyboard-shortcuts not enqueued?' );
 }
 
 export const ShortcutProvider = ks?.ShortcutProvider;

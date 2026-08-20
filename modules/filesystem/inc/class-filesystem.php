@@ -30,7 +30,7 @@
  *   GET /fs/read?root=&path=            → file content (text) or binary flag
  *   GET /fs/download?root=&path=        → raw file stream (Content-Disposition)
  *
- * @package Core_Index
+ * @package OS
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

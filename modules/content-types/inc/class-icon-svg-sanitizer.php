@@ -2,7 +2,7 @@
 /**
  * Strict sanitizer for inline Content Types icons.
  *
- * @package Core_Index
+ * @package OS
  */
 
 defined( 'ABSPATH' ) || exit;

@@ -3,7 +3,7 @@
 
 	function applyIdentity() {
 		var runtime = window.WPDSIdentity;
-		var config = window.CI_WPDS_IDENTITY || {};
+		var config = window.OS_WPDS_IDENTITY || {};
 		if ( ! runtime || ! config.title ) return;
 		var primaryColor = runtime.readAppPrimaryColor
 			? runtime.readAppPrimaryColor( document.documentElement )

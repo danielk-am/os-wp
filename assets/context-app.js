@@ -10,7 +10,7 @@ import { HashRouter, Routes, Route, Link, useParams, useNavigate, useLocation, N
 // app registry). Extracted to its own ES module — see assets/os-core.js.
 import { h, BOOT, API_VERSION, rest, restWithHeaders, restAllPages, decodeEntities, CIRegistry, registerEditor, registerListView, registerRoute, registerNavRow, registerNewFile, registerCalendarSource, onRegistryChange, setNavBadge, editorChoices, buildParentTree, typeKeys, typeMeta, typeKind, isTermType, isNativeReplace, treeKind, applyTemplate, listUrl, normalizeItem } from 'os/core';
 // Context UI kernel (icons + base presentational components) — see assets/os-ui.js.
-import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, CI_ICONS, PICKABLE_ICONS, SelectCheckbox, SegmentedToggle, PageHeading, SelectMenu } from 'os/ui';
+import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, OS_ICONS, PICKABLE_ICONS, SelectCheckbox, SegmentedToggle, PageHeading, SelectMenu } from 'os/ui';
 // Context Engine (field-group / taxonomy / validation layer) — see assets/os-engine.js.
 import { FG_FIELD_TYPES, FG_PRESENTATIONAL, FG_WIDTHS, fgCols, fgWithId, fgStrip, FG_COND_OPS, evalConditional, fgCptOptions, RelationshipField, TaxonomyField } from 'os/engine';
 // Context Shell (app-wide toast + dialog providers/hooks) — see assets/os-shell.js.
@@ -2766,7 +2766,7 @@ function SettingsInstanceId({ data, reload, toast }) {
             disabled=${locked}
             placeholder="ci-a8c"
             help=${locked
-              ? 'Pinned in wp-config.php by the CI_INSTANCE_ID constant.'
+              ? 'Pinned in wp-config.php by the OS_INSTANCE_ID constant.'
               : 'Lowercase letters, digits and hyphens, starting with "os-". Keep it stable — changing it breaks every address pointing here.'}
           />
         </div>
@@ -3227,7 +3227,7 @@ window.CI.CIRegistry = CIRegistry;
 window.CI.mountComposer = function mountComposer(target, props = {}) {
   const node = typeof target === 'string' ? document.querySelector(target) : target;
   if (!node) {
-    console.error('[core-index] mountComposer: target not found', target);
+    console.error('[os] mountComposer: target not found', target);
     return null;
   }
   const root = createRoot(node);
@@ -3301,7 +3301,7 @@ if (rootEl) {
   (async () => {
     for (const url of (BOOT.app_modules || [])) {
       try { await import(url); }
-      catch (e) { console.error('[core-index] app module failed to load:', url, e); }
+      catch (e) { console.error('[os] app module failed to load:', url, e); }
     }
     createRoot(rootEl).render(h`<${App} />`);
     // Reveal the (otherwise opacity:0) root once React has painted at least

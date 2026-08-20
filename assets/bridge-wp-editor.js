@@ -6,7 +6,7 @@
  */
 const ed = window.wp && window.wp.editor;
 if ( ! ed ) {
-  console.error( '[core-index] window.wp.editor not available — wp-editor script not enqueued?' );
+  console.error( '[os] window.wp.editor not available — wp-editor script not enqueued?' );
 }
 
 export const EditorProvider        = ed?.EditorProvider;

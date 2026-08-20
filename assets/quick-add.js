@@ -8,10 +8,10 @@
  *
  * Renders with `wp.element` so we don't ship a bundle. Self-contained:
  * no module imports, no dependencies beyond wp.element + the
- * CI_QUICK_ADD boot payload.
+ * OS_QUICK_ADD boot payload.
  */
 ( function () {
-	const boot = window.CI_QUICK_ADD;
+	const boot = window.OS_QUICK_ADD;
 	if ( ! boot || ! window.wp || ! window.wp.element ) return;
 
 	const { createElement: h, useState, useEffect, useRef, render, createRoot } = window.wp.element;

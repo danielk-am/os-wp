@@ -512,20 +512,6 @@ final class OS_Calendar {
 	}
 }
 
-( static function (): void {
-	if ( ! class_exists( 'Calendar_For_WordPress' ) ) {
-		class_alias( OS_Calendar::class, 'Calendar_For_WordPress' );
-	}
-	if ( ! class_exists( 'Calendar_For_WordPress_Features' ) ) {
-		class_alias( OS_Calendar_Features::class, 'Calendar_For_WordPress_Features' );
-	}
-	if ( ! class_exists( 'Calendar_For_WordPress_Reminders' ) ) {
-		class_alias( OS_Calendar_Reminders::class, 'Calendar_For_WordPress_Reminders' );
-	}
-	if ( ! class_exists( 'Calendar_For_WordPress_Automations' ) ) {
-		class_alias( OS_Calendar_Automations::class, 'Calendar_For_WordPress_Automations' );
-	}
-} )();
 
 OS_Calendar::register();
 OS_Calendar_Features::register();

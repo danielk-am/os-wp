@@ -26,7 +26,7 @@ const CHIP_RX = /\s*[,|]\s*/;
 const splitChips = ( v ) => String( v ?? '' ).split( CHIP_RX ).filter( ( p ) => p !== '' );
 
 // The app's canonical chip/label (matches the DataViews list chips elsewhere in
-// Core Index) so tags read the same wherever they appear.
+// OS) so tags read the same wherever they appear.
 const CHIPS_WRAP = { display: 'flex', flexWrap: 'wrap', gap: '4px' };
 const CHIP = {
   fontSize: '11px',

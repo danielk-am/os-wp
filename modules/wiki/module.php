@@ -483,14 +483,6 @@ final class OS_AI_Library {
 	}
 }
 
-( static function (): void {
-	if ( ! class_exists( 'LLM_Wiki_For_WordPress' ) ) {
-		class_alias( OS_AI_Library::class, 'LLM_Wiki_For_WordPress' );
-	}
-	if ( ! class_exists( 'LLM_Wiki_For_WordPress_Memory_Capture' ) ) {
-		class_alias( OS_AI_Library_Memory_Capture::class, 'LLM_Wiki_For_WordPress_Memory_Capture' );
-	}
-} )();
 
 OS_AI_Library::register();
 OS_AI_Library_Memory_Capture::register();

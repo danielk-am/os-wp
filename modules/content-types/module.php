@@ -486,14 +486,6 @@ final class OS_Content_Types {
 	}
 }
 
-( static function (): void {
-	if ( ! class_exists( 'Content_Types_For_WordPress' ) ) {
-		class_alias( OS_Content_Types::class, 'Content_Types_For_WordPress' );
-	}
-	if ( ! class_exists( 'Content_Types_For_WordPress_Dynamic_Types' ) ) {
-		class_alias( OS_Content_Types_Dynamic_Types::class, 'Content_Types_For_WordPress_Dynamic_Types' );
-	}
-} )();
 
 OS_Content_Types::register();
 // Declared types register at init:25, ahead of the stored-definition path at

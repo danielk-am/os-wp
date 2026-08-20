@@ -23,7 +23,7 @@
  *   ci_code_index  : [ { id, slug, language, scope, active, priority } ]
  *   ci_code_errors : { id => { t, msg, file, line } }   (circuit breaker)
  *
- * @package Core_Index
+ * @package OS
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -93,7 +93,7 @@ class OS_Code {
 		CI_Code_Options::update( self::INDEX_OPTION, array(), false );
 		CI_Code_Options::delete( self::LOADING_OPTION );
 
-		$source = CI_CODE_DIR . 'inc/loader/os-code-loader.php';
+		$source = OS_CODE_DIR . 'inc/loader/os-code-loader.php';
 		$loader = self::loader_path();
 		if ( ! is_file( $source ) || ! is_file( $loader ) ) {
 			return;
@@ -530,7 +530,7 @@ class OS_Code {
 		if ( ! defined( 'WPMU_PLUGIN_DIR' ) ) {
 			return;
 		}
-		$src  = CI_CODE_DIR . 'inc/loader/os-code-loader.php';
+		$src  = OS_CODE_DIR . 'inc/loader/os-code-loader.php';
 		$dest = self::loader_path();
 		if ( ! is_file( $src ) ) {
 			return;

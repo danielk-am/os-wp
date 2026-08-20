@@ -869,12 +869,3 @@ final class OS_Calendar_Reminders {
 	}
 }
 
-( static function (): void {
-	$active_plugins = (array) get_option( 'active_plugins', array() );
-	if (
-		! in_array( 'reminders-for-wordpress/reminders-for-wordpress.php', $active_plugins, true )
-		&& ! class_exists( 'Reminders_For_WordPress_Features' )
-	) {
-		class_alias( OS_Calendar_Reminders::class, 'Reminders_For_WordPress_Features' );
-	}
-} )();

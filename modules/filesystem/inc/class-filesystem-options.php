@@ -6,7 +6,7 @@
  * migration can run later without a flag day.
  *
  * Deliberately a local copy rather than a shared dependency: this plugin is a
- * standalone product and must not require Core Index, which is exactly what
+ * standalone product and must not require OS, which is exactly what
  * tools/check-standalone-plugin.php enforces. Forty lines duplicated is the
  * price of that independence, and the price is correct.
  *

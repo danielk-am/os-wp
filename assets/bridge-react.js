@@ -16,7 +16,7 @@
  */
 const e = window.wp && window.wp.element;
 if (!e) {
-  console.error('[core-index] window.wp.element not available — wp-element script not enqueued?');
+  console.error('[os] window.wp.element not available — wp-element script not enqueued?');
 }
 
 // Core

@@ -28,7 +28,7 @@ import {
 import { parse as parseBlocks, serialize as serializeBlocks } from '@wordpress/blocks';
 import { ReactFlow, ReactFlowProvider, Background, Controls, MarkerType } from '@xyflow/react';
 import { h, BOOT, rest, restAllPages, restWithHeaders, decodeEntities, typeMeta, REST_BASE, CIRegistry, registerEditor, registerRoute } from 'os/core';
-import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, CI_ICONS, SelectCheckbox, SegmentedToggle, PageHeading, SelectMenu } from 'os/ui';
+import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, OS_ICONS, SelectCheckbox, SegmentedToggle, PageHeading, SelectMenu } from 'os/ui';
 import { useToast, useDialog } from 'os/shell';
 import { GutenbergComposer, useEditorFullWidth } from 'os/editors';
 
@@ -105,7 +105,7 @@ function buildReminderIcs({ title, notes, dueDate, dueTime, id }) {
     dtend = `DTEND;VALUE=DATE:${ymd}`;
   }
   const lines = [
-    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Core Index Calendar//EN', 'CALSCALE:GREGORIAN',
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//OS Calendar//EN', 'CALSCALE:GREGORIAN',
     'BEGIN:VEVENT', `UID:${uid}`, `DTSTAMP:${dtstamp}`, dtstart, dtend,
     `SUMMARY:${esc(title || 'Reminder')}`,
     notes ? `DESCRIPTION:${esc(notes)}` : null,

@@ -12,8 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CI_CODE_DIR', plugin_dir_path( __FILE__ ) );
-define( 'CI_CODE_URL', plugin_dir_url( __FILE__ ) );
+define( 'OS_CODE_DIR', plugin_dir_path( __FILE__ ) );
+define( 'OS_CODE_URL', plugin_dir_url( __FILE__ ) );
 
 /**
  * Asset URL with an mtime cache-buster, so a redeploy busts the CDN + browser
@@ -21,27 +21,18 @@ define( 'CI_CODE_URL', plugin_dir_url( __FILE__ ) );
  * importmap specifier resolves to a stale module).
  */
 function os_code_asset_url( string $rel ): string {
-	$path = CI_CODE_DIR . $rel;
+	$path = OS_CODE_DIR . $rel;
 	$ver  = file_exists( $path ) ? (string) filemtime( $path ) : '0';
-	return CI_CODE_URL . $rel . '?v=' . $ver;
+	return OS_CODE_URL . $rel . '?v=' . $ver;
 }
 
 add_action(
 	'plugins_loaded',
 	static function () {
-		require_once CI_CODE_DIR . 'inc/class-code-options.php';
-		require_once CI_CODE_DIR . 'inc/class-code.php';
-		require_once CI_CODE_DIR . 'inc/class-ability-base.php';
-		require_once CI_CODE_DIR . 'inc/class-code-abilities.php';
-		if ( ! class_exists( 'WP_Code', false ) ) {
-			class_alias( OS_Code::class, 'WP_Code' );
-		}
-		if ( ! class_exists( 'WP_Code_Ability_Base', false ) ) {
-			class_alias( OS_Code_Ability_Base::class, 'WP_Code_Ability_Base' );
-		}
-		if ( ! class_exists( 'WP_Code_Abilities', false ) ) {
-			class_alias( OS_Code_Abilities::class, 'WP_Code_Abilities' );
-		}
+		require_once OS_CODE_DIR . 'inc/class-code-options.php';
+		require_once OS_CODE_DIR . 'inc/class-code.php';
+		require_once OS_CODE_DIR . 'inc/class-ability-base.php';
+		require_once OS_CODE_DIR . 'inc/class-code-abilities.php';
 		OS_Code::register();
 		OS_Code_Abilities::register();
 		OS_Standalone_Admin::boot(
@@ -82,8 +73,8 @@ add_action(
 register_activation_hook(
 	__FILE__,
 	static function (): void {
-		require_once CI_CODE_DIR . 'inc/class-code-options.php';
-		require_once CI_CODE_DIR . 'inc/class-code.php';
+		require_once OS_CODE_DIR . 'inc/class-code-options.php';
+		require_once OS_CODE_DIR . 'inc/class-code.php';
 		OS_Code::activate();
 	}
 );
@@ -91,8 +82,8 @@ register_activation_hook(
 register_deactivation_hook(
 	__FILE__,
 	static function (): void {
-		require_once CI_CODE_DIR . 'inc/class-code-options.php';
-		require_once CI_CODE_DIR . 'inc/class-code.php';
+		require_once OS_CODE_DIR . 'inc/class-code-options.php';
+		require_once OS_CODE_DIR . 'inc/class-code.php';
 		OS_Code::deactivate();
 	}
 );

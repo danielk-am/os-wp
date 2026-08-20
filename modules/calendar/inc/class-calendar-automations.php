@@ -88,12 +88,3 @@ final class OS_Calendar_Automations {
 	}
 }
 
-( static function (): void {
-	$active_plugins = (array) get_option( 'active_plugins', array() );
-	if (
-		! in_array( 'routines-for-wordpress/routines-for-wordpress.php', $active_plugins, true )
-		&& ! class_exists( 'Routines_For_WordPress_Runner' )
-	) {
-		class_alias( OS_Calendar_Automations::class, 'Routines_For_WordPress_Runner' );
-	}
-} )();

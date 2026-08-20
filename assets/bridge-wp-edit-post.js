@@ -9,7 +9,7 @@
  */
 const ep = window.wp && window.wp.editPost;
 if ( ! ep ) {
-  console.error( '[core-index] window.wp.editPost not available — wp-edit-post script not enqueued?' );
+  console.error( '[os] window.wp.editPost not available — wp-edit-post script not enqueued?' );
 }
 
 export const Editor      = ep?.Editor;

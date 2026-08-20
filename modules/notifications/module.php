@@ -406,14 +406,6 @@ final class OS_Notifications {
 	}
 }
 
-( static function (): void {
-	if ( ! class_exists( 'Notifications_For_WordPress' ) ) {
-		class_alias( OS_Notifications::class, 'Notifications_For_WordPress' );
-	}
-	if ( ! class_exists( 'Notifications_For_WordPress_Publisher' ) ) {
-		class_alias( OS_Notifications_Publisher::class, 'Notifications_For_WordPress_Publisher' );
-	}
-} )();
 
 OS_Notifications::register();
 OS_Notifications_Publisher::register();

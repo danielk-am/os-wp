@@ -33,7 +33,7 @@ import {
 import { marked } from 'marked';
 import { faPython, faJs, faPhp, faCode, faFileCode, faTable, faTerminal, faMarkdown, faDiagramProject } from '@ci/fa-icons';
 import { h, BOOT, rest, restAllPages, decodeEntities, typeMeta, editorChoices, CIRegistry, registerEditor } from 'os/core';
-import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, CI_ICONS, Toolbar as CIToolbar, CptIcon, SelectMenu } from 'os/ui';
+import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, OS_ICONS, Toolbar as CIToolbar, CptIcon, SelectMenu } from 'os/ui';
 import { useToast, useDialog } from 'os/shell';
 import { CodeEditor, useEditorFullWidth, EditorFullWidthButton } from 'os/editors';
 import { CANVAS_ADD_ITEMS } from 'os/core';

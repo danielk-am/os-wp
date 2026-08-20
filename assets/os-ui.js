@@ -35,7 +35,7 @@ import {
 // name → Font Awesome Free icon object. Covers the old custom-SVG names, the
 // former @wordpress/icons chrome glyphs, and the CPT-icon palette. The shipped
 // UI deliberately uses only the GPL-compatible Free set.
-export const CI_ICONS = {
+export const OS_ICONS = {
   // chrome glyphs (former @wordpress/icons + custom set)
   'plus': faPlus, 'undo': faRotateLeft, 'redo': faRotateRight, 'refresh': faRotateRight, 'cog': faGear,
   'terminal': faTerminal,
@@ -102,7 +102,7 @@ function faSvg(fa, className, rest) {
 // Icon — FontAwesome-backed, name-based. Same API as before; unknown names
 // render nothing. (`viewBox`-pair string entries from the old set are gone.)
 export function Icon({ name, className = 'w-4 h-4', ...rest }) {
-  return faSvg(CI_ICONS[name], className, rest);
+  return faSvg(OS_ICONS[name], className, rest);
 }
 
 // WPGlyph — kept for back-compat. Now its `icon` prop is an `<Icon/>` element
@@ -125,7 +125,7 @@ export function CptIcon({ icon, iconSvg, fallback = 'folder', className = 'w-4 h
   if (iconSvg) {
     return h`<span className=${'os-cpt-svg ' + className} aria-hidden="true" dangerouslySetInnerHTML=${{ __html: iconSvg }} />`;
   }
-  return h`<${Icon} name=${icon && CI_ICONS[icon] ? icon : fallback} className=${className} />`;
+  return h`<${Icon} name=${icon && OS_ICONS[icon] ? icon : fallback} className=${className} />`;
 }
 
 // In-content page heading: the prominent title (with the page/type icon) plus an
@@ -143,7 +143,7 @@ export function PageHeading({ icon, iconSvg, title, description, fallback, class
   </header>`;
 }
 
-// SelectMenu is the one shared single- or multi-select contract for Core Index.
+// SelectMenu is the one shared single- or multi-select contract for OS.
 // It deliberately uses WPDS Dropdown + MenuItem rather than SelectControl or a
 // native <select>, so every authored selector opens the same custom popover.
 // Options accept either { value, label } or { key, title, description }.

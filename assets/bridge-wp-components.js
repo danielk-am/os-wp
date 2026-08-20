@@ -6,7 +6,7 @@
  */
 const c = window.wp && window.wp.components;
 if (!c) {
-  console.error('[core-index] window.wp.components not available — wp-components script not enqueued?');
+  console.error('[os] window.wp.components not available — wp-components script not enqueued?');
 }
 
 // Re-export everything available on window.wp.components. We list the

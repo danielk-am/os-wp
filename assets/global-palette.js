@@ -12,7 +12,7 @@
  *   /                    → toggle (only when not typing in an input)
  *   Esc                  → close
  *
- * Data sources (from window.CI_GLOBAL_PALETTE, set by PHP boot):
+ * Data sources (from window.OS_GLOBAL_PALETTE, set by PHP boot):
  *   • admin_menu      — full top + submenu list, capability-filtered
  *   • settings_fields — Settings API field index with #:~:text= anchors
  *   • content (live)  — fetched from /activity/v1/find
@@ -22,7 +22,7 @@
 	if ( ! window.wp || ! window.wp.element ) {
 		return;
 	}
-	if ( ! window.CI_GLOBAL_PALETTE ) {
+	if ( ! window.OS_GLOBAL_PALETTE ) {
 		return;
 	}
 	// Avoid double-mounting if this script gets injected twice.
@@ -31,7 +31,7 @@
 	}
 	window.__ciGlobalPaletteMounted = true;
 
-	const BOOT = window.CI_GLOBAL_PALETTE;
+	const BOOT = window.OS_GLOBAL_PALETTE;
 	const { createElement: el, useState, useEffect, useMemo, useRef, useCallback, Fragment } = window.wp.element;
 	const createRoot = window.wp.element.createRoot || ( ( container ) => ( {
 		render: ( node ) => window.wp.element.render( node, container ),

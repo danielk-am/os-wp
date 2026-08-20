@@ -585,10 +585,10 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 					true
 				);
 			}
-			wp_add_inline_script( $this->handle, 'window.CI_BOOTSTRAP=' . wp_json_encode( $this->bootstrap() ) . ';', 'before' );
+			wp_add_inline_script( $this->handle, 'window.OS_BOOTSTRAP=' . wp_json_encode( $this->bootstrap() ) . ';', 'before' );
 			$identity_type = reset( $this->config['types'] );
 			$identity_title = (string) ( $this->config['menu_title'] ?? $identity_type['plural'] ?? $this->config['slug'] );
-			wp_add_inline_script( $this->handle . '-identity', 'window.CI_WPDS_IDENTITY=' . wp_json_encode( array( 'title' => $identity_title ) ) . ';', 'before' );
+			wp_add_inline_script( $this->handle . '-identity', 'window.OS_WPDS_IDENTITY=' . wp_json_encode( array( 'title' => $identity_title ) ) . ';', 'before' );
 		}
 
 		public function module_tag( string $tag, string $handle, string $src ): string {
@@ -987,7 +987,7 @@ if ( ! class_exists( 'OS_Standalone_Admin' ) ) {
 			if ( $this->content_type_key_is_reserved( $cpt ) ) {
 				return new WP_Error(
 					'reserved_content_type',
-					'That content type key is reserved by Core Index.',
+					'That content type key is reserved by OS.',
 					array( 'status' => 400, 'cpt' => $cpt )
 				);
 			}

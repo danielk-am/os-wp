@@ -405,14 +405,6 @@ final class OS_Wizard_Builder {
 	}
 }
 
-( static function (): void {
-	if ( ! class_exists( 'Wizard_Builder_For_WordPress' ) ) {
-		class_alias( OS_Wizard_Builder::class, 'Wizard_Builder_For_WordPress' );
-	}
-	if ( ! class_exists( 'Wizard_Builder_For_WordPress_Runner' ) ) {
-		class_alias( OS_Wizard_Builder_Runner::class, 'Wizard_Builder_For_WordPress_Runner' );
-	}
-} )();
 
 OS_Wizard_Builder::register();
 OS_Wizard_Builder_Runner::register();

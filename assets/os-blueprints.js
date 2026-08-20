@@ -9,12 +9,12 @@
  * state machine) that is POSTed as a schema-override on create so os-schema-get
  * orients agents to the legal transitions.
  *
- * No imports, no side effects. Icons are string names resolved against CI_ICONS
+ * No imports, no side effects. Icons are string names resolved against OS_ICONS
  * at render time, so this module stays dependency-free and safe to read/write
  * from tooling (e.g. the type self-learning skill).
  */
 
-export const CI_BLUEPRINTS = [
+export const OS_BLUEPRINTS = [
   {
     id: 'tracker', label: 'Tracker', plural: 'Trackers', icon: 'clipboard', editor: 'cpt',
     description: 'Items with status, priority, and a due date — a Kanban-ish list.',

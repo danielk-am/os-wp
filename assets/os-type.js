@@ -28,13 +28,13 @@ import {
   TabPanel as WPTabPanel, SlotFillProvider as WPSlotFillProvider,
 } from '@wordpress/components';
 import { h, BOOT, REST_BASE, rest, restWithHeaders, restAllPages, decodeEntities, CIRegistry, registerEditor, registerRoute, editorChoices, typeKeys, typeMeta, typeKind, isTermType, isNativeReplace, treeKind, applyTemplate, listUrl, normalizeItem, buildParentTree, buildPathTree, rankSearch, dataViewsSearchFields } from 'os/core';
-import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, CI_ICONS, PICKABLE_ICONS, SelectCheckbox, CptIcon, SegmentedToggle, PageHeading, Toolbar as CIToolbar, SelectMenu } from 'os/ui';
+import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, OS_ICONS, PICKABLE_ICONS, SelectCheckbox, CptIcon, SegmentedToggle, PageHeading, Toolbar as CIToolbar, SelectMenu } from 'os/ui';
 import { useToast, useDialog } from 'os/shell';
 import { GutenbergComposer, CodeEditor, useEditorFullWidth, fullWidthIcon, convertMarkdownToBlocks, looksConvertibleToBlocks, collectCanvasStyles, EDITOR_ICONS } from 'os/editors';
 import { BlockEditorProvider, BlockTools, BlockCanvas, BlockInspector, InspectorControls, useBlockProps, BlockToolbar as WPBlockToolbar, InnerBlocks, ListView as WPListView, BlockLibrary } from '@wordpress/block-editor';
 import { registerBlockType, createBlock, registerBlockVariation, unregisterBlockVariation } from '@wordpress/blocks';
 import { useDispatch as useWPDispatch } from '@wordpress/data';
-import { CI_BLUEPRINTS } from 'os/blueprints';
+import { OS_BLUEPRINTS } from 'os/blueprints';
 import { FG_FIELD_TYPES, FG_PRESENTATIONAL, FG_WIDTHS, fgCols, fgWithId, fgStrip, FG_COND_OPS, evalConditional, fgCptOptions, RelationshipField, TaxonomyField } from 'os/engine';
 import { DataViews as WPDataViews, filterSortAndPaginate } from '@wordpress/dataviews';
 
@@ -254,10 +254,10 @@ function iconFuzzy(name, query) {
 // modes clears the other (render prefers iconSvg). iconSvg is sanitised
 // server-side before storage.
 function IconPicker({ value, valueSvg, onChange, disabled }) {
-  const current = value && CI_ICONS[value] ? value : 'folder';
+  const current = value && OS_ICONS[value] ? value : 'folder';
   // Only show names that actually resolve to a glyph (guards against drift
   // between PICKABLE_ICONS and the loaded FA set).
-  const allIcons = useMemo(() => PICKABLE_ICONS.filter((n) => CI_ICONS[n]), []);
+  const allIcons = useMemo(() => PICKABLE_ICONS.filter((n) => OS_ICONS[n]), []);
   const [q, setQ] = useState('');
   const [mode, setMode] = useState(valueSvg ? 'svg' : 'fa');
   const [svgDraft, setSvgDraft] = useState(valueSvg || '');
@@ -385,7 +385,7 @@ function FieldImage({ field, value, onChange }) {
       const sizes = (created && created.media_details && created.media_details.sizes) || {};
       setUrl((sizes.thumbnail && sizes.thumbnail.source_url) || created.source_url || '');
       onChange(created.id);
-    } catch (e) { console.error('[core-index] image upload failed:', e); }
+    } catch (e) { console.error('[os] image upload failed:', e); }
     finally { setBusy(false); }
   };
 
@@ -5261,7 +5261,7 @@ function FgTermManager({ slug }) {
 // the field group when the CPT is created (see rest_add_cpt). Editors that need
 // bespoke runtime (Automation/Reminders' cron/channels) still ship as code leaf
 // apps — these cover the "structured-data editor" cases no-code.
-// CI_BLUEPRINTS now lives in the ci/blueprints data module (the os-type split);
+// OS_BLUEPRINTS now lives in the ci/blueprints data module (the os-type split);
 // imported at the top of this file.
 
 // Cross-tab progress bus: one shared BroadcastChannel for all editor instances,
@@ -5315,7 +5315,7 @@ function CreateTypePage() {
   const navigate = useNavigate();
   const toast = useToast();
   const AppHeader = CIRegistry.AppHeader;
-  const bp = CI_BLUEPRINTS.find((b) => b.id === params.get('bp')) || {};
+  const bp = OS_BLUEPRINTS.find((b) => b.id === params.get('bp')) || {};
 
   const [label, setLabel] = useState(bp.label || '');
   const [plural, setPlural] = useState(bp.plural || '');
@@ -5390,7 +5390,7 @@ function CreateTypePage() {
     <${AppHeader} title=${bp.label ? `New ${bp.label}` : 'New content type'} icon="cube" onBack=${() => navigate('/content-types')} backLabel="Content Types" actions=${headerActions} />
     <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain" style=${{ touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' }}>
       <form onSubmit=${submit} className="p-6 md:p-10 mx-auto w-full max-w-3xl space-y-8 pb-32">
-        <${PageHeading} icon=${CI_ICONS[icon] ? icon : 'cube'} title=${bp.label ? `New ${bp.label}` : 'New content type'} description=${bp.description || 'Register a custom post type. Define its fields and taxonomies after creating it.'} />
+        <${PageHeading} icon=${OS_ICONS[icon] ? icon : 'cube'} title=${bp.label ? `New ${bp.label}` : 'New content type'} description=${bp.description || 'Register a custom post type. Define its fields and taxonomies after creating it.'} />
 
         <${ManageSection} title="Identity" description="Names and the slug used for storage and URLs.">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -5563,14 +5563,14 @@ function ContentTypesPage() {
           <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Start from a blueprint</h2>
           <p className="text-sm text-muted-foreground">One-click scaffold a new type with a ready-made field set + editor. You can rename it and tweak fields afterward in its Structure tab.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            ${CI_BLUEPRINTS.map((bp) => h`<button
+            ${OS_BLUEPRINTS.map((bp) => h`<button
               key=${bp.id}
               type="button"
               onClick=${() => navigate(`/structure/new?bp=${bp.id}`)}
               className="text-left border border-border rounded-lg bg-card p-4 transition-colors hover:border-primary hover:shadow-sm"
             >
               <div className="flex items-center gap-2.5">
-                <${Icon} name=${CI_ICONS[bp.icon] ? bp.icon : 'cube'} className="w-5 h-5 shrink-0 text-muted-foreground" />
+                <${Icon} name=${OS_ICONS[bp.icon] ? bp.icon : 'cube'} className="w-5 h-5 shrink-0 text-muted-foreground" />
                 <span className="flex-1 min-w-0 truncate font-semibold">${bp.label}</span>
               </div>
               <p className="mt-2 text-xs text-muted-foreground leading-snug">${bp.description}</p>
@@ -6072,7 +6072,7 @@ function StructureEditorPage() {
         breathes like the Site Editor; the other tabs honour the footer's
         Comfortable / Full width preference. */''}
     <div className=${'p-6 md:p-10 mx-auto w-full space-y-6 pb-32 ' + ((fullWidth || activeTab === 'fields') ? 'max-w-none' : 'max-w-4xl')}>
-      <${PageHeading} icon=${meta.icon && CI_ICONS[meta.icon] ? meta.icon : 'cube'} title=${`Manage ${meta.label}`} description=${h`<span>Register, then define fields and taxonomies for ${meta.label}. Fields become real post meta (REST + <code className="font-mono text-xs bg-muted px-1 rounded">get_post_meta</code>); taxonomies are queryable terms. Changes apply on the next page load.</span>`} />
+      <${PageHeading} icon=${meta.icon && OS_ICONS[meta.icon] ? meta.icon : 'cube'} title=${`Manage ${meta.label}`} description=${h`<span>Register, then define fields and taxonomies for ${meta.label}. Fields become real post meta (REST + <code className="font-mono text-xs bg-muted px-1 rounded">get_post_meta</code>); taxonomies are queryable terms. Changes apply on the next page load.</span>`} />
       <${WPTabPanel} key=${activeTab} className="os-settings-tabs" initialTabName=${activeTab} tabs=${structTabs}
         onSelect=${(name) => { if (name !== activeTab) navigate(`/structure/${type}/${name}`); }}>
         ${(t) => h`<div className="pt-6">${
@@ -6939,7 +6939,7 @@ function ContentBodyEditor({ value, onChange, placeholder, defaultMode, formatDe
       onChange(convertMarkdownToBlocks(value));
       setModeManual('block');
     } catch (e) {
-      console.error('[core-index] convert to blocks failed:', e);
+      console.error('[os] convert to blocks failed:', e);
     }
   };
   return h`<div>

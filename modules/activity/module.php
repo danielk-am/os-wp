@@ -407,14 +407,6 @@ final class OS_Activity {
 	}
 }
 
-( static function (): void {
-	if ( ! class_exists( 'Activity_Log_For_WordPress' ) ) {
-		class_alias( OS_Activity::class, 'Activity_Log_For_WordPress' );
-	}
-	if ( ! class_exists( 'Activity_Log_For_WordPress_Recorder' ) ) {
-		class_alias( OS_Activity_Recorder::class, 'Activity_Log_For_WordPress_Recorder' );
-	}
-} )();
 
 OS_Activity::register();
 OS_Activity_Recorder::register();

@@ -24,7 +24,7 @@ import {
   TabPanel as WPTabPanel, SlotFillProvider as WPSlotFillProvider,
 } from '@wordpress/components';
 import { h, BOOT, rest, restAllPages, restWithHeaders, decodeEntities, typeMeta, CIRegistry, registerEditor } from 'os/core';
-import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, CI_ICONS, SelectCheckbox, PageHeading, ViewToggle, useViewMode, ResizablePane } from 'os/ui';
+import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, OS_ICONS, SelectCheckbox, PageHeading, ViewToggle, useViewMode, ResizablePane } from 'os/ui';
 import { useToast, useDialog } from 'os/shell';
 
 // Chrome glyphs (FA-backed Icon elements) used by the media surface.

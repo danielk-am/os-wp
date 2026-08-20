@@ -27,7 +27,7 @@ import {
 } from '@wordpress/components';
 import { marked } from 'marked';
 import { h, BOOT, rest, restAllPages, decodeEntities, typeMeta, CIRegistry, registerEditor, registerRoute } from 'os/core';
-import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, CI_ICONS, SelectCheckbox } from 'os/ui';
+import { Icon, WPGlyph, Card, PadCard, Button, Badge, Spinner, OS_ICONS, SelectCheckbox } from 'os/ui';
 import { useToast, useDialog } from 'os/shell';
 import { GutenbergComposer, useEditorFullWidth, EditorFullWidthButton } from 'os/editors';
 import { rewriteWikilinks } from 'os/core';

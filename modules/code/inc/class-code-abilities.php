@@ -2,11 +2,11 @@
 /**
  * OS_Code_Abilities — code snippet abilities
  *
- * Per-app ability registrar for Core Index, extracted from
+ * Per-app ability registrar for OS, extracted from
  * class-abilities.php (issue 797) onto the shared
  * OS_Code_Ability_Base.
  *
- * @package Core_Index
+ * @package OS
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
