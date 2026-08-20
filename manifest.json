@@ -1,6 +1,6 @@
 {
-	"version": "3.3.0",
-	"package": "https://github.com/danielk-am/os-wp/releases/download/v3.3.0/os.zip",
+	"version": "3.4.0",
+	"package": "https://github.com/danielk-am/os-wp/releases/download/v3.4.0/os.zip",
 	"requires": "6.9",
 	"requires_php": "8.1",
 	"tested": "7.0.4",
