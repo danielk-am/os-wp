@@ -310,7 +310,7 @@ function buildAppCommandPaletteItems() {
 // runs score higher; long gaps cost a little.
 //
 // Returns a score where LOWER = better, to match the surrounding
-// `.sort((a,b) => a.score - b.score)` convention. Returns -1 to mark
+// `.sort((a,b) => a.score - b.score)` convention. Returns Infinity to mark
 // "no match" — those entries are filtered out before sorting.
 function fuzzySubseq(query, target) {
   if (!query) return 0;
