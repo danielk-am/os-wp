@@ -51,7 +51,10 @@
 			} );
 	}
 
-	// Fuzzy subsequence scorer — same shape as the React palette.
+	// Fuzzy subsequence scorer — same shape as the React palette (context-app.js).
+	// Lower is better. A strong match is NEGATIVE, because the word-start and
+	// adjacency bonuses subtract, so the miss sentinel must be Infinity rather
+	// than a negative number: a `< 0` miss test would discard the best results.
 	function fuzzy( query, target ) {
 		if ( ! query ) return 0;
 		const q = query.toLowerCase();
@@ -67,7 +70,7 @@
 				qi++;
 			}
 		}
-		if ( qi < q.length ) return -1;
+		if ( qi < q.length ) return Infinity;
 		return gap - bonus + t.length * 0.05;
 	}
 
@@ -76,7 +79,7 @@
 		let total = 0;
 		for ( const t of terms ) {
 			const s = fuzzy( t, hay );
-			if ( s < 0 ) return -1;
+			if ( s === Infinity ) return Infinity;
 			total += s;
 		}
 		return total;
@@ -172,7 +175,7 @@
 			if ( terms.length === 0 ) return [];
 			const scored = staticPool
 				.map( ( it ) => ( { it, s: score( it, terms ) } ) )
-				.filter( ( x ) => x.s >= 0 )
+				.filter( ( x ) => x.s !== Infinity )
 				.sort( ( a, b ) => a.s - b.s )
 				.slice( 0, 25 )
 				.map( ( x ) => x.it );
